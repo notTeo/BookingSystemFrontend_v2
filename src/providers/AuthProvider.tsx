@@ -1,39 +1,28 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
-import type { AuthContextValue, UserProfile } from "../types";
+import React, { createContext, useContext, useState, useEffect } from "react";
+
 import { getCurrentUser } from "../api/user";
-import { getAccessToken } from "../api/http";
+import type { AuthContextValue, UserProfile } from "../types";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     let isMounted = true;
 
-    const token = getAccessToken();
-    console.log(token)
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
     const fetchUser = async () => {
-
       try {
         const currentUser = await getCurrentUser();
-        if (!isMounted) return;
-
-        setUser(currentUser ?? null);
-      } catch (error) {
-        if (!isMounted) return;
-        setUser(null);
+        console.log(currentUser);
+        if (isMounted) {
+          setUser(currentUser);
+        }
+      } catch {
+        if (isMounted) {
+          setUser(null);
+        }
       } finally {
         if (!isMounted) return;
         setIsLoading(false);
@@ -49,11 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const value: AuthContextValue = { user, isLoading };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

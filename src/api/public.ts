@@ -1,6 +1,13 @@
 import { request } from "./http";
 import type { BookingWithRelations } from "../types/bookings";
-import type { PublicBookingPayload, PublicProvider, PublicService, PublicShopHour, PublicSlotsResponse, SlotSearchParams } from "../types/public";
+import type {
+  PublicBookingPayload,
+  PublicProvider,
+  PublicService,
+  PublicShopHour,
+  PublicSlotsResponse,
+  SlotSearchParams,
+} from "../types/public";
 import type { ShopSummary } from "../types/shop";
 
 export function getPublicShop(shopId: number) {
@@ -20,7 +27,10 @@ export function listPublicServices(shopId: number, query?: string) {
 }
 
 export function getPublicService(shopId: number, serviceId: number) {
-  return request<PublicService>({ method: "GET", url: `/public/shops/${shopId}/services/${serviceId}` });
+  return request<PublicService>({
+    method: "GET",
+    url: `/public/shops/${shopId}/services/${serviceId}`,
+  });
 }
 
 export function listPublicProviders(shopId: number) {

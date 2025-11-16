@@ -3,8 +3,25 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import type { ApiResponse } from "../types/common";
 
 const DEFAULT_BASE_URL = "http://localhost:4000/api/v1";
+const ACCESS_TOKEN_COOKIE = "booking_access_token";
 
-let accessToken: string | null = null;
+const isBrowser = typeof document !== "undefined";
+
+function readCookie(name: string): string | null {
+  if (!isBrowser) return null;
+  const cookies = document.cookie ? document.cookie.split("; ") : [];
+  const match = cookies.find((cookie) => cookie.startsWith(`${name}=`));
+  if (!match) return null;
+  return decodeURIComponent(match.substring(name.length + 1));
+}
+
+function writeCookie(name: string, value: string | null): void {
+  if (!isBrowser) return;
+  const base = `${name}=${value ? encodeURIComponent(value) : ""}; path=/; SameSite=Lax`;
+  document.cookie = value ? `${base}` : `${base}; expires=${new Date(0).toUTCString()}`;
+}
+
+let accessToken: string | null = readCookie(ACCESS_TOKEN_COOKIE);
 let activeShopId: number | null = null;
 
 const apiClient: AxiosInstance = axios.create({
@@ -17,7 +34,6 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   if (accessToken && config.headers) {
-     
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   if (activeShopId && config.headers && !config.headers["x-shop-id"]) {
@@ -28,6 +44,7 @@ apiClient.interceptors.request.use((config) => {
 
 export function setAccessToken(token: string | null): void {
   accessToken = token;
+  writeCookie(ACCESS_TOKEN_COOKIE, token);
 }
 
 export function getAccessToken(): string | null {

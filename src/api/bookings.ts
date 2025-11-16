@@ -1,5 +1,9 @@
 import { request } from "./http";
-import type { BookingWithRelations, CreateBookingPayload, ListBookingParams } from "../types/bookings";
+import type {
+  BookingWithRelations,
+  CreateBookingPayload,
+  ListBookingParams,
+} from "../types/bookings";
 import type { BookingStatus } from "../types/common";
 
 export function createBooking(payload: CreateBookingPayload) {
@@ -15,7 +19,11 @@ export function getBooking(id: number) {
 }
 
 export function updateBookingStatus(id: number, status: BookingStatus, note?: string) {
-  return request<BookingWithRelations>({ method: "PATCH", url: `/shop/bookings/${id}/status`, data: { status, note } });
+  return request<BookingWithRelations>({
+    method: "PATCH",
+    url: `/shop/bookings/${id}/status`,
+    data: { status, note },
+  });
 }
 
 export function cancelBooking(id: number) {

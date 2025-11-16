@@ -16,7 +16,11 @@ export function toggleMemberBookable(memberId: number) {
 }
 
 export function updateMemberRole(memberId: number, role: ShopUserRoleSummary["role"]) {
-  return request<ShopUserRoleSummary>({ method: "PATCH", url: `/shop/team/${memberId}/role`, data: { role } });
+  return request<ShopUserRoleSummary>({
+    method: "PATCH",
+    url: `/shop/team/${memberId}/role`,
+    data: { role },
+  });
 }
 
 export function getMemberServices(memberId: number) {
@@ -24,11 +28,18 @@ export function getMemberServices(memberId: number) {
 }
 
 export function syncMemberServices(memberId: number, serviceIds: number[]) {
-  return request<Service[]>({ method: "PUT", url: `/shop/team/${memberId}/services`, data: { serviceIds } });
+  return request<Service[]>({
+    method: "PUT",
+    url: `/shop/team/${memberId}/services`,
+    data: { serviceIds },
+  });
 }
 
 export function deleteMemberService(memberId: number, serviceId: number) {
-  return request<{ removed: boolean }>({ method: "DELETE", url: `/shop/team/${memberId}/services/${serviceId}` });
+  return request<{ removed: boolean }>({
+    method: "DELETE",
+    url: `/shop/team/${memberId}/services/${serviceId}`,
+  });
 }
 
 export function getMemberHours(memberId: number) {
@@ -36,11 +47,19 @@ export function getMemberHours(memberId: number) {
 }
 
 export function replaceMemberHours(memberId: number, week: WeekSchedule[]) {
-  return request<WeekSchedule[]>({ method: "PUT", url: `/shop/team/${memberId}/hours`, data: { week } });
+  return request<WeekSchedule[]>({
+    method: "PUT",
+    url: `/shop/team/${memberId}/hours`,
+    data: { week },
+  });
 }
 
 export function patchMemberHours(memberId: number, week: WeekSchedule[]) {
-  return request<WeekSchedule[]>({ method: "PATCH", url: `/shop/team/${memberId}/hours`, data: { week } });
+  return request<WeekSchedule[]>({
+    method: "PATCH",
+    url: `/shop/team/${memberId}/hours`,
+    data: { week },
+  });
 }
 
 export function deleteMemberHours(memberId: number) {

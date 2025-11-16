@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { loginUser } from "../../../api/auth";
 import { getAccessToken, setAccessToken } from "../../../api/http";
@@ -15,7 +16,7 @@ export default function SignInPage() {
   const [status, setStatus] = useState<SignInStatus>("idle");
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
 
   const canSubmit = useMemo(() => {
     return Boolean(form.email.trim()) && Boolean(form.password.trim()) && status !== "pending";
@@ -46,9 +47,9 @@ export default function SignInPage() {
           password: form.password,
         });
         setAccessToken(nextTokens.accessToken);
-        window.location.href = "/overview";
         setTokens(nextTokens);
         setStatus("success");
+        navigate("/overview", { replace: true });
       } catch (err) {
         console.error("Unable to sign in", err);
         setStatus("error");

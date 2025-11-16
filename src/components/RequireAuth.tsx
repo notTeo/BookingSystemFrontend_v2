@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+
 import { useAuth } from "../providers/AuthProvider";
-import { Spinner } from "react-bootstrap";
 
 const RequireAuth: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -9,18 +9,12 @@ const RequireAuth: React.FC = () => {
 
   // While you’re checking token / fetching / whatever
   if (isLoading) {
-    return <Spinner/>; // or your spinner
+    return <p>Loading...</p>; // or your spinner
   }
 
   // Not logged in → kick to login, remember where they came from
   if (!user) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-        state={{ from: location.pathname + location.search }}
-      />
-    );
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }
 
   return <Outlet />;

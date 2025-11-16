@@ -15,12 +15,9 @@ const ShopLayout: React.FC = () => {
       >
         <h2>Shop: {shopName}</h2>
         <nav>
-          <Link to="">Overview</Link> |{" "}
-          <Link to="calendar">Calendar</Link> |{" "}
-          <Link to="bookings">Bookings</Link> |{" "}
-          <Link to="bookings/new">Add Booking</Link> |{" "}
-          <Link to="services">Services</Link> |{" "}
-          <Link to="team">Team</Link> |{" "}
+          <Link to="">Overview</Link> | <Link to="calendar">Calendar</Link> |{" "}
+          <Link to="bookings">Bookings</Link> | <Link to="bookings/new">Add Booking</Link> |{" "}
+          <Link to="services">Services</Link> | <Link to="team">Team</Link> |{" "}
           <Link to="team/invite">Invite</Link>
         </nav>
       </header>
