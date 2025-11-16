@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 
 import type { ApiResponse } from "../types/common";
 
-const DEFAULT_BASE_URL = "http://localhost:5000/api/v1";
+const DEFAULT_BASE_URL = "http://localhost:4000/api/v1";
 
 let accessToken: string | null = null;
 let activeShopId: number | null = null;
@@ -17,6 +17,7 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   if (accessToken && config.headers) {
+     
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   if (activeShopId && config.headers && !config.headers["x-shop-id"]) {
@@ -41,9 +42,9 @@ export function getActiveShopId(): number | null {
   return activeShopId;
 }
 
-export function setApiBaseUrl(baseURL: string): void {
-  apiClient.defaults.baseURL = baseURL || DEFAULT_BASE_URL;
-}
+// export function setApiBaseUrl(baseURL: string): void {
+//   apiClient.defaults.baseURL = baseURL || DEFAULT_BASE_URL;
+// }
 
 export async function request<T>(config: AxiosRequestConfig): Promise<T> {
   const response = await apiClient.request<ApiResponse<T>>(config);

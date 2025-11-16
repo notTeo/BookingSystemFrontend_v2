@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import type { Shop, ShopContextValue } from "../types/shop";
+import type { ShopContextValue, Shop } from "../types/shop";
 
 const ShopContext = createContext<ShopContextValue | undefined>(undefined);
 

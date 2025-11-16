@@ -9,7 +9,7 @@ export async function registerUser(payload: RegisterPayload) {
 
 export async function loginUser(payload: LoginPayload) {
   const data = await request<AuthTokens>({ method: "POST", url: "/auth/login", data: payload });
-  setAccessToken(data.accessToken);
+
   return data;
 }
 

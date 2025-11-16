@@ -16,6 +16,7 @@ import RequireAuth from "./components/RequireAuth";
 import MainPage from "./pages/public/MainPage/MainPage";
 import LoginPage from "./pages/public/LoginPage/LoginPage";
 import RegisterPage from "./pages/public/RegisterPage/RegisterPage";
+import NotFoundPage from "./pages/public/NotFoundPage/NotFoundPage";
 
 // PROTECTED – global
 import Overview from "./pages/protected/Overview/Overview";
@@ -73,6 +74,7 @@ export default function Router() {
                 </Route>
               </Route>
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </ShopProvider>
       </AuthProvider>

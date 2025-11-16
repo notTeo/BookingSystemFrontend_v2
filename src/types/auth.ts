@@ -4,11 +4,12 @@ import type { UserProfile } from "./user";
 export type AuthUser = {
   id: string;
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
 };
 
 export type AuthContextValue = {
-  user: AuthUser | null;
+  user: UserProfile | null;
   isLoading: boolean;
   // later: login(), logout(), refresh(), etc.
 };
