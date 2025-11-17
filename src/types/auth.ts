@@ -11,7 +11,8 @@ export type AuthUser = {
 export type AuthContextValue = {
   user: UserProfile | null;
   isLoading: boolean;
-  // later: login(), logout(), refresh(), etc.
+  setUser: (user: UserProfile | null) => void;
+  refreshUser: () => Promise<void>;
 };
 
 export interface RegisterPayload {

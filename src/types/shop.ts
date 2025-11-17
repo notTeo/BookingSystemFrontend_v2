@@ -1,6 +1,15 @@
 import type { BookingStatus, DayOfWeek, InviteStatus, ShopRole } from "./common";
 import type { Service } from "./services";
 
+export interface ShopContextValue {
+  currentShop: ShopOverviewStats | null;
+  isLoading: boolean;
+  refreshShop: () => Promise<void>;
+  setCurrentShop: (shop: ShopOverviewStats | null) => void;
+}
+
+
+
 export interface Invite {
   id: number;
   shopId: number;

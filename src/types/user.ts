@@ -1,3 +1,4 @@
+import type { ShopSummary } from ".";
 import type { SubscriptionTier } from "./common";
 
 export interface UserProfile {
@@ -7,6 +8,7 @@ export interface UserProfile {
   lastName: string;
   subscription: SubscriptionTier;
   active?: boolean;
+  shops: ShopSummary[];
   createdAt?: string;
   updatedAt?: string;
 }
