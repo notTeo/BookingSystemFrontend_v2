@@ -1,1 +1,283 @@
-/* Styles for Overview */
+.overview {
+    padding: 1.5rem 1.75rem;
+  }
+  
+  .overview__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  /* Header */
+  
+  .overview__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  .overview__title {
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .overview__subtitle {
+    font-size: 0.9rem;
+    color: var(--text-soft);
+  }
+  
+  .overview__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  
+  /* ===== PLAN PILL – ONLY DEFINITION ===== */
+  
+  .overview__plan-pill {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+  }
+  
+  /* MEMBER = neutral grey */
+  .overview__plan-pill--MEMBER {
+    background: #111827;          /* dark grey */
+    border-color: #4b5563;
+    color: #e5e7eb;
+  }
+  
+  /* STARTER = accent blue */
+  .overview__plan-pill--STARTER {
+    background: rgba(102, 155, 188, 0.25); /* blue tint */
+    border-color: #669bbc;
+    color: #f9fafb;
+  }
+  
+  /* PRO = green (success) */
+  .overview__plan-pill--PRO {
+    background: rgba(34, 197, 94, 0.22);   /* soft green */
+    border-color: var(--success);          /* #22c55e from theme */
+    color: #dcfce7;
+  }
+  
+  .overview__create-btn {
+    box-shadow: none;
+  }
+  
+  .overview__create-btn:hover,
+  .overview__create-btn:focus-visible {
+    box-shadow: none;
+    transform: none;
+  }
+  
+  /* Base card – matte, boxy */
+  
+  .overview__card {
+    background: #050505;
+    border-radius: var(--radius-md);
+    border: 1px solid #1f1f1f;
+    padding: 1rem 1rem 0.9rem;
+    box-shadow: none;
+  }
+  
+  .overview__section-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Profile card */
+  
+  .overview__card--profile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .overview__profile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  
+  .overview__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #0b0b0b;
+    border: 1px solid #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .overview__profile-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  
+  .overview__name {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .overview__email {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+  }
+  
+  .overview__profile-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  
+  /* Shops section */
+  
+  .overview__card--shops {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .overview__shops-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .overview__empty {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+  }
+  
+  /* Shops grid – small boxes */
+  
+  .overview__shops-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  /* Shop card – background depends on role */
+  
+  .overview__shop-card {
+    border-radius: var(--radius-md);
+    border: 1px solid #151515;
+    overflow: hidden;
+  }
+  
+  /* OWNER = accent-tinted bg */
+  .overview__shop-card--owner {
+    background: rgba(102, 155, 188, 0.16);
+    border-color: #669bbc;
+  }
+  
+  /* MANAGER = grey-blue bg */
+  .overview__shop-card--manager {
+    background: #111827;
+    border-color: #4b5563;
+  }
+  
+  /* STAFF = dark neutral bg */
+  .overview__shop-card--staff {
+    background: #0b0b0b;
+    border-color: #262626;
+  }
+  
+  /* DEFAULT = neutral dark bg */
+  .overview__shop-card--default {
+    background: #050505;
+    border-color: #333333;
+  }
+  
+  .overview__shop-link {
+    display: block;
+    padding: 0.6rem 0.7rem;
+    text-decoration: none;
+    color: var(--text-main);
+  }
+  
+  .overview__shop-link:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
+  
+  .overview__shop-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .overview__shop-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  .overview__shop-subtext {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+  }
+  
+  /* Role pill – matte */
+  
+  .overview__role-pill {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid #333;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  
+  .overview__role-pill--owner {
+    background: rgba(102, 155, 188, 0.28);
+    border-color: #9ac3de;
+    color: #f9fafb;
+  }
+  
+  .overview__role-pill--manager {
+    background: rgba(31, 41, 55, 0.9);
+    border-color: #4b5563;
+    color: #e5e7eb;
+  }
+  
+  .overview__role-pill--staff {
+    background: #111111;
+    border-color: #262626;
+    color: #d4d4d4;
+  }
+  
+  .overview__role-pill--default {
+    background: #050505;
+    border-color: #333333;
+    color: #e5e7eb;
+  }
+  
+  /* Loading */
+  
+  .overview--loading {
+    padding: 2rem 1.75rem;
+  }
+  
+  /* Responsive */
+  
+  @media (max-width: 900px) {
+    .overview__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  

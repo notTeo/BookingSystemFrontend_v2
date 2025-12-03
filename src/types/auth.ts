@@ -13,6 +13,7 @@ export type AuthContextValue = {
   isLoading: boolean;
   setUser: (user: UserProfile | null) => void;
   refreshUser: () => Promise<void>;
+  logout: () => void;
 };
 
 export interface RegisterPayload {

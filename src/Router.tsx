@@ -51,7 +51,7 @@ export default function Router() {
                 <Route path="/overview" element={<Overview />} />
                 <Route path="/inbox" element={<Inbox />} />
                 <Route path="/shops" element={<AllShops />} />
-                <Route path="/shops/new" element={<CreateShop />} />
+                <Route path="/new-shop" element={<CreateShop />} />
                 <Route path="/settings/account" element={<Account />} />
                 <Route path="/settings/billing" element={<Billing />} />
 

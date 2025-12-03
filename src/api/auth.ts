@@ -2,7 +2,6 @@ import { request, setAccessToken } from "./http";
 import type { AuthTokens, LoginPayload, RefreshPayload, RegisterPayload } from "../types/auth";
 
 export async function registerUser(payload: RegisterPayload) {
-  console.log(payload)
   const data = await request<AuthTokens>({ method: "POST", url: "/auth/register", data: payload });
   setAccessToken(data.accessToken);
   return data;

@@ -1,7 +1,14 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  AxiosError,
+} from "axios";
 import type { ApiResponse } from "../types/common";
 
-const DEFAULT_BASE_URL = "http://localhost:4000/api/v1";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+// Fallback for dev if env is missing:
+const API_URL = VITE_API_URL ?? "http://localhost:5000/api/v1";
+
 const ACCESS_TOKEN_COOKIE = "booking_access_token";
 const ACTIVE_SHOP_COOKIE = "booking_active_shop";
 
@@ -18,7 +25,10 @@ function readCookie(name: string): string | null {
 function writeCookie(name: string, value: string | null): void {
   if (!isBrowser) return;
   const base = `${name}=${value ? encodeURIComponent(value) : ""}; path=/; SameSite=Lax`;
-  document.cookie = value ? base : `${base}; expires=${new Date(0).toUTCString()}`;
+  // if value is null, write an expired cookie
+  document.cookie = value
+    ? base
+    : `${base}; expires=${new Date(0).toUTCString()}`;
 }
 
 // ---- initial in-memory state hydrated from cookies ----
@@ -32,25 +42,6 @@ function readActiveShopId(): number | null {
 }
 
 let activeShopId: number | null = readActiveShopId();
-
-// ---- axios client ----
-const apiClient: AxiosInstance = axios.create({
-  baseURL: DEFAULT_BASE_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-apiClient.interceptors.request.use((config) => {
-  if (accessToken && config.headers) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
-  }
-  if (activeShopId !== null && config.headers && !config.headers["x-shop-id"]) {
-    config.headers["x-shop-id"] = String(activeShopId);
-  }
-  return config;
-});
 
 // ---- token helpers ----
 export function setAccessToken(token: string | null): void {
@@ -75,10 +66,68 @@ export function getActiveShopId(): number | null {
   return activeShopId;
 }
 
+// Clear both cookies AND in-memory state
+export function clearAuthCookies(): void {
+  setAccessToken(null);
+  setActiveShopId(null);
+}
+
+// ---- axios client ----
+const apiClient: AxiosInstance = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Attach auth + shop headers on each request
+apiClient.interceptors.request.use((config) => {
+  config.headers = config.headers ?? {};
+
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  if (activeShopId !== null && !config.headers["x-shop-id"]) {
+    config.headers["x-shop-id"] = String(activeShopId);
+  }
+  return config;
+});
+
+// Global response interceptor: handle 401
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<ApiResponse<unknown>>) => {
+    if (error.response?.status === 401) {
+      clearAuthCookies();
+      if (isBrowser && window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 // ---- generic request helper ----
 export async function request<T>(config: AxiosRequestConfig): Promise<T> {
-  const response = await apiClient.request<ApiResponse<T>>(config);
-  return response.data.data;
+  try {
+    const response = await apiClient.request<ApiResponse<T>>(config);
+    return response.data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const apiData = error.response?.data as ApiResponse<unknown> | undefined;
+      const message =
+        apiData?.message ||
+        error.message ||
+        "Something went wrong. Please try again.";
+
+      throw new Error(message);
+    }
+
+    // Non-Axios error, just rethrow
+    throw error;
+  }
 }
 
 export { apiClient };

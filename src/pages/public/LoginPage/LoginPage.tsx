@@ -1,12 +1,13 @@
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { loginUser } from "../../../api/auth";
 
-import "./LoginPage.css"
+import "./LoginPage.css";
 import { useAuth } from "../../../providers/AuthProvider";
+import { clearAuthCookies } from "../../../api/http";
 
-const EMPTY_FORM = { email: "", password: "" } as const;
+const EMPTY_FORM = { email: "", password: "Passw0rd!23" } as const;
 
 type FormState = typeof EMPTY_FORM;
 
@@ -42,26 +43,38 @@ export default function SignInPage() {
           email: form.email,
           password: form.password,
         });
-        await refreshUser()
+        await refreshUser();
         setStatus("success");
         navigate("/overview", { replace: true });
       } catch (err) {
+        clearAuthCookies()
         console.error("Unable to sign in", err);
         setStatus("error");
-        setError(err instanceof Error ? err.message : "Unable to sign in. Try again.");
+        setError(
+          err instanceof Error ? err.message : "Unable to sign in. Try again.",
+        );
       }
     },
-    [navigate, form.email, form.password],
+    [navigate, form.email, form.password, refreshUser],
   );
+
+  const isSubmitting = status === "pending";
 
   return (
     <main className="signin">
-      <form className="signin__card" onSubmit={handleSubmit}>
-        <h1>Log in</h1>
+      <form className="signin__card stack-md" onSubmit={handleSubmit}>
+        <header className="signin__header stack-sm">
+          <h1 className="signin__title">Log in</h1>
+          <p className="signin__subtitle">
+            Welcome back. Enter your details to access your dashboard.
+          </p>
+        </header>
 
-        <label>
-          Email
+        <div className="field">
+          <label htmlFor="email">Email</label>
           <input
+            className="input"
+            id="email"
             autoComplete="email"
             name="email"
             onChange={handleChange}
@@ -69,11 +82,13 @@ export default function SignInPage() {
             type="email"
             value={form.email}
           />
-        </label>
+        </div>
 
-        <label>
-          Password
+        <div className="field">
+          <label htmlFor="password">Password</label>
           <input
+            className="input"
+            id="password"
             autoComplete="current-password"
             name="password"
             onChange={handleChange}
@@ -81,12 +96,24 @@ export default function SignInPage() {
             type="password"
             value={form.password}
           />
-        </label>
+        </div>
 
-        <button type="submit">
-          {status === "pending" ? "Signing in…" : "Sign in"}
+        {status === "error" && error && (
+          <p className="signin__error">{error}</p>
+        )}
+
+        <button
+          type="submit"
+          className="btn btn--primary btn--full signin__btn"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Signing in…" : "Sign in"}
         </button>
-        {status === "error" && <p className="signin__error">{error}</p>}
+
+        <p className="signin__footer">
+          <span>Don&apos;t have an account?</span>
+          <Link to="/register">Create one</Link>
+        </p>
       </form>
     </main>
   );

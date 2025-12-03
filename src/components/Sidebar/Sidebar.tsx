@@ -6,14 +6,13 @@ import { useShop } from "../../providers/ShopProvider";
 import { setActiveShopId } from "../../api/http";
 
 const SideBar: React.FC = () => {
-  const { user } = useAuth();
-  const {currentShop, setCurrentShop } = useShop();
+  const { user, logout } = useAuth();
+  const { currentShop, setCurrentShop } = useShop();
   const location = useLocation();
 
   if (!user) return null;
 
-  const isShopRoute =
-    location.pathname.startsWith("/shops/") && location.pathname !== "/shops";
+  const isShopRoute = location.pathname.startsWith("/shops/") && location.pathname !== "/shops";
 
   return (
     <aside
@@ -67,7 +66,7 @@ const SideBar: React.FC = () => {
               <Link to="/shops">All Shops</Link>
             </li>
 
-            {user.shops.map(shop => (
+            {user.shops.map((shop) => (
               <li key={shop.id}>
                 <Link
                   to={`/shops/${shop.name}`} // route param is just visual here
@@ -81,7 +80,7 @@ const SideBar: React.FC = () => {
             ))}
 
             <li>
-              <Link to="/shops/new">Create Shop</Link>
+              <Link to="/new-shop">Create Shop</Link>
             </li>
             <li>
               <Link to="/settings/account">Account</Link>
@@ -97,6 +96,9 @@ const SideBar: React.FC = () => {
         <p>
           {user.firstName} {user.lastName}
         </p>
+      </div>
+      <div>
+        <button onClick={logout}>Logout</button>
       </div>
     </aside>
   );

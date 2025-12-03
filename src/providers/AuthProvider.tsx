@@ -14,13 +14,15 @@ import type { AuthContextValue, UserProfile } from "../types";
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const accessToken = getAccessToken();
+  const [token, setToken] = useState<string | null>(() => getAccessToken());
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
+    const latestToken = getAccessToken();
+    setToken((prev) => (prev === latestToken ? prev : latestToken));
     // no token → definitely logged out
-    if (!accessToken) {
+    if (!latestToken) {
       setUser(null);
       setIsLoading(false);
       return;
@@ -37,17 +39,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken]);
+  }, []);
+
+  const logout = () => {
+    setUser(null)
+  }
 
   useEffect(() => {
     void refreshUser();
-  }, []);
+  }, [token, refreshUser]);
 
   const value: AuthContextValue = {
     user,
     isLoading,
     setUser,    
-    refreshUser 
+    refreshUser,
+    logout
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

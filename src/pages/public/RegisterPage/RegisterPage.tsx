@@ -1,12 +1,18 @@
-import React from "react";
-import "./RegisterPage.css";
-import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
+import "./RegisterPage.css";
 import { registerUser } from "../../../api/auth";
 import { useAuth } from "../../../providers/AuthProvider";
 
-const EMPTY_FORM = { firstName: "", lastName: "", email: "", password: "",confirmPassword: "", subscription: "MEMBER"} as const;
+const EMPTY_FORM = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  subscription: "MEMBER",
+} as const;
 
 type FormState = typeof EMPTY_FORM;
 
@@ -19,7 +25,9 @@ const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
 
-  const handleChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+  const handleChange = useCallback<
+    React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>
+  >(
     (event) => {
       const { name, value } = event.target;
       setForm((prev) => ({ ...prev, [name]: value }));
@@ -38,60 +46,83 @@ const RegisterPage: React.FC = () => {
       setError(null);
 
       try {
-         await registerUser({
+        await registerUser({
           firstName: form.firstName,
           lastName: form.lastName,
           email: form.email,
           password: form.password,
           confirmPassword: form.confirmPassword,
           subscription: form.subscription,
-         });
-         await refreshUser()
+        });
+
+        await refreshUser();
         setStatus("success");
         navigate("/overview", { replace: true });
       } catch (err) {
-        console.error("Unable to sign in", err);
+        console.error("Unable to register", err);
         setStatus("error");
-        setError(err instanceof Error ? err.message : "Unable to register. Try again.");
+        setError(
+          err instanceof Error ? err.message : "Unable to register. Try again.",
+        );
       }
     },
-    [navigate, form.firstName, form.lastName, form.email, form.password, form.confirmPassword, form.subscription],
+    [
+      navigate,
+      form.firstName,
+      form.lastName,
+      form.email,
+      form.password,
+      form.confirmPassword,
+      form.subscription,
+      refreshUser,
+    ],
   );
 
-
+  const isSubmitting = status === "pending";
 
   return (
     <main className="signin">
-      <form className="signin__card" onSubmit={handleSubmit}>
-        <h1>Register</h1>
+      <form className="signin__card stack-md" onSubmit={handleSubmit}>
+        <header className="signin__header stack-sm">
+          <h1 className="signin__title">Create an account</h1>
+          <p className="signin__subtitle">
+            Set up your account to start managing your shops and bookings.
+          </p>
+        </header>
 
-        <label>
-        First Name 
+        <div className="field">
+          <label htmlFor="firstName">First name</label>
           <input
-            autoComplete="firstName"
+            className="input"
+            id="firstName"
+            autoComplete="given-name"
             name="firstName"
             onChange={handleChange}
-            placeholder="your first name"
-            type="firstName"
+            placeholder="Your first name"
+            type="text"
             value={form.firstName}
           />
-        </label>
+        </div>
 
-        <label>
-          Last Name 
+        <div className="field">
+          <label htmlFor="lastName">Last name</label>
           <input
-            autoComplete="lastName"
+            className="input"
+            id="lastName"
+            autoComplete="family-name"
             name="lastName"
             onChange={handleChange}
-            placeholder="your last name"
-            type="lastName"
+            placeholder="Your last name"
+            type="text"
             value={form.lastName}
           />
-        </label>
+        </div>
 
-        <label>
-          Email
+        <div className="field">
+          <label htmlFor="email">Email</label>
           <input
+            className="input"
+            id="email"
             autoComplete="email"
             name="email"
             onChange={handleChange}
@@ -99,44 +130,67 @@ const RegisterPage: React.FC = () => {
             type="email"
             value={form.email}
           />
-        </label>
+        </div>
 
-        <label>
-          Password
+        <div className="field">
+          <label htmlFor="password">Password</label>
           <input
-            autoComplete="current-password"
+            className="input"
+            id="password"
+            autoComplete="new-password"
             name="password"
             onChange={handleChange}
             placeholder="••••••••"
             type="password"
             value={form.password}
           />
-        </label>
-        <label>
-          Confirm Password
+        </div>
+
+        <div className="field">
+          <label htmlFor="confirmPassword">Confirm password</label>
           <input
-            autoComplete="current-password"
+            className="input"
+            id="confirmPassword"
+            autoComplete="new-password"
             name="confirmPassword"
             onChange={handleChange}
             placeholder="••••••••"
-            type="confirmPassword"
+            type="password"
             value={form.confirmPassword}
           />
-        </label>
-        <label>
-          Subscription
-          <select id="subscription-select">
-            <option value=""></option>
+        </div>
+
+        <div className="field">
+          <label htmlFor="subscription">Subscription</label>
+          <select
+            className="select"
+            id="subscription"
+            name="subscription"
+            value={form.subscription}
+            onChange={handleChange}
+          >
             <option value="MEMBER">MEMBER</option>
             <option value="STARTER">STARTER</option>
             <option value="PRO">PRO</option>
-        </select>
-        </label>
+          </select>
+        </div>
 
-        <button type="submit">
-          {status === "pending" ? "Registering..." : "Registered"}
+        {status === "error" && error && (
+          <p className="signin__error">{error}</p>
+        )}
+
+        <button
+          type="submit"
+          className="btn btn--primary btn--full signin__btn"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Registering..." : "Register"}
         </button>
-        {status === "error" && <p className="signin__error">{error}</p>}
+
+        <p className="auth-footer">
+          <span>Already have an account?</span>
+          <Link to="/login">Log in</Link>
+        </p>
       </form>
     </main>
   );
