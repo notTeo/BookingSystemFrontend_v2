@@ -4,11 +4,11 @@ import SideBar from "../components/Sidebar/Sidebar";
 
 const DashboardLayout: React.FC = () => {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div style={{ display: "flex", minHeight: "100vh" }} >
       
       <SideBar />
 
-      <main style={{ flex: 1, padding: "1rem" }}>
+      <main className="app-main">
         <Outlet />
       </main>
     </div>

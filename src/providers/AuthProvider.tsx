@@ -7,7 +7,7 @@ import React, {
   useCallback,
 } from "react";
 
-import { getAccessToken } from "../api/http";
+import { clearAuthCookies, getAccessToken } from "../api/http";
 import { getCurrentUser } from "../api/user";
 import type { AuthContextValue, UserProfile } from "../types";
 
@@ -21,7 +21,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshUser = useCallback(async () => {
     const latestToken = getAccessToken();
     setToken((prev) => (prev === latestToken ? prev : latestToken));
-    // no token → definitely logged out
     if (!latestToken) {
       setUser(null);
       setIsLoading(false);
@@ -43,6 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null)
+    clearAuthCookies()
   }
 
   useEffect(() => {

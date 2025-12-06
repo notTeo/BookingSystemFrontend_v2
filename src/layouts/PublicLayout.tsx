@@ -1,15 +1,11 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import TopBar from "../components/TopBar/TopBar";
 
 const PublicLayout: React.FC = () => {
   return (
     <div>
-      <header>
-        <nav>
-          <Link to="/">Main</Link> | <Link to="/login">Login</Link> |{" "}
-          <Link to="/register">Register</Link>
-        </nav>
-      </header>
+      <TopBar/>
 
       <main>
         <Outlet />

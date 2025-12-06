@@ -1,107 +1,273 @@
-/* ===== Register page layout ===== */
-/* Reuse the same auth layout as login */
+/* =========================================================
+   RegisterPage.css — Full screen 60/40 (mirrored)
+   Uses the SAME class system as LoginPage.css
+   ========================================================= */
 
-.signin {
+   .signin {
     min-height: 100vh;
+    width: 100vw;
+    padding: 0 !important;
+    display: block;
+    background: var(--bg);
+    overflow-x: hidden;
+  }
+  
+  /* Shell: mirrored layout */
+  .signin__shell {
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* 40/60 (info left, form right) */
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    box-shadow: none;
+  }
+  
+  .signin__left,
+  .signin__right {
+    min-height: 100%;
+  }
+  
+  .signin__left {
+    padding: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem 1.5rem;
-    background: #000;
   }
   
+  /* Form on right: just a semantic class, same layout */
+  .signin__left--right {
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  
+  /* Card */
   .signin__card {
-    width: 100%;
-    max-width: 380px;
-    border-radius: var(--radius-lg);
-    padding: 1.8rem 1.6rem 1.5rem;
+    width: min(560px, 100%);
     background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    box-shadow: none;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg) !important;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
   }
   
-  .signin__header {
-    text-align: left;
-  }
+  .signin__header { text-align: left; }
   
   .signin__title {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
   
   .signin__subtitle {
-    font-size: 0.85rem;
-    color: var(--text-soft);
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.35;
   }
   
-  /* Fields */
-  
-  .signin__card .field {
-    margin-bottom: 0.75rem;
+  /* 2-col grid for register fields */
+  .signin__grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
   }
   
-  .signin__card .field label {
-    font-size: 0.8rem;
-    color: var(--text-soft);
+  @media (max-width: 560px) {
+    .signin__grid2 {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Inputs */
+  .signin .field label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  
+  .signin .input,
+  .signin .select {
+    background: var(--bg-input);
+    border-color: var(--border);
+  }
+  
+  .signin .input:hover,
+  .signin .select:hover {
+    border-color: var(--border-strong);
+  }
+  
+  .signin .input:focus,
+  .signin .select:focus {
+    border-color: rgba(59, 130, 246, 0.55);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+  
+  /* Error */
+  .signin__error {
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: var(--r-md);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    background: rgba(239, 68, 68, 0.10);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.9rem;
+    line-height: 1.3;
   }
   
   /* Button */
+  .signin__btn { height: 44px; }
+  .btn--full { width: 100%; }
   
-  .btn--full {
-    width: 100%;
-    justify-content: center;
+  .signin button.btn.btn--primary {
+    background: var(--accent);
+    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid transparent;
   }
   
-  /* Make auth button minimal (no glow) */
-  .signin__btn {
-    box-shadow: none;
-    border-radius: 999px;
+  .signin button.btn.btn--primary:hover {
+    background: var(--accent-hover);
+    color: rgba(255, 255, 255, 0.98);
   }
   
-  .signin__btn:hover,
-  .signin__btn:focus-visible {
-    box-shadow: none;
-    transform: none;
+  .signin button.btn.btn--primary:focus-visible {
+    background: var(--accent-hover);
+    color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 0 0 3px var(--focus-ring);
   }
   
-  .signin__btn.btn--primary {
-    background: var(--primary);
-    color: #000;
-  }
-  
-  .signin__card button[disabled] {
-    opacity: 0.7;
+  .signin button.btn.btn--primary:disabled {
+    background: rgba(59, 130, 246, 0.35);
+    color: rgba(255, 255, 255, 0.72);
     cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
   }
   
-  /* Error message */
-  
-  .signin__error {
-    margin-top: 0.25rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--danger);
-  }
-  
-  /* Footer: "Already have an account? Log in" */
-  
-  .auth-footer {
-    margin-top: 0.75rem;
+  /* Footer */
+  .signin__footer {
+    margin: 0;
+    padding-top: 6px;
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 0.35rem;
-    font-size: 0.8rem;
-    color: var(--text-soft);
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
   }
   
-  .auth-footer a {
-    color: var(--primary);
-    font-weight: 500;
+  .signin__footer a { font-weight: 650; }
+  
+  /* LEFT info panel (reuse naming) */
+  .signin__right {
+    background: rgba(59, 130, 246, 0.14);
+    display: flex;
   }
   
-  .auth-footer a:hover {
-    text-decoration: underline;
+  .signin__right--left {
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  
+  .signin__rightInner {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+  
+  .signin__badge {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(59, 130, 246, 0.28);
+    background: rgba(59, 130, 246, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 900;
+    font-size: 0.82rem;
+  }
+  
+  .signin__rightTitle {
+    margin: 0;
+    font-size: 1.55rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: rgba(255, 255, 255, 0.95);
+  }
+  
+  .signin__rightText {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 46ch;
+    line-height: 1.45;
+  }
+  
+  .signin__bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .signin__bullet {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 650;
+  }
+  
+  .signin__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+  }
+  
+  .signin__rightCta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  
+  .signin__rightCta .btn {
+    border-radius: 12px;
+  }
+  
+  /* Responsive stack */
+  @media (max-width: 980px) {
+    .signin__shell {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: unset;
+    }
+  
+    .signin__left--right {
+      border-left: none;
+    }
+  
+    .signin__right--left {
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+  }
+  
+  @media (max-width: 420px) {
+    .signin__left,
+    .signin__rightInner {
+      padding: 18px;
+    }
+  
+    .signin__card {
+      padding: 18px;
+    }
+  
+    .signin__title {
+      font-size: 1.2rem;
+    }
   }
   

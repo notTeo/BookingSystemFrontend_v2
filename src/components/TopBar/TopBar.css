@@ -1,0 +1,79 @@
+
+.public {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.public__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(18, 18, 18, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.public__topbarInner {
+  height: 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.public__brand {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.public__brand:hover {
+  opacity: 0.92;
+}
+
+.public__nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Make nav buttons look consistent in the bar */
+.public__nav .btn {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+}
+
+.app-topbar__logout {
+  background: rgba(239, 68, 68, 0.16) !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.14);
+}
+
+.app-topbar__logout:hover {
+  background: rgba(239, 68, 68, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.14);
+}
+
+/* Small screens */
+@media (max-width: 520px) {
+  .public__topbarInner {
+    height: auto;
+    padding: 12px 14px;
+    align-items: flex-start;
+  }
+
+  .public__nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+}

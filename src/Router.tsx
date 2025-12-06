@@ -42,11 +42,13 @@ export default function Router() {
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
 
             {/* PROTECTED */}
             <Route element={<RequireAuth />}>
               <Route element={<DashboardLayout />}>
+                <Route path="*" element={<NotFoundPage />} />
                 {/* Global, not tied to one shop */}
                 <Route path="/overview" element={<Overview />} />
                 <Route path="/inbox" element={<Inbox />} />
@@ -68,7 +70,6 @@ export default function Router() {
                 </Route>
               </Route>
             </Route>
-            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </ShopProvider>
       </AuthProvider>

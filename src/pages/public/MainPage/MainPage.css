@@ -1,1 +1,471 @@
 /* Styles for MainPage */
+/* =========================================================
+   MainPage.css — Pre-login landing page (matches your tokens)
+   Uses: --bg, --bg-elevated, --bg-card, --border, --text, --text-muted, --accent
+   ========================================================= */
+
+   .landing {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+  }
+  
+ 
+  
+  .landing__main {
+    padding: 24px;
+  }
+  
+  .landing__hero {
+    padding: 28px 0 12px;
+  }
+  
+  .landing__heroInner {
+    max-width: 1100px;
+    margin: 0 auto;
+  
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 22px;
+    align-items: start;
+  }
+  
+  .landing__eyebrow {
+    margin: 0 0 10px;
+    color: var(--text-muted);
+    font-weight: 650;
+    font-size: 0.95rem;
+  }
+  
+  .landing__title {
+    margin: 0 0 12px;
+    font-size: 2.1rem;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+  }
+  
+  .landing__subtitle {
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 56ch;
+  }
+  
+  .landing__ctaRow {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+  }
+  
+  .landing__trustRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 14px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  
+  .landing__trustItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .landing__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.20);
+  }
+  
+  .landing__dot--blue {
+    background: rgba(59, 130, 246, 0.85);
+  }
+  
+  .landing__mockCard {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow);
+    padding: 14px;
+  }
+  
+  .landing__mockHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .landing__mockTitle {
+    font-weight: 750;
+  }
+  
+  .landing__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  
+  .landing__pill--accent {
+    border-color: rgba(59, 130, 246, 0.35);
+    background: rgba(59, 130, 246, 0.14);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .landing__mockList {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .landing__mockRow {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 10px;
+    align-items: center;
+  
+    padding: 10px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  .landing__mockBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  
+    height: 28px;
+    border-radius: 999px;
+    padding: 0 10px;
+  
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.28);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 750;
+    font-size: 0.82rem;
+  }
+  
+  .landing__mockInfo {
+    min-width: 0;
+  }
+  
+  .landing__mockName {
+    font-weight: 720;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .landing__mockMeta {
+    color: var(--text-muted);
+    font-size: 0.86rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .landing__status {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 700;
+    font-size: 0.86rem;
+  }
+  
+  .landing__status--muted {
+    color: var(--text-muted);
+  }
+  
+  .landing__mockFooter {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  
+  .landing__miniStat {
+    padding: 10px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  .landing__miniLabel {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+  
+  .landing__miniValue {
+    margin-top: 4px;
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  
+  .landing__mockNote {
+    margin: 10px 6px 0;
+    color: var(--text-soft);
+    font-size: 0.85rem;
+  }
+  
+  .landing__section {
+    padding: 30px 0 6px;
+  }
+  
+  .landing__sectionHead {
+    max-width: 1100px;
+    margin: 0 auto 14px;
+  }
+  
+  .landing__h2 {
+    margin: 0 0 8px;
+    font-size: 1.35rem;
+  }
+  
+  .landing__h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  
+  .landing__muted {
+    color: var(--text-muted);
+    margin: 0;
+  }
+  
+  .landing__grid {
+    max-width: 1100px;
+    margin: 0 auto;
+  
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  
+  .landing__feature {
+    padding: 14px;
+  }
+  
+  .landing__featureTop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .landing__iconBox {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  
+  .landing__pricing {
+    max-width: 1100px;
+    margin: 0 auto;
+  
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  
+  .landing__priceCard {
+    position: relative;
+    padding: 16px;
+  }
+  
+  .landing__priceCard--featured {
+    border-color: rgba(59, 130, 246, 0.25);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.12), var(--shadow);
+  }
+  
+  .landing__ribbon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.92);
+    background: rgba(59, 130, 246, 0.16);
+    border: 1px solid rgba(59, 130, 246, 0.28);
+  }
+  
+  .landing__plan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    font-weight: 800;
+    font-size: 0.8rem;
+    width: fit-content;
+  }
+  
+  .landing__plan--member {
+    border-color: rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  
+  .landing__plan--starter {
+    border-color: rgba(245, 158, 11, 0.45);
+    background: rgba(245, 158, 11, 0.14);
+  }
+  
+  .landing__plan--pro {
+    border-color: rgba(59, 130, 246, 0.35);
+    background: rgba(59, 130, 246, 0.12);
+  }
+  
+  .landing__price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .landing__priceNum {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+  
+  .landing__priceUnit {
+    color: var(--text-muted);
+    font-weight: 650;
+  }
+  
+  .landing__bullets {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 0;
+  
+    display: grid;
+    gap: 8px;
+  
+    color: var(--text-muted);
+    font-weight: 650;
+  }
+  
+  .landing__bullets li {
+    position: relative;
+    padding-left: 16px;
+  }
+  
+  .landing__bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.75);
+  }
+  
+  .landing__priceBtn {
+    margin-top: 14px;
+    width: 100%;
+  }
+  
+  .landing__faq {
+    max-width: 1100px;
+    margin: 0 auto;
+  
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .landing__faqItem summary {
+    cursor: pointer;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.92);
+    list-style: none;
+  }
+  
+  .landing__faqItem summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .landing__faqItem p {
+    margin: 10px 0 0;
+  }
+  
+  .landing__bottomCta {
+    padding: 26px 0 28px;
+  }
+  
+  .landing__bottomInner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  
+  .landing__footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+  }
+  
+  .landing__footerInner {
+    max-width: 1100px;
+    margin: 0 auto;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .landing__footerLinks {
+    display: flex;
+    gap: 14px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 980px) {
+    .landing__heroInner {
+      grid-template-columns: 1fr;
+    }
+    .landing__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .landing__pricing {
+      grid-template-columns: 1fr;
+    }
+    .landing__bottomInner {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+  
+  @media (max-width: 520px) {
+    .landing__main {
+      padding: 18px;
+    }
+    .landing__nav {
+      padding: 12px 18px;
+    }
+    .landing__title {
+      font-size: 1.75rem;
+    }
+    .landing__grid {
+      grid-template-columns: 1fr;
+    }
+    .landing__mockFooter {
+      grid-template-columns: 1fr;
+    }
+  }
+  

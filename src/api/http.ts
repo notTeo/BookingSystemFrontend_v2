@@ -5,10 +5,7 @@ import axios, {
 } from "axios";
 import type { ApiResponse } from "../types/common";
 
-const VITE_API_URL = import.meta.env.VITE_API_URL;
-// Fallback for dev if env is missing:
-const API_URL = VITE_API_URL ?? "http://localhost:5000/api/v1";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const ACCESS_TOKEN_COOKIE = "booking_access_token";
 const ACTIVE_SHOP_COOKIE = "booking_active_shop";
 
