@@ -12,6 +12,9 @@
   min-height: 100vh;
   height: 100vh;
   padding: 16px;
+  position: sticky;
+  top: 0;
+
 
   background: var(--bg-elevated);
   border-right: 1px solid var(--border);

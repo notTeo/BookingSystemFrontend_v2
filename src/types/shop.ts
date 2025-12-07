@@ -38,12 +38,14 @@ export interface ShopSummary {
   bookable?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  workingHours?: OpeningHour[];
 }
 
 export interface ShopOverviewStats {
   shop: ShopSummary;
   totalBookings: number;
   activeServices: number;
+  workingHours: OpeningHour[];
   teamMembers: number;
   monthlyRevenue: number;
   recentBookings: Array<{
@@ -59,6 +61,7 @@ export interface ShopOverviewStats {
 
 export interface CreateShopPayload {
   name: string;
+  address?: string | null;
   openingHours: Array<{
     dayOfWeek: string;
     openTime: string;

@@ -1,0 +1,388 @@
+/* =========================================================
+   EditShop.css — dark, clean, same app style
+   Supports multi-block working hours UI
+   Scoped under .edit-shop to avoid interference
+   ========================================================= */
+
+   .edit-shop {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 22px 18px 40px;
+    color: var(--text);
+  }
+  
+  /* Header */
+  .edit-shop__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .edit-shop__title {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  
+  .edit-shop__subtitle {
+    margin: 6px 0 0 0;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+  
+  /* Form layout */
+  .edit-shop__form {
+    display: grid;
+    gap: 14px;
+  }
+  
+  /* Cards */
+  .edit-shop__card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  
+  .edit-shop__card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 14px;
+  }
+  
+  .edit-shop__card-header h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+  }
+  
+  .edit-shop__card-header p {
+    margin: 6px 0 0 0;
+    color: var(--text-muted);
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+  
+  /* Saved pill */
+  .edit-shop__pill {
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 800;
+    font-size: 0.82rem;
+  }
+  
+  /* Inputs grid */
+  .edit-shop__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .edit-shop__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .edit-shop__field span {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  
+  .edit-shop__field input {
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text);
+    padding: 0 12px;
+    outline: none;
+  }
+  
+  .edit-shop__field input:hover {
+    border-color: var(--border-strong);
+  }
+  
+  .edit-shop__field input:focus {
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+  
+  /* Working hours */
+  .edit-shop__hours {
+    display: grid;
+    gap: 10px;
+  }
+  
+  /* Day container */
+  .edit-shop__hours-row {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+  }
+  
+  /* Day header line */
+  .edit-shop__day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .edit-shop__day {
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.92);
+    text-transform: uppercase;
+  }
+  
+  /* Closed toggle */
+  .edit-shop__closed {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 700;
+  }
+  
+  .edit-shop__closed input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+  }
+  
+  /* Blocks wrapper */
+  .edit-shop__blocks {
+    display: grid;
+    gap: 10px;
+  }
+  
+  /* Each block row */
+  .edit-shop__time-block {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: end;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.18);
+  }
+  
+  /* Time inputs */
+  .edit-shop__time {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .edit-shop__time label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .edit-shop__time label span {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  
+  .edit-shop__time input {
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text);
+    padding: 0 10px;
+    outline: none;
+  }
+  
+  .edit-shop__time input:hover {
+    border-color: var(--border-strong);
+  }
+  
+  .edit-shop__time input:focus {
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+  
+  .edit-shop__time input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  
+  /* Remove block button */
+  .edit-shop__icon-btn {
+    height: 40px;
+    border-radius: 12px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .edit-shop__icon-btn:hover {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.35);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+  }
+  
+  .edit-shop__icon-btn:active {
+    transform: translateY(1px);
+  }
+  
+  .edit-shop__icon-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+  
+  /* Add block button */
+  .edit-shop__add-block {
+    height: 42px;
+    border-radius: 12px;
+    padding: 0 14px;
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 850;
+    cursor: pointer;
+    justify-self: start;
+  }
+  
+  .edit-shop__add-block:hover {
+    border-color: rgba(59, 130, 246, 0.45);
+    background: rgba(59, 130, 246, 0.08);
+  }
+  
+  /* Closed note */
+  .edit-shop__closed-note {
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    color: rgba(255, 255, 255, 0.82);
+  }
+  
+  /* Alerts */
+  .edit-shop__alert {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 14px;
+    line-height: 1.35;
+    font-size: 0.95rem;
+  }
+  
+  .edit-shop__alert--error {
+    border-color: rgba(239, 68, 68, 0.35);
+    background: rgba(239, 68, 68, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+  }
+  
+  .edit-shop__alert--success {
+    border-color: rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+  }
+  
+  /* Actions */
+  .edit-shop__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .edit-shop__ghost,
+  .edit-shop__primary {
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    font-weight: 850;
+  }
+  
+  .edit-shop__ghost {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .edit-shop__ghost:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  
+  .edit-shop__primary {
+    background: var(--accent);
+    color: rgba(255, 255, 255, 0.95);
+    cursor: pointer;
+  }
+  
+  .edit-shop__primary:hover {
+    background: var(--accent-hover);
+  }
+  
+  .edit-shop__primary:disabled {
+    background: rgba(59, 130, 246, 0.35);
+    color: rgba(255, 255, 255, 0.72);
+    cursor: not-allowed;
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .edit-shop__grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .edit-shop__time-block {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+  
+    .edit-shop__icon-btn {
+      justify-self: start;
+    }
+  }
+  
+  @media (max-width: 520px) {
+    .edit-shop {
+      padding: 18px 14px 32px;
+    }
+  
+    .edit-shop__card {
+      padding: 16px;
+    }
+  
+    .edit-shop__time {
+      grid-template-columns: 1fr;
+    }
+  
+    .edit-shop__day-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  

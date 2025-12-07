@@ -17,6 +17,7 @@ import Account from "./pages/protected/Settings/Account/Account";
 import Billing from "./pages/protected/Settings/Billing/Billing";
 import AllShops from "./pages/protected/Shops/AllShops/AllShops";
 import CreateShop from "./pages/protected/Shops/CreateShop/CreateShop";
+import EditShop from "./pages/protected/Shops/EditShop/EditShop";
 // PROTECTED – shop-specific
 import ShopOverview from "./pages/protected/Shops/ShopOverview/ShopOverview";
 import AllTeam from "./pages/protected/Team/AllTeam/AllTeam";
@@ -60,6 +61,7 @@ export default function Router() {
                 {/* Shop-specific */}
                 <Route path="/shops/:shopName" element={<ShopLayout />}>
                   <Route index element={<ShopOverview />} />
+                  <Route path="edit" element={<EditShop />} />
                   <Route path="calendar" element={<Calendar />} />
                   <Route path="bookings" element={<AllBookings />} />
                   <Route path="bookings/new" element={<AddBooking />} />
