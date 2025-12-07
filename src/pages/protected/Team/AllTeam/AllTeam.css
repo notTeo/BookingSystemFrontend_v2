@@ -1,1 +1,209 @@
-/* Styles for AllTeam */
+.teamPage {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .teamPage__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .teamPage__eyebrow {
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+  }
+  
+  .teamPage__title {
+    margin: 0 0 6px;
+  }
+  
+  .teamPage__subtitle {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  
+  .teamPage__actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .teamPage__stats {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .teamPage__stat {
+    display: grid;
+    gap: 6px;
+  }
+  
+  .teamPage__statLabel {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 0.85rem;
+  }
+  
+  .teamPage__statValue {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  
+  .teamPage__statHint {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  
+  .teamPage__listCard,
+  .teamPage__inviteCard {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .teamPage__cardHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .teamPage__cardHead h2 {
+    margin: 0 0 4px;
+  }
+  
+  .teamPage__cardHint {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  
+  .teamPage__secondaryLink {
+    color: var(--text-muted);
+  }
+  
+  .teamPage__table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  
+  .teamPage__row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    padding: 12px;
+    gap: 10px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .teamPage__row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.035);
+  }
+  
+  .teamPage__row--head {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    background: rgba(255, 255, 255, 0.05);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .teamPage__cellMain {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .teamPage__avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: rgba(255, 255, 255, 0.92);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  
+  .teamPage__identity {
+    display: grid;
+    gap: 4px;
+  }
+  
+  .teamPage__name {
+    margin: 0;
+    font-weight: 650;
+  }
+  
+  .teamPage__email {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  
+  .teamPage__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  
+  .teamPage__pill--primary {
+    background: var(--accent-soft);
+    border-color: rgba(59, 130, 246, 0.35);
+    color: rgba(255, 255, 255, 0.96);
+  }
+  
+  .teamPage__pill--success {
+    background: rgba(34, 197, 94, 0.16);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: rgba(255, 255, 255, 0.92);
+  }
+  
+  .teamPage__pill--muted {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--border);
+    color: var(--text-soft);
+  }
+  
+  .teamPage__muted {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  
+  .teamPage__state {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+  }
+  
+  .teamPage__state--error {
+    color: var(--danger);
+  }
+  
+  @media (max-width: 900px) {
+    .teamPage__header {
+      flex-direction: column;
+    }
+  
+    .teamPage__actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .teamPage__row {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+  }

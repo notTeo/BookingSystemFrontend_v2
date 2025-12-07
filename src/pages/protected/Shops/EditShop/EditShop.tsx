@@ -17,6 +17,7 @@ type DaySchedule = {
 type FormState = {
   name: string;
   address: string;
+  active: boolean;
   workingHours: DaySchedule[];
 };
 
@@ -60,11 +61,16 @@ const EditShop: React.FC = () => {
   const [form, setForm] = useState<FormState>(() => ({
     name: "",
     address: "",
+    active: true,
     workingHours: buildDaySchedules(hours),
   }));
 
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+
+  // Collapse the whole Working Hours card body
+  const [hoursCollapsed, setHoursCollapsed] = useState(false);
+  const toggleHoursCollapsed = () => setHoursCollapsed((p) => !p);
 
   useEffect(() => {
     if (!shopId) return;
@@ -73,10 +79,11 @@ const EditShop: React.FC = () => {
 
   useEffect(() => {
     if (!currentShop) return;
-    console.log(currentShop)
+
     setForm({
       name: currentShop.shop.name ?? "",
       address: currentShop.shop.address ?? "",
+      active: currentShop.shop.active ?? true,
       workingHours: buildDaySchedules(currentShop.shop.workingHours),
     });
   }, [currentShop]);
@@ -86,10 +93,14 @@ const EditShop: React.FC = () => {
     [status, form.name],
   );
 
-  const updateField = (key: keyof FormState, value: string | DaySchedule[]) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+  const resetStatusError = () => {
     if (status !== "idle") setStatus("idle");
     if (error) setError(null);
+  };
+
+  const updateField = (key: keyof FormState, value: string | DaySchedule[] | boolean) => {
+    setForm((prev) => ({ ...prev, [key]: value } as FormState));
+    resetStatusError();
   };
 
   const updateBlock = (
@@ -110,8 +121,7 @@ const EditShop: React.FC = () => {
         };
       }),
     }));
-    if (status !== "idle") setStatus("idle");
-    if (error) setError(null);
+    resetStatusError();
   };
 
   const toggleClosed = (day: OpeningHour["dayOfWeek"], value: boolean) => {
@@ -119,15 +129,10 @@ const EditShop: React.FC = () => {
       ...prev,
       workingHours: prev.workingHours.map((schedule) => {
         if (schedule.dayOfWeek !== day) return schedule;
-
-        return {
-          ...schedule,
-          isClosed: value,
-        };
+        return { ...schedule, isClosed: value };
       }),
     }));
-    if (status !== "idle") setStatus("idle");
-    if (error) setError(null);
+    resetStatusError();
   };
 
   const addBlock = (day: OpeningHour["dayOfWeek"]) => {
@@ -147,8 +152,7 @@ const EditShop: React.FC = () => {
         };
       }),
     }));
-    if (status !== "idle") setStatus("idle");
-    if (error) setError(null);
+    resetStatusError();
   };
 
   const removeBlock = (day: OpeningHour["dayOfWeek"], index: number) => {
@@ -164,8 +168,7 @@ const EditShop: React.FC = () => {
         };
       }),
     }));
-    if (status !== "idle") setStatus("idle");
-    if (error) setError(null);
+    resetStatusError();
   };
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
@@ -204,6 +207,7 @@ const EditShop: React.FC = () => {
       await updateShop({
         name: form.name.trim(),
         address: form.address.trim() || null,
+        active: form.active,
         openingHours,
       });
 
@@ -246,6 +250,7 @@ const EditShop: React.FC = () => {
             <label className="edit-shop__field">
               <span>Shop name</span>
               <input
+                className="edit-shop__input"
                 type="text"
                 name="name"
                 value={form.name}
@@ -257,6 +262,7 @@ const EditShop: React.FC = () => {
             <label className="edit-shop__field">
               <span>Address</span>
               <input
+                className="edit-shop__input"
                 type="text"
                 name="address"
                 value={form.address}
@@ -264,18 +270,50 @@ const EditShop: React.FC = () => {
                 placeholder="123 Main St, Springfield"
               />
             </label>
+
+            <label className="edit-shop__field edit-shop__field--toggle">
+              <span>Status</span>
+
+              <div className="edit-shop__toggle">
+                <input
+                  id="shop-active"
+                  type="checkbox"
+                  checked={form.active}
+                  onChange={(e) => updateField("active", e.target.checked)}
+                />
+                <span className="edit-shop__toggleText">
+                  {form.active ? "Active" : "Inactive"}
+                </span>
+              </div>
+
+              <small className="edit-shop__hint">Inactive shops won’t appear for booking.</small>
+            </label>
           </div>
         </section>
 
         <section className="edit-shop__card">
-          <div className="edit-shop__card-header">
+          {/* Clickable header to collapse the card body */}
+          <button
+            type="button"
+            className="edit-shop__card-header edit-shop__card-header--clickable"
+            onClick={toggleHoursCollapsed}
+            aria-expanded={!hoursCollapsed}
+            aria-controls="working-hours-body"
+          >
             <div>
               <h2>Working hours</h2>
               <p>Control when customers can book and mark closed days.</p>
             </div>
-          </div>
 
-          <div className="edit-shop__hours">
+            <h1 className="edit-shop__hours-caret" aria-hidden="true">
+              {hoursCollapsed ? "▾" : "▴"}
+            </h1>
+          </button>
+
+          <div
+            id="working-hours-body"
+            className={`edit-shop__hours ${hoursCollapsed ? "is-collapsed" : ""}`}
+          >
             {DAYS.map((day) => {
               const schedule = form.workingHours.find((h) => h.dayOfWeek === day)!;
 
@@ -283,6 +321,7 @@ const EditShop: React.FC = () => {
                 <div key={day} className="edit-shop__hours-row">
                   <div className="edit-shop__day-header">
                     <div className="edit-shop__day">{day.slice(0, 3)}</div>
+
                     <label className="edit-shop__closed">
                       <input
                         type="checkbox"
@@ -303,6 +342,7 @@ const EditShop: React.FC = () => {
                             <label>
                               <span>Opens</span>
                               <input
+                                className="edit-shop__time-input"
                                 type="time"
                                 value={block.openTime}
                                 disabled={schedule.isClosed}
@@ -314,6 +354,7 @@ const EditShop: React.FC = () => {
                             <label>
                               <span>Closes</span>
                               <input
+                                className="edit-shop__time-input"
                                 type="time"
                                 value={block.closeTime}
                                 disabled={schedule.isClosed}
@@ -323,6 +364,7 @@ const EditShop: React.FC = () => {
                               />
                             </label>
                           </div>
+
                           {schedule.blocks.length > 1 && (
                             <button
                               type="button"

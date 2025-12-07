@@ -1,42 +1,50 @@
 /* =========================================================
-   EditShop.css — dark, clean, same app style
-   Supports multi-block working hours UI
-   Scoped under .edit-shop to avoid interference
+   EditShop.css — uses Global Tokens
    ========================================================= */
 
    .edit-shop {
-    max-width: 1200px;
+    max-width: 980px;
     margin: 0 auto;
-    padding: 22px 18px 40px;
-    color: var(--text);
+    padding: 8px 0 44px;
   }
   
-  /* Header */
   .edit-shop__header {
     display: flex;
-    align-items: flex-start;
     justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 16px;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 14px;
   }
   
   .edit-shop__title {
+    font-size: 1.7rem;
     margin: 0;
-    font-size: 1.45rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
   }
   
   .edit-shop__subtitle {
-    margin: 6px 0 0 0;
+    margin: 8px 0 0;
     color: var(--text-muted);
-    line-height: 1.45;
+    font-size: 0.95rem;
+    line-height: 1.35;
   }
   
-  /* Form layout */
   .edit-shop__form {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 14px;
+  }
+  
+  /* Fallback messages */
+  .edit-shop__empty,
+  .edit-shop__loading,
+  .edit-shop__error {
+    max-width: 980px;
+    margin: 16px auto;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    background: var(--bg-card);
+    box-shadow: var(--shadow);
   }
   
   /* Cards */
@@ -44,267 +52,340 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
-    padding: 18px;
+    padding: 16px;
     box-shadow: var(--shadow);
   }
   
   .edit-shop__card-header {
     display: flex;
-    align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    margin-bottom: 14px;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 12px;
   }
   
   .edit-shop__card-header h2 {
     margin: 0;
     font-size: 1.05rem;
-    font-weight: 900;
-    letter-spacing: -0.01em;
   }
   
   .edit-shop__card-header p {
-    margin: 6px 0 0 0;
+    margin: 6px 0 0;
     color: var(--text-muted);
-    line-height: 1.4;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    line-height: 1.35;
   }
   
-  /* Saved pill */
   .edit-shop__pill {
-    height: 28px;
     display: inline-flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 5px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(34, 197, 94, 0.35);
-    background: rgba(34, 197, 94, 0.12);
-    color: rgba(255, 255, 255, 0.92);
-    font-weight: 800;
-    font-size: 0.82rem;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    background: var(--accent-soft);
+    color: var(--text);
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
   
-  /* Inputs grid */
+  /* Grid */
   .edit-shop__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 14px;
   }
   
+  @media (max-width: 720px) {
+    .edit-shop__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Fields */
   .edit-shop__field {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
   
-  .edit-shop__field span {
+  .edit-shop__field > span {
     font-size: 0.82rem;
     color: var(--text-muted);
   }
   
-  .edit-shop__field input {
-    height: 44px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
+  /* Use your global input look */
+  .edit-shop__input,
+  .edit-shop__time-input {
+    width: 100%;
     background: var(--bg-input);
-    color: var(--text);
-    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 10px 12px;
     outline: none;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
   }
   
-  .edit-shop__field input:hover {
-    border-color: var(--border-strong);
-  }
-  
-  .edit-shop__field input:focus {
-    border-color: rgba(59, 130, 246, 0.6);
+  .edit-shop__input:focus,
+  .edit-shop__time-input:focus {
+    border-color: rgba(59, 130, 246, 0.55);
     box-shadow: 0 0 0 3px var(--focus-ring);
   }
   
-  /* Working hours */
+  .edit-shop__input::placeholder {
+    color: var(--text-soft);
+  }
+  
+  .edit-shop__time-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* Toggle */
+  .edit-shop__field--toggle {
+    grid-column: 1 / -1;
+  }
+  
+  .edit-shop__toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 2px;
+  }
+  
+  .edit-shop__toggle input[type="checkbox"] {
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+    accent-color: var(--accent);
+  }
+  
+  .edit-shop__toggleText {
+    font-weight: 650;
+  }
+  
+  .edit-shop__hint {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+  
+  /* Hours */
   .edit-shop__hours {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
   }
   
-  /* Day container */
   .edit-shop__hours-row {
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    overflow: hidden;
     background: rgba(255, 255, 255, 0.02);
-    padding: 12px;
-    display: grid;
-    gap: 10px;
   }
   
-  /* Day header line */
+  /* Clickable day header */
   .edit-shop__day-header {
+    width: 100%;
+    border: 0;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    padding: 12px 12px;
+    cursor: pointer;
+    transition: background var(--t-fast);
+    text-align: left;
+  }
+  
+  .edit-shop__day-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .edit-shop__day-header:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 3px var(--focus-ring);
+  }
+  
+  .edit-shop__day-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   
   .edit-shop__day {
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.92);
-    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    font-size: 0.82rem;
+    color: var(--text-muted);
   }
   
-  /* Closed toggle */
+  .edit-shop__chev {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    transform: translateY(-1px);
+  }
+  
+  /* Closed checkbox */
   .edit-shop__closed {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    user-select: none;
-    color: rgba(255, 255, 255, 0.86);
-    font-weight: 700;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
   }
   
   .edit-shop__closed input {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     accent-color: var(--accent);
+    cursor: pointer;
   }
   
-  /* Blocks wrapper */
+  /* Collapsible blocks */
   .edit-shop__blocks {
-    display: grid;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
+  
+    max-height: 1200px;
+    opacity: 1;
+    transition: max-height var(--t-med), opacity var(--t-fast), padding var(--t-fast);
   }
   
-  /* Each block row */
+  .edit-shop__blocks.is-collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  
+  .edit-shop__closed-note {
+    padding: 10px 12px;
+    border-radius: var(--r-md);
+    border: 1px dashed var(--border-strong);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  
+  /* Time block card */
   .edit-shop__time-block {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
-    align-items: end;
-    padding: 10px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(0, 0, 0, 0.18);
   }
   
-  /* Time inputs */
   .edit-shop__time {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
+  }
+  
+  @media (max-width: 560px) {
+    .edit-shop__time {
+      grid-template-columns: 1fr;
+    }
   }
   
   .edit-shop__time label {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
   
   .edit-shop__time label span {
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
   }
   
-  .edit-shop__time input {
-    height: 40px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--bg-input);
-    color: var(--text);
-    padding: 0 10px;
-    outline: none;
-  }
-  
-  .edit-shop__time input:hover {
-    border-color: var(--border-strong);
-  }
-  
-  .edit-shop__time input:focus {
-    border-color: rgba(59, 130, 246, 0.6);
-    box-shadow: 0 0 0 3px var(--focus-ring);
-  }
-  
-  .edit-shop__time input:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-  
-  /* Remove block button */
-  .edit-shop__icon-btn {
-    height: 40px;
-    border-radius: 12px;
-    padding: 0 12px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.03);
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 800;
+  /* Buttons (match global style vibe) */
+  .edit-shop__icon-btn,
+  .edit-shop__add-block,
+  .edit-shop__ghost,
+  .edit-shop__primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 999px;
+    font-weight: 650;
     cursor: pointer;
-    white-space: nowrap;
+    user-select: none;
+    transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast),
+      color var(--t-fast), filter var(--t-fast);
   }
   
-  .edit-shop__icon-btn:hover {
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.35);
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
-  }
-  
-  .edit-shop__icon-btn:active {
+  .edit-shop__icon-btn:active,
+  .edit-shop__add-block:active,
+  .edit-shop__ghost:active,
+  .edit-shop__primary:active {
     transform: translateY(1px);
   }
   
-  .edit-shop__icon-btn:focus-visible {
+  .edit-shop__icon-btn:focus-visible,
+  .edit-shop__add-block:focus-visible,
+  .edit-shop__ghost:focus-visible,
+  .edit-shop__primary:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px var(--focus-ring);
   }
   
-  /* Add block button */
+  /* Small remove button */
+  .edit-shop__icon-btn {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+  }
+  
+  .edit-shop__icon-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--border-strong);
+  }
+  
+  /* Add block */
   .edit-shop__add-block {
-    height: 42px;
-    border-radius: 12px;
+    height: 40px;
     padding: 0 14px;
-    border: 1px dashed rgba(255, 255, 255, 0.18);
-    background: transparent;
-    color: rgba(255, 255, 255, 0.88);
-    font-weight: 850;
-    cursor: pointer;
-    justify-self: start;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed var(--border-strong);
+    color: var(--text);
   }
   
   .edit-shop__add-block:hover {
-    border-color: rgba(59, 130, 246, 0.45);
-    background: rgba(59, 130, 246, 0.08);
-  }
-  
-  /* Closed note */
-  .edit-shop__closed-note {
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.02);
-    color: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.06);
   }
   
   /* Alerts */
   .edit-shop__alert {
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--r-lg);
     padding: 12px 14px;
-    line-height: 1.35;
-    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
   }
   
   .edit-shop__alert--error {
     border-color: rgba(239, 68, 68, 0.35);
     background: rgba(239, 68, 68, 0.12);
-    color: rgba(255, 255, 255, 0.92);
   }
   
   .edit-shop__alert--success {
     border-color: rgba(34, 197, 94, 0.35);
     background: rgba(34, 197, 94, 0.12);
-    color: rgba(255, 255, 255, 0.92);
   }
   
   /* Actions */
@@ -312,77 +393,77 @@
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    flex-wrap: wrap;
+    padding-top: 6px;
   }
   
   .edit-shop__ghost,
   .edit-shop__primary {
     height: 42px;
-    padding: 0 14px;
-    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 0.92rem;
     border: 1px solid transparent;
-    font-weight: 850;
   }
   
   .edit-shop__ghost {
-    background: transparent;
-    border-color: rgba(255, 255, 255, 0.14);
-    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--border);
+    color: rgba(255, 255, 255, 0.92);
   }
   
   .edit-shop__ghost:hover {
-    border-color: rgba(255, 255, 255, 0.22);
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--border-strong);
   }
   
   .edit-shop__primary {
     background: var(--accent);
+    border-color: rgba(59, 130, 246, 0.45);
     color: rgba(255, 255, 255, 0.95);
-    cursor: pointer;
   }
   
   .edit-shop__primary:hover {
     background: var(--accent-hover);
+    color: rgba(255, 255, 255, 0.95);
   }
   
   .edit-shop__primary:disabled {
-    background: rgba(59, 130, 246, 0.35);
-    color: rgba(255, 255, 255, 0.72);
+    opacity: 0.55;
     cursor: not-allowed;
   }
-  
-  /* Responsive */
-  @media (max-width: 900px) {
-    .edit-shop__grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .edit-shop__time-block {
-      grid-template-columns: 1fr;
-      align-items: stretch;
-    }
-  
-    .edit-shop__icon-btn {
-      justify-self: start;
-    }
-  }
-  
-  @media (max-width: 520px) {
-    .edit-shop {
-      padding: 18px 14px 32px;
-    }
-  
-    .edit-shop__card {
-      padding: 16px;
-    }
-  
-    .edit-shop__time {
-      grid-template-columns: 1fr;
-    }
-  
-    .edit-shop__day-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+
+  /* Collapsible Working Hours card body */
+.edit-shop__card-header--clickable {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: filter var(--t-fast);
+}
+
+.edit-shop__card-header--clickable:hover {
+  filter: brightness(1.05);
+}
+
+.edit-shop__card-header--clickable:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  border-radius: var(--r-md);
+}
+
+/* Collapse the card insides */
+.edit-shop__hours {
+  max-height: 2000px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height var(--t-med), opacity var(--t-fast);
+}
+
+.edit-shop__hours.is-collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
   

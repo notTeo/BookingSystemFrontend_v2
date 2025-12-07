@@ -1,1 +1,170 @@
-/* Styles for Inbox */
+.inboxPage {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .inboxPage__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .inboxPage__eyebrow {
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+  }
+  
+  .inboxPage__title {
+    margin: 0 0 6px;
+  }
+  
+  .inboxPage__subtitle {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  
+  .inboxPage__actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .inboxPage__card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .inboxPage__cardHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .inboxPage__cardHead h2 {
+    margin: 0 0 4px;
+  }
+  
+  .inboxPage__hint {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  
+  .inboxPage__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .inboxPage__invite {
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .inboxPage__inviteHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .inboxPage__inviteTitle {
+    margin: 0 0 6px;
+  }
+  
+  .inboxPage__identity {
+    display: grid;
+    gap: 4px;
+  }
+  
+  .inboxPage__meta {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  
+  .inboxPage__message {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+    padding: 10px 12px;
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    font-style: italic;
+  }
+  
+  .inboxPage__status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  
+  .inboxPage__status--pending {
+    background: var(--accent-soft);
+    border-color: rgba(59, 130, 246, 0.35);
+    color: rgba(255, 255, 255, 0.96);
+  }
+  
+  .inboxPage__status--accepted {
+    background: rgba(34, 197, 94, 0.16);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: rgba(255, 255, 255, 0.92);
+  }
+  
+  .inboxPage__status--declined {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: rgba(255, 255, 255, 0.92);
+  }
+  
+  .inboxPage__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  
+  .inboxPage__muted {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  
+  .inboxPage__state {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+  }
+  
+  .inboxPage__state--error {
+    color: var(--danger);
+  }
+  
+  @media (max-width: 768px) {
+    .inboxPage__header {
+      flex-direction: column;
+    }
+  
+    .inboxPage__actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .inboxPage__inviteHeader,
+    .inboxPage__footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
