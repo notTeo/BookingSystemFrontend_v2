@@ -61,7 +61,7 @@ export default function Router() {
                 {/* Shop-specific */}
                 <Route path="/shops/:shopName" element={<ShopLayout />}>
                   <Route index element={<ShopOverview />} />
-                  <Route path="edit" element={<EditShop />} />
+                  <Route path="settings" element={<EditShop />} />
                   <Route path="calendar" element={<Calendar />} />
                   <Route path="bookings" element={<AllBookings />} />
                   <Route path="bookings/new" element={<AddBooking />} />

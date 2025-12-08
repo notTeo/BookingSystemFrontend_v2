@@ -1,13 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { updateCurrentUser } from "../../../../api/user";
+import { deleteCurrentUser, updateCurrentUser } from "../../../../api/user";
 import { useAuth } from "../../../../providers/AuthProvider";
 import type { UpdateUserPayload } from "../../../../types/user";
 import "./Account.css";
 
+
+
 const Account: React.FC = () => {
   type Theme = "dark" | "light";
-  const { user, setUser } = useAuth();
+  const { user, setUser, logout } = useAuth();
+  const navigate = useNavigate();
 
   const [profileForm, setProfileForm] = useState({
     firstName: "",
@@ -24,6 +28,13 @@ const Account: React.FC = () => {
     "idle",
   );
   const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  const [deleteForm, setDeleteForm] = useState({ password: "" });
+  const [deleteStatus, setDeleteStatus] = useState<"idle" | "saving" | "success" | "error">(
+    "idle",
+  );
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (user) {
@@ -78,6 +89,44 @@ const Account: React.FC = () => {
       setProfileStatus("error");
     }
   };
+  const handleDeleteChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const { value } = event.target;
+    setDeleteForm({ password: value });
+    if (deleteError) setDeleteError(null);
+    if (deleteStatus === "success") setDeleteStatus("idle");
+  };
+
+  const handleDeleteSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    if (!user) return;
+
+    if (!deleteForm.password.trim()) {
+      setDeleteError("Please enter your password to confirm deletion.");
+      setDeleteStatus("error");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "This will permanently delete your account and all data. Are you sure?",
+    );
+
+    if (!confirmed) return;
+
+    setDeleteStatus("saving");
+    setDeleteError(null);
+
+    try {
+      await deleteCurrentUser({ password: deleteForm.password });
+      setDeleteStatus("success");
+      logout();
+      navigate("/login");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to delete account.";
+      setDeleteError(message);
+      setDeleteStatus("error");
+    }
+  };
+
 
   const handlePasswordSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -402,19 +451,43 @@ const Account: React.FC = () => {
             </div>
           </header>
 
-          <div className="accountPage__actions">
-            <button
-              type="button"
-              className="btn btn--danger"
-              onClick={() => {
-                // TODO: open a confirmation modal or navigate to a dedicated confirmation page.
-                // e.g. setShowDeleteModal(true);
-                console.log("Delete account clicked");
-              }}
-            >
-              Delete account
-            </button>
-          </div>
+          <form className="stack-md" onSubmit={handleDeleteSubmit}>
+            <div className="field">
+              <label htmlFor="deletePassword">Confirm password</label>
+              <input
+                className="input"
+                id="deletePassword"
+                name="deletePassword"
+                type="password"
+                value={deleteForm.password}
+                onChange={handleDeleteChange}
+                autoComplete="current-password"
+                placeholder="Enter your password to delete"
+              />
+              <p className="accountPage__hint accountPage__hint--inline">
+                For your security, you must enter your current password to delete your account.
+              </p>
+            </div>
+
+            {deleteError && (
+              <p className="accountPage__alert accountPage__alert--error">{deleteError}</p>
+            )}
+            {deleteStatus === "success" && (
+              <p className="accountPage__alert accountPage__alert--success">
+                Account deleted. Redirecting…
+              </p>
+            )}
+
+            <div className="accountPage__actions">
+              <button
+                type="submit"
+                className="btn btn--danger"
+                disabled={deleteStatus === "saving"}
+              >
+                {deleteStatus === "saving" ? "Deleting…" : "Delete account"}
+              </button>
+            </div>
+          </form>
         </section>
       </div>
     </div>
