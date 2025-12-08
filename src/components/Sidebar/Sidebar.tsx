@@ -22,9 +22,6 @@ const SideBar: React.FC = () => {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `app-sidebar__link ${isActive ? "app-sidebar__link--active" : ""}`;
 
-  const shopLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `app-sidebar__link app-sidebar__link--shop ${isActive ? "app-sidebar__link--active" : ""}`;
-
   return (
     <>
       {/* Burger (mobile only via CSS) */}
@@ -44,35 +41,37 @@ const SideBar: React.FC = () => {
 
       {/* Drawer / Sidebar */}
       <aside className={`app-sidebar ${open ? "is-open" : ""}`}>
-      <div className="app-sidebar__header">
-  {/* X LEFT */}
-  <button type="button" className="app-sidebar__close" onClick={close} aria-label="Close">
-    <span />
-    <span />
-  </button>
+        <div className="app-sidebar__header">
+          {/* X LEFT */}
+          <button type="button" className="app-sidebar__close" onClick={close} aria-label="Close">
+            <span />
+            <span />
+          </button>
 
-  <h2 className="app-sidebar__title">Dashboard</h2>
+          {/* Title – show shop name when in shop mode */}
+          <h2 className="app-sidebar__title">
+            {hasActiveShop ? currentShop?.shop.name ?? "Shop" : "Dashboard"}
+          </h2>
 
-  {/* BACK RIGHT */}
-  {hasActiveShop ? (
-    <Link
-      className="app-sidebar__back app-sidebar__back--icon"
-      to="/overview"
-      onClick={() => {
-        setActiveShopId(null);
-        setCurrentShop(null);
-        close();
-      }}
-      aria-label="Back"
-      title="Back"
-    >
-      ‹
-    </Link>
-  ) : (
-    <span className="app-sidebar__back app-sidebar__back--spacer" />
-  )}
-</div>
-
+          {/* BACK RIGHT */}
+          {hasActiveShop ? (
+            <Link
+              className="app-sidebar__back app-sidebar__back--icon"
+              to="/overview"
+              onClick={() => {
+                setActiveShopId(null);
+                setCurrentShop(null);
+                close();
+              }}
+              aria-label="Back"
+              title="Back"
+            >
+              ‹
+            </Link>
+          ) : (
+            <span className="app-sidebar__back app-sidebar__back--spacer" />
+          )}
+        </div>
 
         {hasActiveShop ? (
           <ul className="app-sidebar__list">
@@ -88,7 +87,11 @@ const SideBar: React.FC = () => {
             </li>
 
             <li className="app-sidebar__item">
-              <NavLink to={`/shops/${currentShop?.shop.name}/edit`} onClick={close} className={linkClass}>
+              <NavLink
+                to={`/shops/${currentShop?.shop.name}/edit`}
+                onClick={close}
+                className={linkClass}
+              >
                 Edit
               </NavLink>
             </li>
@@ -143,51 +146,40 @@ const SideBar: React.FC = () => {
               </NavLink>
             </li>
 
-            {user.shops.map((shop) => (
-              <li className="app-sidebar__item" key={shop.id}>
-                <NavLink
-                  to={`/shops/${shop.name}`}
-                  onClick={() => {
-                    setActiveShopId(shop.id);
-                    close();
-                  }}
-                  className={shopLinkClass}
-                  end
-                >
-                  {shop.name}
-                </NavLink>
-              </li>
-            ))}
-
             <li className="app-sidebar__item">
               <NavLink to="/new-shop" onClick={close} className={linkClass}>
                 Create Shop
               </NavLink>
             </li>
 
+            {/* Single Settings item instead of Account + Billing */}
             <li className="app-sidebar__item">
               <NavLink to="/settings/account" onClick={close} className={linkClass}>
-                Account
-              </NavLink>
-            </li>
-
-            <li className="app-sidebar__item">
-              <NavLink to="/settings/billing" onClick={close} className={linkClass}>
-                Billing
+                Settings
               </NavLink>
             </li>
           </ul>
         )}
 
         <div className="app-sidebar__footer">
-          <p className="app-sidebar__user">
-            {user.firstName} {user.lastName}
-          </p>
+          <div className="app-sidebar__user">
+            <h4 className="overview__avatar">
+              {user.firstName.toUpperCase().charAt(0)} {user.lastName.toUpperCase().charAt(0)}
+            </h4>
+            <div className="app-sidebar__user__info">
+              <div>
+                {user.firstName} {user.lastName}
+              </div>
+              {user.subscription}
+            </div>
+          </div>
 
           <button
             className="btn btn--ghost btn--sm app-sidebar__logout"
             onClick={() => {
               logout();
+              setActiveShopId(null);
+              setCurrentShop(null);
               close();
             }}
           >

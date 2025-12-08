@@ -163,6 +163,7 @@
   .signin__right {
     background: rgba(59, 130, 246, 0.14);
     display: flex;
+    justify-content: center;
   }
   
   .signin__right--left {

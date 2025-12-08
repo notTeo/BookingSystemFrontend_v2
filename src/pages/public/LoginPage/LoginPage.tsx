@@ -5,7 +5,7 @@ import { loginUser } from "../../../api/auth";
 import { useAuth } from "../../../providers/AuthProvider";
 import "./LoginPage.css";
 
-const EMPTY_FORM = { email: "", password: "Passw0rd!23" } as const;
+const EMPTY_FORM = { email: "", password: "123456789" } as const;
 
 type FormState = typeof EMPTY_FORM;
 type SignInStatus = "idle" | "pending" | "success" | "error";

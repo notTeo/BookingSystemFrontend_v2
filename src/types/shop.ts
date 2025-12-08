@@ -17,6 +17,14 @@ export interface Invite {
   role: ShopRole;
   status: InviteStatus;
   message?: string | null;
+  shop: {
+    name: string
+  };
+  sender: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
   createdAt: string;
   updatedAt: string;
 }

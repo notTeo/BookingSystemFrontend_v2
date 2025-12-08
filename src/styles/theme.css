@@ -48,6 +48,14 @@
   --t-fast: 140ms ease;
   --t-med: 200ms ease;
   --t-slow: 300ms ease;
+
+    /* Overlays */
+    --overlay: rgba(255, 255, 255, 0.04);
+    --overlay-hover: rgba(255, 255, 255, 0.07);
+  
+    /* Topbar */
+    --topbar-bg: rgba(23, 24, 26, 0.9);
+  
 }
 
 /* ---------- Reset / base ---------- */
@@ -139,7 +147,7 @@ a:hover {
 .app-topbar {
   grid-area: topbar;
   height: var(--nav-height);
-  background: rgba(23, 24, 26, 0.9);
+  background: var(--topbar-bg);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
   display: flex;
@@ -147,6 +155,7 @@ a:hover {
   justify-content: space-between;
   padding: 0 var(--page-pad);
 }
+
 
 .app-topbar__title {
   font-size: 0.95rem;
@@ -230,17 +239,30 @@ a:hover {
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* Ghost: readable hover */
+/* Ghost: theme-aware */
 .btn--ghost {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--overlay);
   border-color: var(--border);
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--text);
 }
 .btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--overlay-hover);
   border-color: var(--border-strong);
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text);
 }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--overlay);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 
 .btn--sm {
   padding: 7px 10px;
@@ -312,17 +334,6 @@ a:hover {
   gap: 22px;
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
 
 .badge--primary {
   border-color: rgba(59, 130, 246, 0.35);
@@ -345,3 +356,40 @@ a:hover {
     padding-top: calc(var(--page-pad) + 56px); /* 44px burger + 12px top gap */
   }
 }
+
+/* =========================================================
+   Light theme — toggled via <html data-theme="light">
+   ========================================================= */
+   html[data-theme="light"] {
+    /* Surfaces */
+    --bg: #eee;
+    --bg-elevated: #eee;
+    --bg-card: #eee;
+    --bg-input: #eee;
+  
+    /* Borders */
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.14);
+  
+    /* Text */
+    --text: rgba(0, 0, 0, 0.88);
+    --text-muted: rgba(0, 0, 0, 0.62);
+    --text-soft: rgba(0, 0, 0, 0.45);
+  
+    /* Accent stays the same */
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-soft: rgba(59, 130, 246, 0.14);
+    --focus-ring: rgba(59, 130, 246, 0.25);
+  
+    /* Overlays become dark overlays (not white) */
+    --overlay: rgba(0, 0, 0, 0.04);
+    --overlay-hover: rgba(0, 0, 0, 0.07);
+  
+    /* Topbar */
+    --topbar-bg: rgba(255, 255, 255, 0.85);
+  
+    /* Shadow should be softer on light */
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  }
+  

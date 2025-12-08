@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { getActiveShopId } from "../../../../api/http";
 import { getTeamOverview } from "../../../../api/team";
@@ -30,6 +30,8 @@ const AllTeam: React.FC = () => {
   const [showInvite, setShowInvite] = useState(false);
 
   const shopId = getActiveShopId();
+  const { shopName } = useParams();
+  const navigate = useNavigate();
 
   const loadTeam = useCallback(async () => {
     if (!shopId) {
@@ -68,8 +70,15 @@ const AllTeam: React.FC = () => {
     loadTeam();
   };
 
-  return (
+  const navigateToMember = (member: TeamMemberSummary) => {
+    if (!shopName) return;
 
+    navigate(`/shops/${encodeURIComponent(shopName)}/team/${member.shopUserId}`, {
+      state: { member },
+    });
+  };
+
+  return (
     <div className="teamPage">
       <header className="teamPage__header">
         <div>
@@ -126,7 +135,9 @@ const AllTeam: React.FC = () => {
         </div>
         <div className="card teamPage__stat">
           <p className="teamPage__statLabel">Inactive</p>
-          <p className="teamPage__statValue">{Math.max((overview?.totalMembers ?? 0) - activeCount, 0)}</p>
+          <p className="teamPage__statValue">
+            {Math.max((overview?.totalMembers ?? 0) - activeCount, 0)}
+          </p>
           <p className="teamPage__statHint">Paused or disabled</p>
         </div>
       </section>
@@ -157,10 +168,24 @@ const AllTeam: React.FC = () => {
               <div>Status</div>
               <div>Bookable</div>
               <div>Joined</div>
+              <div className="teamPage__actionsHead">Actions</div>
             </div>
 
             {sortedMembers.map((member: TeamMemberSummary) => (
-              <div key={member.id} className="teamPage__row" role="row">
+              <div
+                key={member.id}
+                className="teamPage__row teamPage__row--clickable"
+                role="row"
+                tabIndex={0}
+                onClick={() => navigateToMember(member)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigateToMember(member);
+                  }
+                }}
+                aria-label={`View ${member.firstName} ${member.lastName}`}
+              >
                 <div className="teamPage__cellMain">
                   <div className="teamPage__avatar">
                     {member.firstName[0]}
@@ -195,6 +220,18 @@ const AllTeam: React.FC = () => {
                 </div>
 
                 <div className="teamPage__muted">{formatDate(member.joinedAt)}</div>
+                <div className="teamPage__actionCell">
+                  <button
+                    type="button"
+                    className="teamPage__manageButton"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigateToMember(member);
+                    }}
+                  >
+                    Configure
+                  </button>
+                </div>
               </div>
             ))}
           </div>
