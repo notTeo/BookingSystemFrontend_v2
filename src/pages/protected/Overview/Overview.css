@@ -229,7 +229,9 @@
   padding: 14px;
   color: inherit;
   text-decoration: none;
-  transition: background var(--t-fast), transform var(--t-fast);
+  transition:
+    background var(--t-fast),
+    transform var(--t-fast);
 }
 
 .overview__shop-link:hover {

@@ -1,11 +1,10 @@
 import React from "react";
-
-import "./TopBar.css";
 import { Link } from "react-router-dom";
+
 import { useAuth } from "../../providers/AuthProvider";
+import "./TopBar.css";
 
 const TopBar: React.FC = () => {
-
   const { user, logout } = useAuth();
   return (
     <>
@@ -21,7 +20,11 @@ const TopBar: React.FC = () => {
                 <Link className="btn btn--ghost" to="/overview">
                   Overview
                 </Link>
-                <button className="btn btn--primary app-topbar__logout" type="button" onClick={logout}>
+                <button
+                  className="btn btn--primary app-topbar__logout"
+                  type="button"
+                  onClick={logout}
+                >
                   Logout
                 </button>
               </>

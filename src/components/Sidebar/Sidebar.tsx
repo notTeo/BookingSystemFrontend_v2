@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
+import { setActiveShopId } from "../../api/http";
 import { useAuth } from "../../providers/AuthProvider";
 import { useShop } from "../../providers/ShopProvider";
-import { setActiveShopId } from "../../api/http";
 import "./Sidebar.css";
 
 const SideBar: React.FC = () => {
@@ -50,7 +50,7 @@ const SideBar: React.FC = () => {
 
           {/* Title – show shop name when in shop mode */}
           <h2 className="app-sidebar__title">
-            {hasActiveShop ? currentShop?.shop.name ?? "Shop" : "Dashboard"}
+            {hasActiveShop ? (currentShop?.shop.name ?? "Shop") : "Dashboard"}
           </h2>
 
           {/* BACK RIGHT */}
@@ -87,7 +87,7 @@ const SideBar: React.FC = () => {
             </li>
 
             <li className="app-sidebar__item">
-              <NavLink    
+              <NavLink
                 to={`/shops/${currentShop?.shop.name}/settings`}
                 onClick={close}
                 className={linkClass}

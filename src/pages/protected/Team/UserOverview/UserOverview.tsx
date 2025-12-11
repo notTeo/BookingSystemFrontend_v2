@@ -126,7 +126,7 @@ const UserOverview: React.FC = () => {
     } finally {
       setHoursLoading(false);
     }
-  }, [memberId]);
+  }, [member]);
 
   useEffect(() => {
     loadMemberFromApi();
@@ -231,7 +231,9 @@ const UserOverview: React.FC = () => {
     try {
       const result = await toggleMemberBookable(member.id);
       setMember((prev) => (prev ? { ...prev, bookable: result.updated.bookable } : prev));
-      setMemberNotice(result.updated.bookable ? "Member is now bookable." : "Member hidden from booking.");
+      setMemberNotice(
+        result.updated.bookable ? "Member is now bookable." : "Member hidden from booking.",
+      );
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to update bookable status.";
       setMemberError(message);
@@ -246,7 +248,11 @@ const UserOverview: React.FC = () => {
 
     try {
       const updated = await updateMemberRole(member.id, role);
-      setMember((prev) => (prev ? { ...prev, role: updated.role, active: updated.active, bookable: updated.bookable } : prev));
+      setMember((prev) =>
+        prev
+          ? { ...prev, role: updated.role, active: updated.active, bookable: updated.bookable }
+          : prev,
+      );
       setMemberNotice("Role updated.");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unable to update role.";
@@ -259,11 +265,13 @@ const UserOverview: React.FC = () => {
       <header className="userOverview__header">
         <div>
           <p className="userOverview__eyebrow">Team member</p>
-          <h1 className="userOverview__title">{member ? `${member.firstName} ${member.lastName}` : "User overview"}</h1>
-          <p className="userOverview__subtitle">Manage access, availability, and working hours for this teammate.</p>
-          {member && (
-            <p className="userOverview__muted">{member.email ?? "No email on file"}</p>
-          )}
+          <h1 className="userOverview__title">
+            {member ? `${member.firstName} ${member.lastName}` : "User overview"}
+          </h1>
+          <p className="userOverview__subtitle">
+            Manage access, availability, and working hours for this teammate.
+          </p>
+          {member && <p className="userOverview__muted">{member.email ?? "No email on file"}</p>}
         </div>
         <div className="userOverview__actions">
           <Link className="userOverview__ghost" to={backToTeamHref}>
@@ -273,13 +281,17 @@ const UserOverview: React.FC = () => {
       </header>
 
       {memberLoading && <p className="userOverview__state">Loading member…</p>}
-      {memberError && <p className="userOverview__state userOverview__state--error">{memberError}</p>}
+      {memberError && (
+        <p className="userOverview__state userOverview__state--error">{memberError}</p>
+      )}
 
       <section className="userOverview__card" aria-label="Member access">
         <div className="userOverview__cardHeader">
           <div>
             <h2>Access & visibility</h2>
-            <p className="userOverview__hint">Control the role, activity, and booking visibility of this person.</p>
+            <p className="userOverview__hint">
+              Control the role, activity, and booking visibility of this person.
+            </p>
           </div>
           {memberNotice && <span className="userOverview__pill">{memberNotice}</span>}
         </div>
@@ -299,21 +311,32 @@ const UserOverview: React.FC = () => {
                 </option>
               ))}
             </select>
-            <small className="userOverview__hint">Roles control what the teammate can manage in the shop.</small>
+            <small className="userOverview__hint">
+              Roles control what the teammate can manage in the shop.
+            </small>
           </div>
 
           <label className="userOverview__toggle">
             <span>
               <strong>Active</strong>
-              <small className="userOverview__hint">Inactive members cannot log in to this shop.</small>
+              <small className="userOverview__hint">
+                Inactive members cannot log in to this shop.
+              </small>
             </span>
-            <input type="checkbox" checked={Boolean(member?.active)} onChange={handleToggleActive} disabled={!member} />
+            <input
+              type="checkbox"
+              checked={Boolean(member?.active)}
+              onChange={handleToggleActive}
+              disabled={!member}
+            />
           </label>
 
           <label className="userOverview__toggle">
             <span>
               <strong>Bookable</strong>
-              <small className="userOverview__hint">Hide or show this teammate when customers book.</small>
+              <small className="userOverview__hint">
+                Hide or show this teammate when customers book.
+              </small>
             </span>
             <input
               type="checkbox"
@@ -329,17 +352,22 @@ const UserOverview: React.FC = () => {
         <div className="userOverview__cardHeader">
           <div>
             <h2>Working hours</h2>
-            <p className="userOverview__hint">Set the days and hours this teammate is available for bookings.</p>
+            <p className="userOverview__hint">
+              Set the days and hours this teammate is available for bookings.
+            </p>
           </div>
           {hoursStatus === "saved" && <span className="userOverview__pill">Saved</span>}
         </div>
 
         {hoursLoading && <p className="userOverview__state">Loading hours…</p>}
-        {hoursError && <p className="userOverview__state userOverview__state--error">{hoursError}</p>}
+        {hoursError && (
+          <p className="userOverview__state userOverview__state--error">{hoursError}</p>
+        )}
 
         <div className="userOverview__hours">
           {week.map((schedule) => {
-            const displayName = DAY_LABELS.find((d) => d.key === schedule.dayOfWeek)?.label ?? schedule.dayOfWeek;
+            const displayName =
+              DAY_LABELS.find((d) => d.key === schedule.dayOfWeek)?.label ?? schedule.dayOfWeek;
 
             return (
               <div key={schedule.dayOfWeek} className="userOverview__hoursRow">
@@ -360,14 +388,19 @@ const UserOverview: React.FC = () => {
                     <div className="userOverview__closedNote">This day is marked as off.</div>
                   ) : (
                     schedule.slots.map((slot, index) => (
-                      <div key={`${schedule.dayOfWeek}-${index}`} className="userOverview__timeBlock">
+                      <div
+                        key={`${schedule.dayOfWeek}-${index}`}
+                        className="userOverview__timeBlock"
+                      >
                         <div className="userOverview__timeInputs">
                           <label>
                             <span>Start</span>
                             <input
                               type="time"
                               value={slot.start}
-                              onChange={(e) => updateSlot(schedule.dayOfWeek, index, "start", e.target.value)}
+                              onChange={(e) =>
+                                updateSlot(schedule.dayOfWeek, index, "start", e.target.value)
+                              }
                             />
                           </label>
 
@@ -376,7 +409,9 @@ const UserOverview: React.FC = () => {
                             <input
                               type="time"
                               value={slot.end}
-                              onChange={(e) => updateSlot(schedule.dayOfWeek, index, "end", e.target.value)}
+                              onChange={(e) =>
+                                updateSlot(schedule.dayOfWeek, index, "end", e.target.value)
+                              }
                             />
                           </label>
                         </div>
@@ -395,7 +430,11 @@ const UserOverview: React.FC = () => {
                   )}
 
                   {!schedule.isOff && (
-                    <button type="button" className="userOverview__addBlock" onClick={() => addSlot(schedule.dayOfWeek)}>
+                    <button
+                      type="button"
+                      className="userOverview__addBlock"
+                      onClick={() => addSlot(schedule.dayOfWeek)}
+                    >
                       + Add time block
                     </button>
                   )}

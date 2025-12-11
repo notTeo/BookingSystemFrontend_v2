@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { createShop } from "../../../../api/shop";
 import { setActiveShopId } from "../../../../api/http";
+import { createShop } from "../../../../api/shop";
 import { useAuth } from "../../../../providers/AuthProvider";
 import { useShop } from "../../../../providers/ShopProvider";
 import type { CreateShopPayload } from "../../../../types/shop";
@@ -92,9 +92,7 @@ const CreateShop: React.FC = () => {
       const { name, value } = target;
 
       const nextValue =
-        target instanceof HTMLInputElement && target.type === "checkbox"
-          ? target.checked
-          : value;
+        target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : value;
 
       setForm((prev) => ({
         ...prev,
@@ -134,11 +132,7 @@ const CreateShop: React.FC = () => {
       } catch (err) {
         console.error("Create shop failed", err);
         setStatus("error");
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Unable to create shop. Please try again.",
-        );
+        setError(err instanceof Error ? err.message : "Unable to create shop. Please try again.");
       }
     },
     [form.name, form.address, refreshShop, refreshUser, navigate],
@@ -160,8 +154,7 @@ const CreateShop: React.FC = () => {
         <div className="create-shop__titles">
           <h1 className="create-shop__title">Create a new shop</h1>
           <p className="create-shop__subtitle">
-            Set up your shop profile so customers know where to book and how to
-            reach you.
+            Set up your shop profile so customers know where to book and how to reach you.
           </p>
         </div>
       </header>
@@ -284,8 +277,7 @@ const CreateShop: React.FC = () => {
               <div className="create-shop__checkboxCopy">
                 <span className="create-shop__checkboxTitle">Allow walk-ins</span>
                 <span className="create-shop__checkboxSub">
-                  Keep this enabled if you accept on-site bookings without an online
-                  reservation.
+                  Keep this enabled if you accept on-site bookings without an online reservation.
                 </span>
               </div>
             </label>
@@ -315,8 +307,8 @@ const CreateShop: React.FC = () => {
           <div className="create-shop__badge">Preview</div>
           <h3 className="create-shop__infoTitle">How your shop shows up</h3>
           <p className="create-shop__infoText">
-            Customers will see these details on your booking link and in their
-            confirmation emails. Keep it short, friendly, and accurate.
+            Customers will see these details on your booking link and in their confirmation emails.
+            Keep it short, friendly, and accurate.
           </p>
 
           <ul className="create-shop__list">

@@ -1,259 +1,259 @@
 .userOverview {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.userOverview__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.userOverview__eyebrow {
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+.userOverview__title {
+  margin: 0 0 6px;
+}
+
+.userOverview__subtitle {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.userOverview__muted {
+  margin: 6px 0 0;
+  color: var(--text-soft);
+}
+
+.userOverview__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.userOverview__ghost {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-weight: 600;
+}
+
+.userOverview__ghost:hover {
+  border-color: rgba(59, 130, 246, 0.55);
+  color: rgba(59, 130, 246, 0.95);
+}
+
+.userOverview__card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+
+.userOverview__cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.userOverview__hint {
+  color: var(--text-muted);
+  margin: 4px 0 0;
+  display: block;
+}
+
+.userOverview__grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.userOverview__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.userOverview__label {
+  font-weight: 600;
+}
+
+.userOverview__input {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+}
+
+.userOverview__input:disabled {
+  opacity: 0.7;
+}
+
+.userOverview__toggle {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.userOverview__toggle input {
+  width: 24px;
+  height: 24px;
+}
+
+.userOverview__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 700;
+}
+
+.userOverview__state {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.userOverview__state--error {
+  color: var(--danger);
+}
+
+.userOverview__hours {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userOverview__hoursRow {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.userOverview__dayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.userOverview__day {
+  font-weight: 700;
+}
+
+.userOverview__closed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.userOverview__blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userOverview__closedNote {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.userOverview__timeBlock {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border: 1px dashed var(--border);
+  padding: 10px;
+  border-radius: var(--r-md);
+}
+
+.userOverview__timeInputs {
+  display: flex;
+  gap: 12px;
+}
+
+.userOverview__timeInputs input {
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+}
+
+.userOverview__iconBtn {
+  background: none;
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  color: var(--text);
+}
+
+.userOverview__addBlock {
+  background: none;
+  border: 1px dashed var(--border);
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  color: var(--text);
+  text-align: left;
+  width: fit-content;
+}
+
+.userOverview__actionsBar {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.userOverview__primary {
+  background: var(--accent-soft);
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
   .userOverview__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
+    flex-direction: column;
   }
-  
-  .userOverview__eyebrow {
-    margin: 0 0 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.8rem;
-    color: var(--text-soft);
-  }
-  
-  .userOverview__title {
-    margin: 0 0 6px;
-  }
-  
-  .userOverview__subtitle {
-    margin: 0;
-    color: var(--text-muted);
-  }
-  
-  .userOverview__muted {
-    margin: 6px 0 0;
-    color: var(--text-soft);
-  }
-  
+
   .userOverview__actions {
-    display: flex;
-    gap: 10px;
+    width: 100%;
+    justify-content: flex-start;
   }
-  
-  .userOverview__ghost {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px 14px;
-    border-radius: var(--r-md);
-    font-weight: 600;
-  }
-  
-  .userOverview__ghost:hover {
-    border-color: rgba(59, 130, 246, 0.55);
-    color: rgba(59, 130, 246, 0.95);
-  }
-  
-  .userOverview__card {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-  }
-  
-  .userOverview__cardHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  
-  .userOverview__hint {
-    color: var(--text-muted);
-    margin: 4px 0 0;
-    display: block;
-  }
-  
-  .userOverview__grid {
-    display: grid;
-    gap: 14px;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-  
-  .userOverview__field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  
-  .userOverview__label {
-    font-weight: 600;
-  }
-  
-  .userOverview__input {
-    padding: 10px 12px;
-    border-radius: var(--r-md);
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--text);
-  }
-  
-  .userOverview__input:disabled {
-    opacity: 0.7;
-  }
-  
-  .userOverview__toggle {
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.02);
-  }
-  
-  .userOverview__toggle input {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .userOverview__pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 700;
-  }
-  
-  .userOverview__state {
-    margin: 0;
-    color: var(--text-muted);
-  }
-  
-  .userOverview__state--error {
-    color: var(--danger);
-  }
-  
-  .userOverview__hours {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .userOverview__hoursRow {
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.01);
-  }
-  
-  .userOverview__dayHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-  
-  .userOverview__day {
-    font-weight: 700;
-  }
-  
-  .userOverview__closed {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
-  }
-  
-  .userOverview__blocks {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .userOverview__closedNote {
-    color: var(--text-muted);
-    font-style: italic;
-  }
-  
+
   .userOverview__timeBlock {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: center;
-    border: 1px dashed var(--border);
-    padding: 10px;
-    border-radius: var(--r-md);
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
+
   .userOverview__timeInputs {
-    display: flex;
-    gap: 12px;
+    flex-direction: column;
   }
-  
-  .userOverview__timeInputs input {
-    padding: 8px 10px;
-    border-radius: var(--r-md);
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--text);
-  }
-  
-  .userOverview__iconBtn {
-    background: none;
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    border-radius: var(--r-md);
-    color: var(--text);
-  }
-  
-  .userOverview__addBlock {
-    background: none;
-    border: 1px dashed var(--border);
-    padding: 8px 12px;
-    border-radius: var(--r-md);
-    color: var(--text);
-    text-align: left;
-    width: fit-content;
-  }
-  
-  .userOverview__actionsBar {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  
-  .userOverview__primary {
-    background: var(--accent-soft);
-    border: 1px solid rgba(59, 130, 246, 0.45);
-    color: rgba(255, 255, 255, 0.95);
-    padding: 10px 14px;
-    border-radius: var(--r-md);
-    font-weight: 700;
-  }
-  
-  @media (max-width: 900px) {
-    .userOverview__header {
-      flex-direction: column;
-    }
-  
-    .userOverview__actions {
-      width: 100%;
-      justify-content: flex-start;
-    }
-  
-    .userOverview__timeBlock {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .userOverview__timeInputs {
-      flex-direction: column;
-    }
-  }
+}

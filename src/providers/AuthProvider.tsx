@@ -1,11 +1,5 @@
 // AuthProvider.tsx
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 import { clearAuthCookies, getAccessToken } from "../api/http";
 import { getCurrentUser } from "../api/user";
@@ -30,7 +24,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const currentUser = await getCurrentUser();
-      console.log(currentUser)
+      console.log(currentUser);
       setUser(currentUser ?? null);
     } catch (error) {
       console.error("getCurrentUser failed", error);
@@ -41,9 +35,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const logout = () => {
-    setUser(null)
-    clearAuthCookies()
-  }
+    setUser(null);
+    clearAuthCookies();
+  };
 
   useEffect(() => {
     void refreshUser();
@@ -52,9 +46,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value: AuthContextValue = {
     user,
     isLoading,
-    setUser,    
+    setUser,
     refreshUser,
-    logout
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

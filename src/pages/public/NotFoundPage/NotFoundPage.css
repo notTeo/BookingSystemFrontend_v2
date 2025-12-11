@@ -1,79 +1,78 @@
 /* NotFoundPage.css */
 
 .nf {
-    min-height: 100vh;
-    width: 100%;
-    display: grid;
-    place-items: center;
-    padding: 28px;
-    background: var(--bg);
-    color: var(--text);
+  min-height: 100vh;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.nf__card {
+  width: min(700px, 100%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 26px;
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.nf__badge {
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.14);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.nf__title {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+.nf__subtitle {
+  margin: 8px 0 0 0;
+  color: var(--text-muted);
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.nf__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.nf__actions .btn {
+  border-radius: 12px;
+}
+
+.nf__hint {
+  margin: 16px 0 0 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 420px) {
+  .nf {
+    padding: 18px;
   }
-  
+
   .nf__card {
-    width: min(700px, 100%);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--r-lg);
-    padding: 26px;
-    box-shadow: var(--shadow);
-    text-align: left;
+    padding: 18px;
   }
-  
-  .nf__badge {
-    width: fit-content;
-    padding: 6px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(59, 130, 246, 0.35);
-    background: rgba(59, 130, 246, 0.14);
-    color: rgba(255, 255, 255, 0.92);
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    margin-bottom: 12px;
-  }
-  
+
   .nf__title {
-    margin: 0;
-    font-size: 1.8rem;
-    letter-spacing: -0.02em;
-    font-weight: 800;
+    font-size: 1.55rem;
   }
-  
-  .nf__subtitle {
-    margin: 8px 0 0 0;
-    color: var(--text-muted);
-    line-height: 1.5;
-    font-size: 1rem;
-  }
-  
-  .nf__actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 18px;
-  }
-  
-  .nf__actions .btn {
-    border-radius: 12px;
-  }
-  
-  .nf__hint {
-    margin: 16px 0 0 0;
-    color: var(--text-muted);
-    font-size: 0.92rem;
-  }
-  
-  @media (max-width: 420px) {
-    .nf {
-      padding: 18px;
-    }
-  
-    .nf__card {
-      padding: 18px;
-    }
-  
-    .nf__title {
-      font-size: 1.55rem;
-    }
-  }
-  
+}

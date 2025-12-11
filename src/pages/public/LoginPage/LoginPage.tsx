@@ -50,7 +50,7 @@ export default function SignInPage() {
   const isSubmitting = status === "pending";
 
   return (
-<main className="page page--signin signin">
+    <main className="page page--signin signin">
       <div className="signin__shell">
         {/* LEFT 60% */}
         <section className="signin__left" aria-label="Sign in">
@@ -119,8 +119,8 @@ export default function SignInPage() {
             </h2>
 
             <p className="signin__rightText">
-              Manage shops, staff, services, working hours, and bookings — scoped per shop,
-              designed to avoid mistakes and double bookings.
+              Manage shops, staff, services, working hours, and bookings — scoped per shop, designed
+              to avoid mistakes and double bookings.
             </p>
 
             <div className="signin__bullets">

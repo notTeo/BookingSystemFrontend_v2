@@ -6,10 +6,11 @@ import { useAuth } from "../../../../providers/AuthProvider";
 import type { UpdateUserPayload } from "../../../../types/user";
 import "./Account.css";
 
+// -------------------- Local types / helpers --------------------
 
+type Theme = "dark" | "light";
 
 const Account: React.FC = () => {
-  type Theme = "dark" | "light";
   const { user, setUser, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -30,9 +31,7 @@ const Account: React.FC = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const [deleteForm, setDeleteForm] = useState({ password: "" });
-  const [deleteStatus, setDeleteStatus] = useState<"idle" | "saving" | "success" | "error">(
-    "idle",
-  );
+  const [deleteStatus, setDeleteStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
 
@@ -89,6 +88,7 @@ const Account: React.FC = () => {
       setProfileStatus("error");
     }
   };
+
   const handleDeleteChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.target;
     setDeleteForm({ password: value });
@@ -126,7 +126,6 @@ const Account: React.FC = () => {
       setDeleteStatus("error");
     }
   };
-
 
   const handlePasswordSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -307,28 +306,6 @@ const Account: React.FC = () => {
             </form>
           </section>
 
-          {/* APPEARANCE */}
-          <section className="card stack-md">
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              <div className="stack-sm" style={{ gap: 2 }}>
-                <h2 style={{ margin: 0 }}>Appearance</h2>
-                <small>Switch between dark and light theme.</small>
-                <small>
-                  Current theme:{" "}
-                  <strong>{theme === "dark" ? "Dark" : "Light"}</strong>
-                </small>
-              </div>
-              <button
-                type="button"
-                className="btn btn--ghost btn--sm"
-                onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? "Use light mode" : "Use dark mode"}
-              </button>
-            </div>
-          </section>
-
           {/* SECURITY / PASSWORD */}
           <section className="card accountPage__card">
             <header className="accountPage__cardHead">
@@ -371,14 +348,10 @@ const Account: React.FC = () => {
               </div>
 
               {passwordError && (
-                <p className="accountPage__alert accountPage__alert--error">
-                  {passwordError}
-                </p>
+                <p className="accountPage__alert accountPage__alert--error">{passwordError}</p>
               )}
               {passwordStatus === "success" && (
-                <p className="accountPage__alert accountPage__alert--success">
-                  Password updated.
-                </p>
+                <p className="accountPage__alert accountPage__alert--success">Password updated.</p>
               )}
 
               <div className="accountPage__actions">
@@ -393,6 +366,27 @@ const Account: React.FC = () => {
             </form>
           </section>
         </div>
+
+        {/* APPEARANCE */}
+        <section className="card stack-md">
+          <div className="row" style={{ justifyContent: "space-between" }}>
+            <div className="stack-sm" style={{ gap: 2 }}>
+              <h2 style={{ margin: 0 }}>Appearance</h2>
+              <small>Switch between dark and light theme.</small>
+              <small>
+                Current theme: <strong>{theme === "dark" ? "Dark" : "Light"}</strong>
+              </small>
+            </div>
+            <button
+              type="button"
+              className="btn btn--ghost btn--sm"
+              onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? "Use light mode" : "Use dark mode"}
+            </button>
+          </div>
+        </section>
 
         {/* METADATA */}
         <section className="card accountPage__card accountPage__card--wide">
@@ -431,15 +425,13 @@ const Account: React.FC = () => {
             </div>
             <div>
               <dt>Status</dt>
-              <dd className="accountPage__pill">
-                {user.active === false ? "Inactive" : "Active"}
-              </dd>
+              <dd className="accountPage__pill">{user.active === false ? "Inactive" : "Active"}</dd>
             </div>
           </dl>
         </section>
 
         {/* DANGER ZONE */}
-        <section className="card accountPage__card accountPage__card--danger">
+        <section className=" accountPage__card--danger edit-shop__danger">
           <header className="accountPage__cardHead">
             <div>
               <p className="accountPage__eyebrow">Danger zone</p>
@@ -478,10 +470,10 @@ const Account: React.FC = () => {
               </p>
             )}
 
-            <div className="accountPage__actions">
+            <div className="edit-shop__dangerActions">
               <button
                 type="submit"
-                className="btn btn--danger"
+                className="edit-shop__dangerBtn"
                 disabled={deleteStatus === "saving"}
               >
                 {deleteStatus === "saving" ? "Deleting…" : "Delete account"}

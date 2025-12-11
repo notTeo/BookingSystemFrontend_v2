@@ -9,9 +9,7 @@ const NotFoundPage: React.FC = () => {
         <div className="nf__badge">404</div>
 
         <h1 className="nf__title">Page not found</h1>
-        <p className="nf__subtitle">
-          The page you’re looking for doesn’t exist or was moved.
-        </p>
+        <p className="nf__subtitle">The page you’re looking for doesn’t exist or was moved.</p>
 
         <div className="nf__actions">
           <Link className="btn btn--primary" to="/overview">
@@ -22,9 +20,7 @@ const NotFoundPage: React.FC = () => {
           </Link>
         </div>
 
-        <p className="nf__hint">
-          If you typed the address, check for typos.
-        </p>
+        <p className="nf__hint">If you typed the address, check for typos.</p>
       </section>
     </main>
   );

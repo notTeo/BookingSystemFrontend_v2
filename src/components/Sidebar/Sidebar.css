@@ -15,7 +15,6 @@
   position: sticky;
   top: 0;
 
-
   background: var(--bg-elevated);
   border-right: 1px solid var(--border);
 
@@ -40,8 +39,8 @@
   color: var(--text);
   white-space: nowrap;
   text-align: center;
-  overflow: visible;     /* desktop: no clipping */
-  text-overflow: unset;  /* desktop: no ellipsis */
+  overflow: visible; /* desktop: no clipping */
+  text-overflow: unset; /* desktop: no ellipsis */
 }
 
 /* Keep icons consistent size when they exist */
@@ -61,7 +60,6 @@
     text-overflow: ellipsis;
   }
 }
-
 
 /* Back in header */
 .app-sidebar__back--spacer {
@@ -86,7 +84,11 @@
   font-size: 20px;
   line-height: 1;
 
-  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast), transform var(--t-fast);
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    color var(--t-fast),
+    transform var(--t-fast);
 }
 
 .app-sidebar__back--icon:hover {
@@ -109,11 +111,14 @@
   justify-content: center;
   position: relative;
 
-  opacity: 0;            /* invisible */
-  pointer-events: none;  /* not clickable */
+  opacity: 0; /* invisible */
+  pointer-events: none; /* not clickable */
   transform: scale(0.98);
 
-  transition: opacity var(--t-fast), transform var(--t-fast), background var(--t-fast);
+  transition:
+    opacity var(--t-fast),
+    transform var(--t-fast),
+    background var(--t-fast);
 }
 
 /* When sidebar is open on mobile: show it */
@@ -188,7 +193,10 @@
   border: 1px solid transparent;
 
   color: var(--text-muted);
-  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    color var(--t-fast);
 }
 
 .app-sidebar__link:hover {
@@ -249,11 +257,11 @@
   font-size: 0.92rem;
 }
 
-.app-sidebar__user .overview__avatar{
+.app-sidebar__user .overview__avatar {
   margin: 0;
 }
 
-.app-sidebar__user__info div{
+.app-sidebar__user__info div {
   color: #fff;
   font-size: 1rem;
 }

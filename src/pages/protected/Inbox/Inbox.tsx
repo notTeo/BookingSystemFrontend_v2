@@ -43,7 +43,7 @@ const Inbox: React.FC = () => {
 
     try {
       const res = await listInvites();
-      console.log(res)
+      console.log(res);
       const received = Array.isArray((res as any)?.received) ? (res as any).received : [];
       const sent = Array.isArray((res as any)?.sent) ? (res as any).sent : [];
 
@@ -90,7 +90,6 @@ const Inbox: React.FC = () => {
           inv.id === inviteId ? { ...inv, ...(updated as Partial<Invite>) } : inv,
         ),
       }));
-      
     } catch (err) {
       const message = err instanceof Error ? err.message : `Could not ${action} invite.`;
       setError(message);
@@ -98,8 +97,6 @@ const Inbox: React.FC = () => {
       setActingOn(null);
     }
   };
-
-
 
   return (
     <div className="inboxPage">
@@ -154,7 +151,9 @@ const Inbox: React.FC = () => {
 
         {!loading && !error && currentList.length === 0 && (
           <p className="inboxPage__state">
-            {activeTab === "received" ? "No received invites right now." : "No sent invites right now."}
+            {activeTab === "received"
+              ? "No received invites right now."
+              : "No sent invites right now."}
           </p>
         )}
 
@@ -165,7 +164,11 @@ const Inbox: React.FC = () => {
               const canAct = activeTab === "received" && isPending;
 
               return (
-                <article key={invite.id} className="inboxPage__invite" aria-label={`Invite ${invite.id}`}>
+                <article
+                  key={invite.id}
+                  className="inboxPage__invite"
+                  aria-label={`Invite ${invite.id}`}
+                >
                   <div className="inboxPage__inviteHeader">
                     <div className="inboxPage__identity">
                       <p className="inboxPage__mini">
@@ -175,12 +178,15 @@ const Inbox: React.FC = () => {
                         Shop: {invite.shop.name} — {roleLabels[invite.role] ?? invite.role}
                       </h3>
                       <p className="inboxPage__meta">
-                        Sent from {invite.sender.firstName} {invite.sender.lastName}, {invite.sender.email}
+                        Sent from {invite.sender.firstName} {invite.sender.lastName},{" "}
+                        {invite.sender.email}
                       </p>
                       <p className="inboxPage__meta">Created {formatDate(invite.createdAt)}</p>
                     </div>
 
-                    <span className={`inboxPage__status inboxPage__status--${invite.status.toLowerCase()}`}>
+                    <span
+                      className={`inboxPage__status inboxPage__status--${invite.status.toLowerCase()}`}
+                    >
                       {statusLabels[invite.status] ?? invite.status}
                     </span>
                   </div>
@@ -188,7 +194,6 @@ const Inbox: React.FC = () => {
                   {invite.message && <p className="inboxPage__message">“{invite.message}”</p>}
 
                   <div className="inboxPage__footer">
-
                     {canAct ? (
                       <div className="inboxPage__actions">
                         <button
@@ -210,7 +215,9 @@ const Inbox: React.FC = () => {
                       </div>
                     ) : (
                       <p className="inboxPage__muted">
-                        {activeTab === "sent" ? "You can’t act on sent invites." : "No further action available."}
+                        {activeTab === "sent"
+                          ? "You can’t act on sent invites."
+                          : "No further action available."}
                       </p>
                     )}
                   </div>

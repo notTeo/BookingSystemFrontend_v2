@@ -1,233 +1,235 @@
 .all-shops {
-    padding: 12px;
-  }
-  
-  .all-shops__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  
+  padding: 12px;
+}
+
+.all-shops__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.all-shops__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.all-shops__eyebrow {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 4px;
+}
+
+.all-shops__title {
+  font-size: 1.7rem;
+  margin: 0;
+}
+
+.all-shops__subtitle {
+  margin: 6px 0 0;
+  color: var(--text-soft);
+}
+
+.all-shops__cta {
+  height: 42px;
+}
+
+.all-shops__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.all-shops__stat-card {
+  border: 1px solid var(--border);
+}
+
+.all-shops__stat-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.all-shops__stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.all-shops__stat-meta {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+
+.all-shops__table-card {
+  border: 1px solid var(--border);
+  padding: 18px;
+}
+
+.all-shops__table-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.all-shops__table-title {
+  margin: 0;
+}
+
+.all-shops__table-subtitle {
+  margin: 4px 0 0;
+  color: var(--text-soft);
+}
+
+.all-shops__last-updated {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.all-shops__table-wrapper {
+  width: 100%;
+  overflow: auto;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+
+.all-shops__table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 840px;
+  background: var(--bg-card);
+}
+
+.all-shops__table th,
+.all-shops__table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.all-shops__table thead th {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.all-shops__row {
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast);
+}
+
+.all-shops__row:hover,
+.all-shops__row:focus-visible {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.all-shops__name {
+  font-weight: 650;
+}
+
+.all-shops__subtext {
+  margin: 4px 0 0;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+
+.all-shops__role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 650;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+}
+
+.all-shops__role--owner {
+  color: #facc15;
+}
+
+.all-shops__role--manager {
+  color: var(--accent);
+}
+
+.all-shops__role--staff {
+  color: var(--text-muted);
+}
+
+.all-shops__role--default {
+  color: var(--text-soft);
+}
+
+.all-shops__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 650;
+  border: 1px solid transparent;
+}
+
+.all-shops__pill--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--success);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.all-shops__pill--accent {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.all-shops__pill--muted {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.all-shops__address {
+  max-width: 240px;
+  color: var(--text-muted);
+}
+
+.all-shops__state {
+  margin: 0;
+  padding: 12px 0;
+  color: var(--text-muted);
+}
+
+.all-shops__state--error {
+  color: var(--danger);
+}
+
+.all-shops__empty {
+  padding: 12px 0;
+  color: var(--text-muted);
+}
+
+.all-shops__empty-sub {
+  color: var(--text-soft);
+  margin: 2px 0 0;
+}
+
+@media (max-width: 720px) {
   .all-shops__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .all-shops__eyebrow {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin: 0 0 4px;
-  }
-  
-  .all-shops__title {
-    font-size: 1.7rem;
-    margin: 0;
-  }
-  
-  .all-shops__subtitle {
-    margin: 6px 0 0;
-    color: var(--text-soft);
-  }
-  
-  .all-shops__cta {
-    height: 42px;
-  }
-  
-  .all-shops__stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-  }
-  
-  .all-shops__stat-card {
-    border: 1px solid var(--border);
-  }
-  
-  .all-shops__stat-label {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 6px;
-  }
-  
-  .all-shops__stat-value {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin: 0 0 6px;
-  }
-  
-  .all-shops__stat-meta {
-    margin: 0;
-    color: var(--text-soft);
-    font-size: 0.92rem;
-  }
-  
-  .all-shops__table-card {
-    border: 1px solid var(--border);
-    padding: 18px;
-  }
-  
-  .all-shops__table-head {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .all-shops__table-title {
-    margin: 0;
-  }
-  
-  .all-shops__table-subtitle {
-    margin: 4px 0 0;
-    color: var(--text-soft);
-  }
-  
-  .all-shops__last-updated {
-    color: var(--text-muted);
-    margin: 0;
-  }
-  
-  .all-shops__table-wrapper {
-    width: 100%;
-    overflow: auto;
-    border-radius: var(--r-md);
-    border: 1px solid var(--border);
-  }
-  
+
   .all-shops__table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 840px;
-    background: var(--bg-card);
+    min-width: 720px;
   }
-  
-  .all-shops__table th,
-  .all-shops__table td {
-    text-align: left;
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  
-  .all-shops__table thead th {
-    font-size: 0.92rem;
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.02);
-  }
-  
-  .all-shops__row {
-    cursor: pointer;
-    transition: background var(--t-fast), border-color var(--t-fast);
-  }
-  
-  .all-shops__row:hover,
-  .all-shops__row:focus-visible {
-    background: rgba(59, 130, 246, 0.06);
-  }
-  
-  .all-shops__name {
-    font-weight: 650;
-  }
-  
-  .all-shops__subtext {
-    margin: 4px 0 0;
-    color: var(--text-soft);
-    font-size: 0.92rem;
-  }
-  
-  .all-shops__role {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-weight: 650;
-    font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-  }
-  
-  .all-shops__role--owner {
-    color: #facc15;
-  }
-  
-  .all-shops__role--manager {
-    color: var(--accent);
-  }
-  
-  .all-shops__role--staff {
-    color: var(--text-muted);
-  }
-  
-  .all-shops__role--default {
-    color: var(--text-soft);
-  }
-  
-  .all-shops__pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 0.88rem;
-    font-weight: 650;
-    border: 1px solid transparent;
-  }
-  
-  .all-shops__pill--success {
-    background: rgba(34, 197, 94, 0.12);
-    color: var(--success);
-    border-color: rgba(34, 197, 94, 0.3);
-  }
-  
-  .all-shops__pill--accent {
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-color: rgba(59, 130, 246, 0.35);
-  }
-  
-  .all-shops__pill--muted {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-muted);
-    border-color: var(--border);
-  }
-  
-  .all-shops__address {
-    max-width: 240px;
-    color: var(--text-muted);
-  }
-  
-  .all-shops__state {
-    margin: 0;
-    padding: 12px 0;
-    color: var(--text-muted);
-  }
-  
-  .all-shops__state--error {
-    color: var(--danger);
-  }
-  
-  .all-shops__empty {
-    padding: 12px 0;
-    color: var(--text-muted);
-  }
-  
-  .all-shops__empty-sub {
-    color: var(--text-soft);
-    margin: 2px 0 0;
-  }
-  
-  @media (max-width: 720px) {
-    .all-shops__header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .all-shops__table {
-      min-width: 720px;
-    }
-  }
+}

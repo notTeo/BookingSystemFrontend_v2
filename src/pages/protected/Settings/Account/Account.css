@@ -1,427 +1,635 @@
 /* =========================================================
-   Account.css — clean “ChatGPT-ish” dark + light theme
-   Works with: <html data-theme="dark|light">
+   Account.css — styled like EditShop, uses Global Tokens
    ========================================================= */
 
-/* If you don't already define LIGHT tokens globally, this makes light mode work. */
-:root[data-theme="light"] {
-    --bg: #f6f7f9;
-    --bg-elevated: #ffffff;
-    --bg-card: #ffffff;
-    --bg-input: #ffffff;
+/* Root layout */
+.accountPage {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 8px 0 44px;
+}
+
+.accountPage--loading {
+  max-width: 980px;
+  margin: 16px auto;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--bg-card);
+  box-shadow: var(--shadow);
+}
+
+/* Inner wrapper */
+.accountPage__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.accountPage__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.accountPage__eyebrow {
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+}
+
+.accountPage__title {
+  font-size: 1.7rem;
+  margin: 0;
+}
+
+.accountPage__subtitle {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.accountPage__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Simple badge style (plan / inactive) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  font-size: 0.78rem;
+  color: var(--text-soft);
+}
+
+.badge--primary {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------
+   Cards (wrap your .card with account styles)
+   --------------------------------------------------------- */
+
+.accountPage__card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Danger card variant (delete account) */
+.accountPage__card--danger {
   
-    --border: rgba(0, 0, 0, 0.08);
-    --border-strong: rgba(0, 0, 0, 0.14);
-  
-    --text: rgba(0, 0, 0, 0.9);
-    --text-muted: rgba(0, 0, 0, 0.6);
-  
-    --primary: #0ea5e9;
-    --primary-soft: rgba(14, 165, 233, 0.14);
-  
-    --danger: #ef4444;
-  
-    --shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+  border: 2px rgba(239, 68, 68, 0.35) solid;
+  background: linear-gradient(
+      90deg,
+      rgba(239, 68, 68, 0.06),
+      rgba(239, 68, 68, 0.02)
+    ),
+    var(--bg-card);
+  border-radius: 20px;
+  padding: 15px;
   }
-  
-  /* Small fallbacks (in case some vars are missing) */
-  :root {
-    --bg: var(--bg, #0f0f10);
-    --bg-elevated: var(--bg-elevated, #17181a);
-    --bg-card: var(--bg-card, #1f2023);
-    --bg-input: var(--bg-input, #1b1c1f);
-  
-    --border: var(--border, rgba(255, 255, 255, 0.08));
-    --border-strong: var(--border-strong, rgba(255, 255, 255, 0.14));
-  
-    --text: var(--text, rgba(255, 255, 255, 0.92));
-    --text-muted: var(--text-muted, rgba(255, 255, 255, 0.62));
-  
-    --primary: var(--primary, #0ea5e9);
-    --primary-soft: var(--primary-soft, rgba(14, 165, 233, 0.16));
-  
-    --danger: var(--danger, #ef4444);
-  
-    --shadow: var(--shadow, 0 18px 60px rgba(0, 0, 0, 0.45));
-  }
-  
-  .accountPage {
-    min-height: 100%;
-    background: var(--bg);
-    color: var(--text);
-  }
-  
-  .accountPage--loading {
-    display: grid;
-    place-items: center;
-    padding: 48px 16px;
-  }
-  
-  .accountPage__inner {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 28px 16px 56px;
-  }
-  
-  .accountPage__header {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 18px 18px 0;
-    margin-bottom: 18px;
-  }
-  
-  .accountPage__eyebrow {
-    margin: 0 0 6px;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-  
-  .accountPage__title {
-    margin: 0;
-    font-size: 28px;
-    line-height: 1.15;
-  }
-  
-  .accountPage__subtitle {
-    margin: 10px 0 0;
-    color: var(--text-muted);
-    max-width: 60ch;
-    font-size: 14px;
-  }
-  
-  .accountPage__badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    padding-top: 4px;
-  }
-  
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    height: 28px;
-    padding: 0 10px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
-    font-size: 12px;
-    color: var(--text);
-    white-space: nowrap;
-  }
-  
-  :root[data-theme="light"] .badge {
-    background: rgba(0, 0, 0, 0.03);
-  }
-  
-  .badge--primary {
-    border-color: rgba(14, 165, 233, 0.35);
-    background: var(--primary-soft);
-    color: var(--text);
-  }
-  
+
+/* Card header */
+.accountPage__cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.accountPage__cardHead h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.accountPage__cardHead p {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+/* Clickable header (working hours) */
+.accountPage__cardHead--clickable {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: filter var(--t-fast);
+}
+
+.accountPage__cardHead--clickable:hover {
+  filter: brightness(1.05);
+}
+
+.accountPage__cardHead--clickable:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  border-radius: var(--r-md);
+}
+
+/* ---------------------------------------------------------
+   Grid layout: Profile / Security
+   --------------------------------------------------------- */
+
+.accountPage__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 14px;
+}
+
+@media (max-width: 720px) {
   .accountPage__grid {
-    display: grid;
     grid-template-columns: 1fr;
-    gap: 14px;
   }
-  
-  @media (min-width: 980px) {
-    .accountPage__grid {
-      grid-template-columns: 1.25fr 0.85fr;
-      align-items: start;
-    }
-  }
-  
-  /* Generic card */
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding: 18px;
-  }
-  
-  /* Cards in grid */
-  .accountPage__card {
-    padding: 18px;
-  }
-  
-  .accountPage__card--wide {
-    margin-top: 14px;
-  }
-  
-  .accountPage__card--danger {
-    border-color: rgba(239, 68, 68, 0.28);
-  }
-  
-  .accountPage__cardHead {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-  
-  .accountPage__cardHead h2 {
-    margin: 0;
-    font-size: 18px;
-    line-height: 1.2;
-  }
-  
-  .accountPage__hint {
-    margin: 8px 0 0;
-    color: var(--text-muted);
-    font-size: 13px;
-  }
-  
-  .accountPage__hint--inline {
-    margin-top: 8px;
-  }
-  
-  .accountPage__avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-weight: 700;
-  }
-  
-  :root[data-theme="light"] .accountPage__avatar {
-    background: rgba(0, 0, 0, 0.04);
-  }
-  
+}
+
+/* Two-col fields inside profile card */
+.accountPage__twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 560px) {
   .accountPage__twoCol {
-    display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
   }
-  
-  @media (min-width: 620px) {
-    .accountPage__twoCol {
-      grid-template-columns: 1fr 1fr;
-    }
+}
+
+/* Generic field wrapper (if not global) */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Avatar bubble */
+.accountPage__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------
+   Inputs (use same look as EditShop)
+   --------------------------------------------------------- */
+
+.input,
+.accountPage__timeInput {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  outline: none;
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+
+.input:focus,
+.accountPage__timeInput:focus {
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.input::placeholder {
+  color: var(--text-soft);
+}
+
+/* ---------------------------------------------------------
+   Stack + actions + alerts
+   --------------------------------------------------------- */
+
+.stack-md {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.accountPage__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+/* Alerts (profile/password/delete) */
+.accountPage__alert {
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+.accountPage__alert--error {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.accountPage__alert--success {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.12);
+}
+
+/* ---------------------------------------------------------
+   Buttons (reusing your global .btn but align look to EditShop)
+   --------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-weight: 650;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast),
+    color var(--t-fast),
+    filter var(--t-fast);
+  border: 1px solid transparent;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.btn--primary {
+  height: 42px;
+  padding: 0 16px;
+  background: var(--accent);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.92rem;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn--ghost {
+  height: 42px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.92rem;
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+}
+
+.btn--danger {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: #b91c1c;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.btn--danger:hover {
+  filter: brightness(1.05);
+}
+
+.btn--danger:disabled,
+.btn--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn--sm {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+}
+
+/* ---------------------------------------------------------
+   Working Hours (Availability) — mirror EditShop pattern
+   --------------------------------------------------------- */
+
+.accountPage__caret {
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+
+/* Collapsible card body */
+.accountPage__hours {
+  max-height: 2000px;
+  opacity: 1;
+  overflow: hidden;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition:
+    max-height var(--t-med),
+    opacity var(--t-fast);
+}
+
+.accountPage__hours.is-collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* Each day row */
+.accountPage__hoursRow {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Day header (left label + closed toggle) */
+.accountPage__dayHeader {
+  width: 100%;
+  border: 0;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+}
+
+.accountPage__dayLabel {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.accountPage__closedToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.accountPage__closedToggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Blocks wrapper */
+.accountPage__blocks {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.accountPage__closedNote {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px dashed var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Each time block */
+.accountPage__timeBlock {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.accountPage__timeInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 560px) {
+  .accountPage__timeInputs {
+    grid-template-columns: 1fr;
   }
-  
-  /* Form helpers */
-  .stack-sm {
-    display: grid;
-    gap: 8px;
+}
+
+.accountPage__timeInputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.accountPage__timeInputs label span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Small remove button in time block */
+.accountPage__iconBtn {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.88rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  align-self: flex-start;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast),
+    color var(--t-fast);
+}
+
+.accountPage__iconBtn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+}
+
+.accountPage__iconBtn:active {
+  transform: translateY(1px);
+}
+
+/* ---------------------------------------------------------
+   Metadata (Account details)
+   --------------------------------------------------------- */
+
+.accountPage__metaGrid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px 16px;
+}
+
+.accountPage__metaGrid dt {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-soft);
+  margin-bottom: 2px;
+}
+
+.accountPage__metaGrid dd {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* Pill for subscription/status */
+.accountPage__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   Danger zone actions
+   --------------------------------------------------------- */
+
+.accountPage__card--danger .accountPage__actions {
+  justify-content: flex-start;
+}
+
+/* ---------------------------------------------------------
+   Misc layout helpers
+   --------------------------------------------------------- */
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+/* ---------------------------------------------------------
+   Responsive tweaks
+   --------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .accountPage__header {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .stack-md {
-    display: grid;
-    gap: 12px;
+
+  .accountPage__badges {
+    flex-wrap: wrap;
   }
-  
-  .row {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-  
-  /* Fields + inputs */
-  .field label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 13px;
-    color: var(--text);
-  }
-  
-  .input {
-    width: 100%;
-    height: 42px;
-    padding: 0 12px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--bg-input);
-    color: var(--text);
-    outline: none;
-    transition: border-color 140ms ease, box-shadow 140ms ease;
-  }
-  
-  .input::placeholder {
-    color: rgba(255, 255, 255, 0.45);
-  }
-  
-  :root[data-theme="light"] .input::placeholder {
-    color: rgba(0, 0, 0, 0.35);
-  }
-  
-  .input:focus {
-    border-color: rgba(14, 165, 233, 0.55);
-    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.14);
-  }
-  
-  /* Alerts */
-  .accountPage__alert {
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    padding: 10px 12px;
-    font-size: 13px;
-    margin: 0;
-  }
-  
-  .accountPage__alert--error {
-    border-color: rgba(239, 68, 68, 0.35);
-    background: rgba(239, 68, 68, 0.12);
-  }
-  
-  .accountPage__alert--success {
-    border-color: rgba(34, 197, 94, 0.35);
-    background: rgba(34, 197, 94, 0.12);
-  }
-  
-  /* Buttons */
-  .btn {
-    height: 40px;
-    padding: 0 14px;
-    border-radius: 12px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--text);
-    cursor: pointer;
-    font-weight: 600;
-    transition: transform 80ms ease, background 140ms ease, border-color 140ms ease,
-      opacity 140ms ease;
-  }
-  
-  .btn:active {
-    transform: translateY(1px);
-  }
-  
-  .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  .btn--sm {
-    height: 34px;
-    padding: 0 12px;
-    border-radius: 10px;
-    font-size: 13px;
-  }
-  
-  .btn--primary {
-    background: var(--primary);
-    border-color: rgba(255, 255, 255, 0.12);
-    color: #06121a;
-  }
-  
-  :root[data-theme="light"] .btn--primary {
-    color: #041018;
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-  
-  .btn--ghost {
-    border-color: var(--border);
-    background: rgba(255, 255, 255, 0.04);
-  }
-  
-  :root[data-theme="light"] .btn--ghost {
-    background: rgba(0, 0, 0, 0.03);
-  }
-  
-  .btn--danger {
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.35);
-    color: var(--text);
-  }
-  
+}
+
+@media (max-width: 560px) {
   .accountPage__actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
-  
-  /* Metadata grid */
-  .accountPage__metaGrid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin: 0;
-  }
-  
-  @media (min-width: 780px) {
-    .accountPage__metaGrid {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-  }
-  
-  .accountPage__metaGrid dt {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin: 0 0 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
-  
-  .accountPage__metaGrid dd {
-    margin: 0;
-    font-size: 14px;
-    color: var(--text);
-  }
-  
-  .accountPage__pill {
-    display: inline-flex;
-    align-items: center;
-    height: 28px;
-    padding: 0 10px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
-  }
-  
-  /* ---------- Confirm password modal (for shop/account delete) ---------- */
-  .modalBackdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.56);
-    display: grid;
-    place-items: center;
-    padding: 18px;
-    z-index: 1000;
-  }
-  
-  :root[data-theme="light"] .modalBackdrop {
-    background: rgba(0, 0, 0, 0.35);
-  }
-  
-  .modal {
-    width: 100%;
-    max-width: 520px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding: 18px;
-  }
-  
-  .modal__title {
-    margin: 0 0 8px;
-    font-size: 18px;
-  }
-  
-  .modal__text {
-    margin: 0 0 14px;
-    color: var(--text-muted);
-    font-size: 13px;
-  }
-  
-  .modal__actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 12px;
-  }
-  
+}
+
+/* Danger zone */
+.edit-shop__danger {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: linear-gradient(
+      90deg,
+      rgba(239, 68, 68, 0.06),
+      rgba(239, 68, 68, 0.02)
+    ),
+    var(--bg-card);
+}
+
+.edit-shop__dangerActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.edit-shop__dangerBtn {
+  min-width: 160px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: #b91c1c;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+}
+
+.edit-shop__dangerBtn:hover {
+  filter: brightness(1.05);
+}
+
+.edit-shop__dangerBtn:active {
+  transform: translateY(1px);
+}
+
+.edit-shop__dangerBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

@@ -2,8 +2,8 @@ import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import "./ShopOverview.css";
-import { useShop } from "../../../../providers/ShopProvider";
 import { getActiveShopId } from "../../../../api/http";
+import { useShop } from "../../../../providers/ShopProvider";
 
 function formatMoneyEUR(n: number) {
   const safe = Number.isFinite(n) ? n : 0;
@@ -44,17 +44,29 @@ const ShopOverviewPage: React.FC = () => {
             <h1 className="shopOv__title">{shop.name}</h1>
             <p className="shopOv__subtitle">
               {shop.address ? shop.address : "No address set"} •{" "}
-              <span className={shop.active ? "shopOv__status shopOv__status--on" : "shopOv__status shopOv__status--off"}>
+              <span
+                className={
+                  shop.active
+                    ? "shopOv__status shopOv__status--on"
+                    : "shopOv__status shopOv__status--off"
+                }
+              >
                 {shop.active ? "Active" : "Inactive"}
               </span>
             </p>
           </div>
 
           <div className="shopOv__actions">
-            <Link className="btn btn--ghost" to={`/shops/${encodeURIComponent(shop.name)}/calendar`}>
+            <Link
+              className="btn btn--ghost"
+              to={`/shops/${encodeURIComponent(shop.name)}/calendar`}
+            >
               Calendar
             </Link>
-            <Link className="btn btn--ghost" to={`/shops/${encodeURIComponent(shop.name)}/bookings`}>
+            <Link
+              className="btn btn--ghost"
+              to={`/shops/${encodeURIComponent(shop.name)}/bookings`}
+            >
               Bookings
             </Link>
             <Link className="btn btn--primary" to={`/shops/${encodeURIComponent(shop.name)}/edit`}>
@@ -98,7 +110,10 @@ const ShopOverviewPage: React.FC = () => {
               <h2>Working hours</h2>
               <p>Weekly opening hours used for bookings.</p>
             </div>
-            <Link className="btn btn--ghost" to={`/shops/${encodeURIComponent(shop.name)}/settings`}>
+            <Link
+              className="btn btn--ghost"
+              to={`/shops/${encodeURIComponent(shop.name)}/settings`}
+            >
               Edit
             </Link>
           </div>
@@ -135,7 +150,10 @@ const ShopOverviewPage: React.FC = () => {
               <h2>Recent bookings</h2>
               <p>Latest appointments for this shop.</p>
             </div>
-            <Link className="btn btn--ghost" to={`/shops/${encodeURIComponent(shop.name)}/bookings`}>
+            <Link
+              className="btn btn--ghost"
+              to={`/shops/${encodeURIComponent(shop.name)}/bookings`}
+            >
               View all
             </Link>
           </div>
@@ -157,11 +175,11 @@ const ShopOverviewPage: React.FC = () => {
                   <div className="shopOv__cellMuted">
                     {b.staffFirstName} {b.staffLastName}
                   </div>
-                  <div className="shopOv__cellMuted">
-                    {new Date(b.date).toLocaleString()}
-                  </div>
+                  <div className="shopOv__cellMuted">{new Date(b.date).toLocaleString()}</div>
                   <div>
-                    <span className={`shopOv__pill shopOv__pill--${String(b.status).toLowerCase()}`}>
+                    <span
+                      className={`shopOv__pill shopOv__pill--${String(b.status).toLowerCase()}`}
+                    >
                       {statusLabel(String(b.status))}
                     </span>
                   </div>

@@ -1,18 +1,11 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 
-import type { ShopContextValue, ShopOverviewStats } from "../types/shop";
 import { getShopOverview } from "../api/shop";
+import type { ShopContextValue, ShopOverviewStats } from "../types/shop";
 
 const ShopContext = createContext<ShopContextValue | undefined>(undefined);
 
-export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentShop, setCurrentShop] = useState<ShopOverviewStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

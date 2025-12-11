@@ -49,13 +49,12 @@
   --t-med: 200ms ease;
   --t-slow: 300ms ease;
 
-    /* Overlays */
-    --overlay: rgba(255, 255, 255, 0.04);
-    --overlay-hover: rgba(255, 255, 255, 0.07);
-  
-    /* Topbar */
-    --topbar-bg: rgba(23, 24, 26, 0.9);
-  
+  /* Overlays */
+  --overlay: rgba(255, 255, 255, 0.04);
+  --overlay-hover: rgba(255, 255, 255, 0.07);
+
+  /* Topbar */
+  --topbar-bg: rgba(23, 24, 26, 0.9);
 }
 
 /* ---------- Reset / base ---------- */
@@ -155,7 +154,6 @@ a:hover {
   justify-content: space-between;
   padding: 0 var(--page-pad);
 }
-
 
 .app-topbar__title {
   font-size: 0.95rem;
@@ -263,7 +261,6 @@ a:hover {
   color: var(--text-muted);
 }
 
-
 .btn--sm {
   padding: 7px 10px;
   font-size: 0.85rem;
@@ -334,7 +331,6 @@ a:hover {
   gap: 22px;
 }
 
-
 .badge--primary {
   border-color: rgba(59, 130, 246, 0.35);
   background: var(--accent-soft);
@@ -360,36 +356,35 @@ a:hover {
 /* =========================================================
    Light theme — toggled via <html data-theme="light">
    ========================================================= */
-   html[data-theme="light"] {
-    /* Surfaces */
-    --bg: #eee;
-    --bg-elevated: #eee;
-    --bg-card: #eee;
-    --bg-input: #eee;
-  
-    /* Borders */
-    --border: rgba(0, 0, 0, 0.08);
-    --border-strong: rgba(0, 0, 0, 0.14);
-  
-    /* Text */
-    --text: rgba(0, 0, 0, 0.88);
-    --text-muted: rgba(0, 0, 0, 0.62);
-    --text-soft: rgba(0, 0, 0, 0.45);
-  
-    /* Accent stays the same */
-    --accent: #3b82f6;
-    --accent-hover: #2563eb;
-    --accent-soft: rgba(59, 130, 246, 0.14);
-    --focus-ring: rgba(59, 130, 246, 0.25);
-  
-    /* Overlays become dark overlays (not white) */
-    --overlay: rgba(0, 0, 0, 0.04);
-    --overlay-hover: rgba(0, 0, 0, 0.07);
-  
-    /* Topbar */
-    --topbar-bg: rgba(255, 255, 255, 0.85);
-  
-    /* Shadow should be softer on light */
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  }
-  
+html[data-theme="light"] {
+  /* Surfaces */
+  --bg: #eee;
+  --bg-elevated: #eee;
+  --bg-card: #eee;
+  --bg-input: #eee;
+
+  /* Borders */
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.14);
+
+  /* Text */
+  --text: rgba(0, 0, 0, 0.88);
+  --text-muted: rgba(0, 0, 0, 0.62);
+  --text-soft: rgba(0, 0, 0, 0.45);
+
+  /* Accent stays the same */
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-soft: rgba(59, 130, 246, 0.14);
+  --focus-ring: rgba(59, 130, 246, 0.25);
+
+  /* Overlays become dark overlays (not white) */
+  --overlay: rgba(0, 0, 0, 0.04);
+  --overlay-hover: rgba(0, 0, 0, 0.07);
+
+  /* Topbar */
+  --topbar-bg: rgba(255, 255, 255, 0.85);
+
+  /* Shadow should be softer on light */
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}

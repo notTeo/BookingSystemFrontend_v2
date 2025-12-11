@@ -25,9 +25,7 @@ const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
 
-  const handleChange = useCallback<
-    React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>
-  >(
+  const handleChange = useCallback<React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>>(
     (event) => {
       const { name, value } = event.target;
       setForm((prev) => ({ ...prev, [name]: value }));
@@ -59,9 +57,7 @@ const RegisterPage: React.FC = () => {
       } catch (err) {
         console.error("Unable to register", err);
         setStatus("error");
-        setError(
-          err instanceof Error ? err.message : "Unable to register. Try again.",
-        );
+        setError(err instanceof Error ? err.message : "Unable to register. Try again.");
       }
     },
     [
@@ -86,13 +82,11 @@ const RegisterPage: React.FC = () => {
           <div className="signin__rightInner">
             <span className="signin__badge">Get started</span>
 
-            <h2 className="signin__rightTitle">
-              Create your account in 30 seconds
-            </h2>
+            <h2 className="signin__rightTitle">Create your account in 30 seconds</h2>
 
             <p className="signin__rightText">
-              Set up your shop, add your team, and start taking bookings with a
-              clean dashboard and a customer-friendly booking flow.
+              Set up your shop, add your team, and start taking bookings with a clean dashboard and
+              a customer-friendly booking flow.
             </p>
 
             <div className="signin__bullets">

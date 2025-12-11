@@ -1,8 +1,6 @@
-import axios, {
-  type AxiosInstance,
-  type AxiosRequestConfig,
-  AxiosError,
-} from "axios";
+import type { AxiosError } from "axios";
+import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
+
 import type { ApiResponse } from "../types/common";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -23,9 +21,7 @@ function writeCookie(name: string, value: string | null): void {
   if (!isBrowser) return;
   const base = `${name}=${value ? encodeURIComponent(value) : ""}; path=/; SameSite=Lax`;
   // if value is null, write an expired cookie
-  document.cookie = value
-    ? base
-    : `${base}; expires=${new Date(0).toUTCString()}`;
+  document.cookie = value ? base : `${base}; expires=${new Date(0).toUTCString()}`;
 }
 
 // ---- initial in-memory state hydrated from cookies ----
@@ -53,10 +49,7 @@ export function getAccessToken(): string | null {
 // ---- active shop helpers ----
 export function setActiveShopId(shopId: number | null): void {
   activeShopId = shopId;
-  writeCookie(
-    ACTIVE_SHOP_COOKIE,
-    shopId !== null ? String(shopId) : null,
-  );
+  writeCookie(ACTIVE_SHOP_COOKIE, shopId !== null ? String(shopId) : null);
 }
 
 export function getActiveShopId(): number | null {
@@ -115,9 +108,7 @@ export async function request<T>(config: AxiosRequestConfig): Promise<T> {
     if (axios.isAxiosError(error)) {
       const apiData = error.response?.data as ApiResponse<unknown> | undefined;
       const message =
-        apiData?.message ||
-        error.message ||
-        "Something went wrong. Please try again.";
+        apiData?.message || error.message || "Something went wrong. Please try again.";
 
       throw new Error(message);
     }

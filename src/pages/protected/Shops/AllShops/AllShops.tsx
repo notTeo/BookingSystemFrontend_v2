@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { listUserShops } from "../../../../api/shop";
 import { setActiveShopId } from "../../../../api/http";
+import { listUserShops } from "../../../../api/shop";
 import type { ShopSummary } from "../../../../types";
 
 import "./AllShops.css";
@@ -132,7 +132,9 @@ const AllShops: React.FC = () => {
           ) : shops.length === 0 ? (
             <div className="all-shops__empty">
               <p>No shops yet.</p>
-              <p className="all-shops__empty-sub">Create your first location to start managing it.</p>
+              <p className="all-shops__empty-sub">
+                Create your first location to start managing it.
+              </p>
             </div>
           ) : (
             <div className="all-shops__table-wrapper">

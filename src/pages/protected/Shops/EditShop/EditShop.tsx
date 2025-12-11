@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getActiveShopId } from "../../../../api/http";
-import { updateShop } from "../../../../api/shop";
+import { getActiveShopId, setActiveShopId } from "../../../../api/http";
+import { deleteShop, updateShop } from "../../../../api/shop";
 import { useShop } from "../../../../providers/ShopProvider";
 import type { OpeningHour } from "../../../../types/shop";
 
@@ -52,7 +52,7 @@ function buildDaySchedules(hours?: OpeningHour[]): DaySchedule[] {
 }
 
 const EditShop: React.FC = () => {
-  const { currentShop, isLoading, refreshShop } = useShop();
+  const { currentShop, isLoading, refreshShop, setCurrentShop } = useShop();
   const navigate = useNavigate();
   const shopId = getActiveShopId();
 
@@ -67,6 +67,10 @@ const EditShop: React.FC = () => {
 
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [deleteStatus, setDeleteStatus] = useState<
+  "idle" | "pending" | "success" | "error"
+>("idle");
+const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Collapse the whole Working Hours card body
   const [hoursCollapsed, setHoursCollapsed] = useState(false);
@@ -99,7 +103,7 @@ const EditShop: React.FC = () => {
   };
 
   const updateField = (key: keyof FormState, value: string | DaySchedule[] | boolean) => {
-    setForm((prev) => ({ ...prev, [key]: value } as FormState));
+    setForm((prev) => ({ ...prev, [key]: value }) as FormState);
     resetStatusError();
   };
 
@@ -221,8 +225,35 @@ const EditShop: React.FC = () => {
     }
   };
 
+  const handleDeleteShop = async () => {
+    if (!currentShop) return;
+
+    const confirmed = window.confirm(
+      `This will permanently delete ${currentShop.shop.name ?? "this shop"}. Continue?`,
+    );
+
+    if (!confirmed) return;
+
+    setDeleteStatus("pending");
+    setDeleteError(null);
+
+    try {
+      await deleteShop();
+      setDeleteStatus("success");
+      setActiveShopId(null);
+      setCurrentShop(null);
+      navigate("/shops");
+    } catch (err) {
+      setDeleteError(
+        err instanceof Error ? err.message : "Unable to delete shop. Please try again.",
+      );
+      setDeleteStatus("error");
+    }
+  };
+
   if (!shopId) return <p className="edit-shop__empty">Select a shop to edit its details.</p>;
-  if (isLoading && !currentShop) return <p className="edit-shop__loading">Loading shop details...</p>;
+  if (isLoading && !currentShop)
+    return <p className="edit-shop__loading">Loading shop details...</p>;
   if (!currentShop) return <p className="edit-shop__error">Shop details not available.</p>;
 
   return (
@@ -281,9 +312,7 @@ const EditShop: React.FC = () => {
                   checked={form.active}
                   onChange={(e) => updateField("active", e.target.checked)}
                 />
-                <span className="edit-shop__toggleText">
-                  {form.active ? "Active" : "Inactive"}
-                </span>
+                <span className="edit-shop__toggleText">{form.active ? "Active" : "Inactive"}</span>
               </div>
 
               <small className="edit-shop__hint">Inactive shops won’t appear for booking.</small>
@@ -409,6 +438,38 @@ const EditShop: React.FC = () => {
           </button>
         </div>
       </form>
+      <section className="edit-shop__card edit-shop__danger" aria-labelledby="delete-shop">
+        <div className="edit-shop__card-header">
+          <div>
+            <p className="edit-shop__eyebrow">Danger zone</p>
+            <h2 id="delete-shop">Delete shop</h2>
+            <p>
+              Removing this shop will delete its settings and availability for all team members.
+              This action cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        {deleteError && (
+          <div className="edit-shop__alert edit-shop__alert--error">{deleteError}</div>
+        )}
+        {deleteStatus === "success" && (
+          <div className="edit-shop__alert edit-shop__alert--success">
+            Shop deleted. Redirecting to shops…
+          </div>
+        )}
+
+        <div className="edit-shop__dangerActions">
+          <button
+            type="button"
+            className="edit-shop__dangerBtn"
+            onClick={handleDeleteShop}
+            disabled={deleteStatus === "pending"}
+          >
+            {deleteStatus === "pending" ? "Deleting…" : "Delete shop"}
+          </button>
+        </div>
+      </section>
     </div>
   );
 };

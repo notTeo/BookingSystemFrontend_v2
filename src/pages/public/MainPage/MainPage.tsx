@@ -183,7 +183,8 @@ const MainPage: React.FC = () => {
             <details className="landing__faqItem card">
               <summary>Can owners create bookings manually?</summary>
               <p className="landing__muted">
-                Yes. Owners can add bookings from the dashboard in addition to online customer bookings.
+                Yes. Owners can add bookings from the dashboard in addition to online customer
+                bookings.
               </p>
             </details>
 

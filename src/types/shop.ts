@@ -8,8 +8,6 @@ export interface ShopContextValue {
   setCurrentShop: (shop: ShopOverviewStats | null) => void;
 }
 
-
-
 export interface Invite {
   id: number;
   shopId: number;
@@ -18,7 +16,7 @@ export interface Invite {
   status: InviteStatus;
   message?: string | null;
   shop: {
-    name: string
+    name: string;
   };
   sender: {
     firstName: string;

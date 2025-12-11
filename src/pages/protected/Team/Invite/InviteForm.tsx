@@ -18,13 +18,11 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSent }) => {
     role: "STAFF",
     message: "",
   });
-  const [status, setStatus] = useState<{ loading: boolean; error: string; success: string }>(
-    {
-      loading: false,
-      error: "",
-      success: "",
-    },
-  );
+  const [status, setStatus] = useState<{ loading: boolean; error: string; success: string }>({
+    loading: false,
+    error: "",
+    success: "",
+  });
 
   const updateField = (key: keyof InvitePayload, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -94,8 +92,12 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSent }) => {
         />
       </label>
 
-      {status.error && <p className="inviteForm__status inviteForm__status--error">{status.error}</p>}
-      {status.success && <p className="inviteForm__status inviteForm__status--success">{status.success}</p>}
+      {status.error && (
+        <p className="inviteForm__status inviteForm__status--error">{status.error}</p>
+      )}
+      {status.success && (
+        <p className="inviteForm__status inviteForm__status--success">{status.success}</p>
+      )}
 
       <div className="inviteForm__footer">
         <button className="btn btn--primary" type="submit" disabled={status.loading}>
