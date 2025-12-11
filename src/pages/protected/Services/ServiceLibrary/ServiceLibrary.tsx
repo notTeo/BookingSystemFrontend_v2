@@ -1,81 +1,66 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { createService, listServices, updateService } from "../../../../api/services";
+import type { Service, ServicePayload } from "../../../../types/services";
 import "./ServiceLibrary.css";
 
 type ServiceStatus = "Active" | "Archived";
 
-type Service = {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  defaultDurationMinutes: number;
-  defaultPrice?: number;
-  status: ServiceStatus;
+type ServiceRow = Service & {
+  category?: string | null;
   offeredByCount?: number;
 };
 
-const mockServices: Service[] = [
-  {
-    id: "svc-001",
-    name: "Consultation",
-    description: "30-minute discovery session to understand client needs.",
-    category: "Advisory",
-    defaultDurationMinutes: 30,
-    defaultPrice: 75,
-    status: "Active",
-    offeredByCount: 3,
-  },
-  {
-    id: "svc-002",
-    name: "Implementation Workshop",
-    description: "Hands-on configuration and training for the client team.",
-    category: "Professional Services",
-    defaultDurationMinutes: 90,
-    defaultPrice: 240,
-    status: "Active",
-    offeredByCount: 5,
-  },
-  {
-    id: "svc-003",
-    name: "Premium Support",
-    description: "Dedicated support channel with 2-hour response time.",
-    category: "Support",
-    defaultDurationMinutes: 60,
-    status: "Archived",
-    offeredByCount: 2,
-  },
-];
+type ServiceFormState = {
+  id?: number;
+  name: string;
+  description?: string;
+  category?: string;
+  duration: number;
+  price?: number;
+  active: boolean;
+  offeredByCount?: number;
+};
 
-const defaultFormState: Service = {
-  id: "",
+const defaultFormState: ServiceFormState = {
   name: "",
   description: "",
   category: "",
-  defaultDurationMinutes: 30,
-  defaultPrice: undefined,
-  status: "Active",
+  duration: 30,
+  price: undefined,
+  active: true,
   offeredByCount: 0,
 };
 
 const ServiceLibrary: React.FC = () => {
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<ServiceRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"All" | ServiceStatus>("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingService, setEditingService] = useState<Service | null>(null);
-  const [formState, setFormState] = useState<Service>(defaultFormState);
-  const [archiveTarget, setArchiveTarget] = useState<Service | null>(null);
+  const [editingService, setEditingService] = useState<ServiceRow | null>(null);
+  const [formState, setFormState] = useState<ServiceFormState>(defaultFormState);
+  const [archiveTarget, setArchiveTarget] = useState<ServiceRow | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
 
   useEffect(() => {
     const loadServices = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        // Simulate loading
-        await new Promise((resolve) => setTimeout(resolve, 450));
-        setServices(mockServices);
+        const data = await listServices();
+        setServices(
+          data.map((svc) => ({
+            ...svc,
+            category: (svc as ServiceRow).category ?? "",
+            offeredByCount: (svc as ServiceRow).offeredByCount ?? 0,
+          })),
+        );
       } catch (err) {
-        setError("Unable to load services. Please try again.");
+        const message = err instanceof Error ? err.message : "Unable to load services. Please try again.";
+        setError(message);
       } finally {
         setIsLoading(false);
       }
@@ -84,11 +69,12 @@ const ServiceLibrary: React.FC = () => {
     loadServices();
   }, []);
 
+  const toStatusLabel = (service: ServiceRow): ServiceStatus => (service.active ? "Active" : "Archived");
+
   const filteredServices = useMemo(() => {
     return services.filter((service) => {
       const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus =
-        statusFilter === "All" ? true : service.status.toLowerCase() === statusFilter.toLowerCase();
+      const matchesStatus = statusFilter === "All" ? true : toStatusLabel(service) === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
@@ -104,46 +90,80 @@ const ServiceLibrary: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const openEditModal = (service: Service) => {
+  const openEditModal = (service: ServiceRow) => {
     setEditingService(service);
-    setFormState({ ...service });
+    setFormState({
+      id: service.id,
+      name: service.name,
+      description: service.description ?? "",
+      category: service.category ?? "",
+      duration: service.duration,
+      price: service.price,
+      active: service.active,
+      offeredByCount: service.offeredByCount,
+    });
     setIsModalOpen(true);
   };
 
-  const handleSave = (event: React.FormEvent) => {
+  const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!formState.name.trim()) {
       return;
     }
 
-    if (editingService) {
-      setServices((prev) =>
-        prev.map((svc) => (svc.id === editingService.id ? { ...formState } : svc)),
-      );
-    } else {
-      const newService: Service = {
-        ...formState,
-        id: crypto.randomUUID(),
-        offeredByCount: formState.offeredByCount ?? 0,
-      };
-      setServices((prev) => [newService, ...prev]);
-    }
+    const payload: ServicePayload = {
+      name: formState.name.trim(),
+      description: formState.description?.trim() || undefined,
+      duration: Number(formState.duration) || 0,
+      price: formState.price ?? 0,
+      active: formState.active,
+    };
 
-    setIsModalOpen(false);
-    resetForm();
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      if (editingService?.id) {
+        const updated = await updateService(editingService.id, payload);
+        setServices((prev) =>
+          prev.map((svc) => (svc.id === editingService.id ? { ...svc, ...updated, category: formState.category } : svc)),
+        );
+      } else {
+        const created = await createService(payload);
+        const newService: ServiceRow = { ...created, category: formState.category };
+        setServices((prev) => [newService, ...prev]);
+      }
+
+      setIsModalOpen(false);
+      resetForm();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to save service.";
+      setError(message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleArchiveRequest = (service: Service) => {
+  const handleArchiveRequest = (service: ServiceRow) => {
     setArchiveTarget(service);
   };
 
-  const confirmArchive = () => {
+  const confirmArchive = async () => {
     if (!archiveTarget) return;
 
-    setServices((prev) =>
-      prev.map((svc) => (svc.id === archiveTarget.id ? { ...svc, status: "Archived" } : svc)),
-    );
-    setArchiveTarget(null);
+    setIsArchiving(true);
+    setError(null);
+
+    try {
+      const updated = await updateService(archiveTarget.id, { active: false });
+      setServices((prev) => prev.map((svc) => (svc.id === archiveTarget.id ? { ...svc, ...updated } : svc)));
+      setArchiveTarget(null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to archive service.";
+      setError(message);
+    } finally {
+      setIsArchiving(false);
+    }
   };
 
   const closeModals = () => {
@@ -153,9 +173,7 @@ const ServiceLibrary: React.FC = () => {
   };
 
   const renderStatusPill = (status: ServiceStatus) => (
-    <span
-      className={`service-library__status-pill service-library__status-pill--${status.toLowerCase()}`}
-    >
+    <span className={`service-library__status-pill service-library__status-pill--${status.toLowerCase()}`}>
       {status}
     </span>
   );
@@ -224,23 +242,19 @@ const ServiceLibrary: React.FC = () => {
                   <div className="service-library__cell-subtext">{service.description}</div>
                   {service.offeredByCount !== undefined && (
                     <div className="service-library__cell-footnote">
-                      {service.offeredByCount} team{" "}
-                      {service.offeredByCount === 1 ? "member" : "members"} offer this service
+                      {service.offeredByCount} team {service.offeredByCount === 1 ? "member" : "members"} offer this service
                     </div>
                   )}
                 </td>
                 <td>{service.category || "—"}</td>
-                <td>{service.defaultDurationMinutes} min</td>
-                <td>{service.defaultPrice !== undefined ? `$${service.defaultPrice}` : "—"}</td>
-                <td>{renderStatusPill(service.status)}</td>
+                <td>{service.duration} min</td>
+                <td>{service.price !== undefined ? `$${service.price}` : "—"}</td>
+                <td>{renderStatusPill(toStatusLabel(service))}</td>
                 <td className="service-library__actions">
                   <button className="btn btn--ghost" onClick={() => openEditModal(service)}>
                     Edit
                   </button>
-                  <button
-                    className="btn btn--ghost service-library__archive"
-                    onClick={() => handleArchiveRequest(service)}
-                  >
+                  <button className="btn btn--ghost service-library__archive" onClick={() => handleArchiveRequest(service)}>
                     Archive
                   </button>
                 </td>
@@ -259,9 +273,7 @@ const ServiceLibrary: React.FC = () => {
           <div>
             <p className="service-library__eyebrow">Services management</p>
             <h1>Services</h1>
-            <p className="service-library__subtitle">
-              Manage your catalog. Team assignments are configured elsewhere.
-            </p>
+            <p className="service-library__subtitle">Manage your catalog. Team assignments are configured elsewhere.</p>
           </div>
           <button className="btn btn--primary" onClick={openCreateModal}>
             + New service
@@ -298,9 +310,7 @@ const ServiceLibrary: React.FC = () => {
           <div className="service-library__modal">
             <div className="service-library__modal-header">
               <div>
-                <p className="service-library__eyebrow">
-                  {editingService ? "Edit service" : "New service"}
-                </p>
+                <p className="service-library__eyebrow">{editingService ? "Edit service" : "New service"}</p>
                 <h2>{editingService ? editingService.name : "Create service"}</h2>
               </div>
               <button className="service-library__close" onClick={closeModals} aria-label="Close">
@@ -346,13 +356,8 @@ const ServiceLibrary: React.FC = () => {
                   <input
                     type="number"
                     min={0}
-                    value={formState.defaultDurationMinutes}
-                    onChange={(e) =>
-                      setFormState({
-                        ...formState,
-                        defaultDurationMinutes: Number(e.target.value) || 0,
-                      })
-                    }
+                    value={formState.duration}
+                    onChange={(e) => setFormState({ ...formState, duration: Number(e.target.value) || 0 })}
                   />
                 </label>
 
@@ -361,12 +366,9 @@ const ServiceLibrary: React.FC = () => {
                   <input
                     type="number"
                     min={0}
-                    value={formState.defaultPrice ?? ""}
+                    value={formState.price ?? ""}
                     onChange={(e) =>
-                      setFormState({
-                        ...formState,
-                        defaultPrice: e.target.value ? Number(e.target.value) : undefined,
-                      })
+                      setFormState({ ...formState, price: e.target.value ? Number(e.target.value) : undefined })
                     }
                     placeholder="Optional"
                   />
@@ -377,15 +379,10 @@ const ServiceLibrary: React.FC = () => {
                 <label className="service-library__toggle">
                   <input
                     type="checkbox"
-                    checked={formState.status === "Active"}
-                    onChange={(e) =>
-                      setFormState({
-                        ...formState,
-                        status: e.target.checked ? "Active" : "Archived",
-                      })
-                    }
+                    checked={formState.active}
+                    onChange={(e) => setFormState({ ...formState, active: e.target.checked })}
                   />
-                  <span>{formState.status === "Active" ? "Active" : "Archived"}</span>
+                  <span>{formState.active ? "Active" : "Archived"}</span>
                 </label>
               </div>
 
@@ -393,8 +390,8 @@ const ServiceLibrary: React.FC = () => {
                 <button type="button" className="btn btn--ghost" onClick={closeModals}>
                   Cancel
                 </button>
-                <button type="submit" className="btn btn--primary">
-                  Save
+                <button type="submit" className="btn btn--primary" disabled={isSaving}>
+                  {isSaving ? "Saving…" : "Save"}
                 </button>
               </div>
             </form>
@@ -407,15 +404,15 @@ const ServiceLibrary: React.FC = () => {
           <div className="service-library__confirm">
             <h3>Archive this service?</h3>
             <p>
-              {archiveTarget.name} will move to Archived. You can reactivate it later from this
-              list. Team assignments stay unchanged.
+              {archiveTarget.name} will move to Archived. You can reactivate it later from this list. Team assignments
+              stay unchanged.
             </p>
             <div className="service-library__actions-row">
-              <button className="btn btn--ghost" onClick={() => setArchiveTarget(null)}>
+              <button className="btn btn--ghost" onClick={() => setArchiveTarget(null)} disabled={isArchiving}>
                 Cancel
               </button>
-              <button className="btn btn--danger" onClick={confirmArchive}>
-                Archive
+              <button className="btn btn--danger" onClick={confirmArchive} disabled={isArchiving}>
+                {isArchiving ? "Archiving…" : "Archive"}
               </button>
             </div>
           </div>

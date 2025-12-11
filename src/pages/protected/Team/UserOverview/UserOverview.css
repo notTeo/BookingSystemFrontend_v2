@@ -257,3 +257,920 @@
     flex-direction: column;
   }
 }
+
+
+/* =========================================================
+   UserOverview.css — styled like EditShop, uses Global Tokens
+   ========================================================= */
+
+/* Root layout */
+.userOverview {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 8px 0 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.userOverview__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.userOverview__eyebrow {
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+}
+
+.userOverview__title {
+  font-size: 1.7rem;
+  margin: 0 0 6px;
+}
+
+.userOverview__subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.userOverview__muted {
+  margin: 6px 0 0;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+
+/* Back link */
+.userOverview__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.userOverview__ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-weight: 650;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast),
+    color var(--t-fast),
+    filter var(--t-fast);
+}
+
+.userOverview__ghost:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+}
+
+.userOverview__ghost:active {
+  transform: translateY(1px);
+}
+
+.userOverview__ghost:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* ---------------------------------------------------------
+   Cards
+   --------------------------------------------------------- */
+
+.userOverview__card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card header */
+.userOverview__cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.userOverview__cardHeader h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.userOverview__hint {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+/* Top-right pill (notice) */
+.userOverview__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   Member state messages
+   --------------------------------------------------------- */
+
+.userOverview__state {
+  max-width: 980px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: var(--shadow);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.userOverview__state--error {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+}
+
+/* ---------------------------------------------------------
+   Access & visibility card
+   --------------------------------------------------------- */
+
+.userOverview__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 860px) {
+  .userOverview__grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+.userOverview__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.userOverview__label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Select (role) – same vibe as EditShop inputs */
+.userOverview__input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  outline: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+
+.userOverview__input:focus {
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.userOverview__input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Toggle cards (Active / Bookable) */
+.userOverview__toggle {
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.userOverview__toggle > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userOverview__toggle strong {
+  font-size: 0.9rem;
+}
+
+.userOverview__toggle .userOverview__hint {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.userOverview__toggle input[type="checkbox"] {
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* ---------------------------------------------------------
+   Working hours (per-member)
+   --------------------------------------------------------- */
+
+.userOverview__hours {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Day row outer shell */
+.userOverview__hoursRow {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Day header */
+.userOverview__dayHeader {
+  width: 100%;
+  border: 0;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+}
+
+.userOverview__day {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Day off checkbox */
+.userOverview__closed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.userOverview__closed input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* Blocks container */
+.userOverview__blocks {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userOverview__closedNote {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px dashed var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Single time block */
+.userOverview__timeBlock {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Time inputs grid */
+.userOverview__timeInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.userOverview__timeInputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.userOverview__timeInputs label span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Time inputs themselves */
+.userOverview__timeInputs input[type="time"] {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 8px 10px;
+  outline: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+
+.userOverview__timeInputs input[type="time"]:focus {
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Remove block button */
+.userOverview__iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 999px;
+  font-weight: 650;
+  cursor: pointer;
+  user-select: none;
+
+  height: 34px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text);
+  align-self: flex-start;
+  font-size: 0.88rem;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast),
+    color var(--t-fast);
+}
+
+.userOverview__iconBtn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+}
+
+.userOverview__iconBtn:active {
+  transform: translateY(1px);
+}
+
+.userOverview__iconBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Add block button */
+.userOverview__addBlock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-weight: 650;
+  cursor: pointer;
+  user-select: none;
+
+  height: 40px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--border-strong);
+  color: var(--text);
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast),
+    color var(--t-fast);
+}
+
+.userOverview__addBlock:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.userOverview__addBlock:active {
+  transform: translateY(1px);
+}
+
+.userOverview__addBlock:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* ---------------------------------------------------------
+   Hours actions (Save / Cancel)
+   --------------------------------------------------------- */
+
+.userOverview__actionsBar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+/* Primary save button (hours) */
+.userOverview__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-weight: 650;
+  cursor: pointer;
+  user-select: none;
+
+  height: 42px;
+  padding: 0 16px;
+  font-size: 0.92rem;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background: var(--accent);
+  color: rgba(255, 255, 255, 0.95);
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast),
+    color var(--t-fast),
+    filter var(--t-fast);
+}
+
+.userOverview__primary:hover {
+  background: var(--accent-hover);
+}
+
+.userOverview__primary:active {
+  transform: translateY(1px);
+}
+
+.userOverview__primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.userOverview__primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.userOverview__actionsBar--space {
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+  
+  .userOverview__primary {
+    background: var(--accent-soft);
+    border: 1px solid rgba(59, 130, 246, 0.45);
+    color: rgba(255, 255, 255, 0.95);
+    padding: 10px 14px;
+    border-radius: var(--r-md);
+    font-weight: 700;
+  }
+
+  .userOverview__servicesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .userOverview__serviceItem {
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .userOverview__serviceMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .userOverview__serviceName {
+    font-weight: 700;
+  }
+  /*NEW*/
+  .userOverview__actionsBar--space {
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+  
+
+  .userOverview__servicesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .userOverview__serviceItem {
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .userOverview__serviceMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .userOverview__serviceName {
+    font-weight: 700;
+  }
+/* ---------------------------------------------------------
+   Responsive tweaks
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .userOverview__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .userOverview__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .userOverview__timeInputs {
+    grid-template-columns: 1fr;
+  }
+
+  .userOverview__actionsBar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}
+
+/* ===== Working hours – cloned from EditShop.css ===== */
+
+/* Clickable card header (edit-shop__card-header--clickable) */
+.userOverview__cardHeader--clickable {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+  transition: filter var(--t-fast);
+}
+
+.userOverview__cardHeader--clickable:hover {
+  filter: brightness(1.05);
+}
+
+.userOverview__cardHeader--clickable:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  border-radius: var(--r-md);
+}
+
+.userOverview__chev {
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  transform: translateY(-1px);
+}
+
+/* Hours container (edit-shop__hours) */
+.userOverview__hours {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  max-height: 2000px;
+  opacity: 1;
+  overflow: hidden;
+  transition:
+    max-height var(--t-med),
+    opacity var(--t-fast);
+}
+
+.userOverview__hours.is-collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* Each day row (edit-shop__hours-row) */
+.userOverview__hoursRow {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Day header (edit-shop__day-header) */
+.userOverview__dayHeader {
+  width: 100%;
+  border: 0;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  text-align: left;
+}
+
+.userOverview__dayHeader:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.userOverview__day {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Closed checkbox (edit-shop__closed) */
+.userOverview__closed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.userOverview__closed input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Blocks wrapper (edit-shop__blocks) */
+.userOverview__blocks {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  max-height: 1200px;
+  opacity: 1;
+  transition:
+    max-height var(--t-med),
+    opacity var(--t-fast),
+    padding var(--t-fast);
+}
+
+.userOverview__blocks.is-collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+/* Closed note (edit-shop__closed-note) */
+.userOverview__closedNote {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px dashed var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Time block (edit-shop__time-block) */
+.userOverview__timeBlock {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Time inputs grid (edit-shop__time) */
+.userOverview__time {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 560px) {
+  .userOverview__time {
+    grid-template-columns: 1fr;
+  }
+}
+
+.userOverview__time label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.userOverview__time label span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Time input (edit-shop__time-input) */
+.userOverview__timeInput {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  outline: none;
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+
+.userOverview__timeInput:focus {
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.userOverview__timeInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Buttons cloned from edit-shop__icon-btn / edit-shop__add-block */
+
+.userOverview__iconBtn,
+.userOverview__addBlock,
+.userOverview__ghost,
+.userOverview__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-weight: 650;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast),
+    color var(--t-fast),
+    filter var(--t-fast);
+}
+
+.userOverview__iconBtn:active,
+.userOverview__addBlock:active,
+.userOverview__ghost:active,
+.userOverview__primary:active {
+  transform: translateY(1px);
+}
+
+.userOverview__iconBtn:focus-visible,
+.userOverview__addBlock:focus-visible,
+.userOverview__ghost:focus-visible,
+.userOverview__primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Small remove button (edit-shop__icon-btn) */
+.userOverview__iconBtn {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 0.88rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text);
+  align-self: flex-start;
+}
+
+.userOverview__iconBtn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+}
+
+/* Add time block button (edit-shop__add-block) */
+.userOverview__addBlock {
+  height: 40px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--border-strong);
+  color: var(--text);
+}
+
+.userOverview__addBlock:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Actions under hours (similar to edit-shop__actions) */
+.userOverview__actionsBar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.userOverview__ghost,
+.userOverview__primary {
+  height: 42px;
+  padding: 0 16px;
+  font-size: 0.92rem;
+  border: 1px solid transparent;
+}
+
+.userOverview__ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.userOverview__ghost:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+}
+
+.userOverview__primary {
+  background: var(--accent);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.userOverview__primary:hover {
+  background: var(--accent-hover);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.userOverview__primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

@@ -3,13 +3,17 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import {
   getMemberHours,
+  getMemberServices,
   getTeamOverview,
   replaceMemberHours,
+  syncMemberServices,
   toggleMemberBookable,
   toggleMemberStatus,
   updateMemberRole,
 } from "../../../../api/team";
+import { listServices } from "../../../../api/services";
 import type { DayOfWeek } from "../../../../types/common";
+import type { Service } from "../../../../types/services";
 import type { TeamMemberSummary, WeekSchedule } from "../../../../types/team";
 import "./UserOverview.css";
 
@@ -70,11 +74,18 @@ const UserOverview: React.FC = () => {
   const [memberLoading, setMemberLoading] = useState(false);
   const [memberError, setMemberError] = useState<string | null>(null);
   const [memberNotice, setMemberNotice] = useState<string | null>(null);
+  const [servicesNotice, setServicesNotice] = useState<string | null>(null);
 
   const [week, setWeek] = useState<WeekSchedule[]>(buildEmptyWeek());
   const [hoursLoading, setHoursLoading] = useState(false);
   const [hoursError, setHoursError] = useState<string | null>(null);
   const [hoursStatus, setHoursStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [servicesStatus, setServicesStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [servicesError, setServicesError] = useState<string | null>(null);
+  const [serviceOptionsLoading, setServiceOptionsLoading] = useState(false);
+  const [serviceOptionsError, setServiceOptionsError] = useState<string | null>(null);
+  const [serviceOptions, setServiceOptions] = useState<Service[]>([]);
+  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set());
   const memberId = useMemo(() => {
     const fromRoute = Number(teamName);
     if (!Number.isNaN(fromRoute)) return fromRoute;
@@ -83,6 +94,9 @@ const UserOverview: React.FC = () => {
   }, [member, teamName]);
 
   const backToTeamHref = shopName ? `/shops/${encodeURIComponent(shopName)}/team` : "/shops";
+
+  const [hoursCollapsed, setHoursCollapsed] = useState(false);
+  const toggleHoursCollapsed = () => setHoursCollapsed((p) => !p);
 
   const loadMemberFromApi = useCallback(async () => {
     if (member || !memberId) return;
@@ -128,6 +142,37 @@ const UserOverview: React.FC = () => {
     }
   }, [member]);
 
+  const loadServicesCatalog = useCallback(async () => {
+    setServiceOptionsLoading(true);
+    setServiceOptionsError(null);
+
+    try {
+      const options = await listServices();
+      setServiceOptions(options);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to load services.";
+      setServiceOptionsError(message);
+    } finally {
+      setServiceOptionsLoading(false);
+    }
+  }, []);
+
+  const loadMemberServices = useCallback(async () => {
+    if (!member) return;
+
+    setServicesStatus("idle");
+    setServicesError(null);
+
+    try {
+      const assigned = await getMemberServices(member.id);
+      setSelectedServiceIds(new Set(assigned.map((svc) => svc.id)));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to load assigned services.";
+      setServicesError(message);
+      setSelectedServiceIds(new Set());
+    }
+  }, [member]);
+
   useEffect(() => {
     loadMemberFromApi();
   }, [loadMemberFromApi]);
@@ -135,6 +180,14 @@ const UserOverview: React.FC = () => {
   useEffect(() => {
     loadHours();
   }, [loadHours]);
+
+  useEffect(() => {
+    loadServicesCatalog();
+  }, [loadServicesCatalog]);
+
+  useEffect(() => {
+    loadMemberServices();
+  }, [loadMemberServices]);
 
   const updateSlot = (day: DayOfWeek, index: number, field: "start" | "end", value: string) => {
     setHoursStatus("idle");
@@ -260,6 +313,39 @@ const UserOverview: React.FC = () => {
     }
   };
 
+  const toggleServiceSelection = (serviceId: number, checked: boolean) => {
+    setServicesStatus("idle");
+    setServicesNotice(null);
+    setSelectedServiceIds((prev) => {
+      const next = new Set(prev);
+      if (checked) {
+        next.add(serviceId);
+      } else {
+        next.delete(serviceId);
+      }
+      return next;
+    });
+  };
+
+  const handleSaveServices = async () => {
+    if (!member) return;
+
+    setServicesStatus("saving");
+    setServicesError(null);
+    setServicesNotice(null);
+
+    try {
+      const updated = await syncMemberServices(member.id, Array.from(selectedServiceIds));
+      setSelectedServiceIds(new Set(updated.map((svc) => svc.id)));
+      setServicesStatus("saved");
+      setServicesNotice("Services updated");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unable to update services.";
+      setServicesError(message);
+      setServicesStatus("idle");
+    }
+  };
+
   return (
     <div className="userOverview">
       <header className="userOverview__header">
@@ -349,113 +435,198 @@ const UserOverview: React.FC = () => {
       </section>
 
       <section className="userOverview__card" aria-label="Working hours">
-        <div className="userOverview__cardHeader">
-          <div>
-            <h2>Working hours</h2>
-            <p className="userOverview__hint">
-              Set the days and hours this teammate is available for bookings.
-            </p>
+  {/* Clickable header, same idea as edit-shop__card-header--clickable */}
+  <button
+    type="button"
+    className="userOverview__cardHeader userOverview__cardHeader--clickable"
+    onClick={toggleHoursCollapsed}
+    aria-expanded={!hoursCollapsed}
+    aria-controls="member-working-hours-body"
+  >
+    <div>
+      <h2>Working hours</h2>
+      <p className="userOverview__hint">
+        Set the days and hours this teammate is available for bookings.
+      </p>
+    </div>
+
+    <h1 className="edit-shop__hours-caret" aria-hidden="true">
+              {hoursCollapsed ? "▾" : "▴"}
+            </h1>
+  </button>
+
+  {hoursStatus === "saved" && <span className="userOverview__pill">Saved</span>}
+
+  {hoursLoading && <p className="userOverview__state">Loading hours…</p>}
+  {hoursError && (
+    <p className="userOverview__state userOverview__state--error">{hoursError}</p>
+  )}
+
+  {/* Collapsible body – identical pattern to edit-shop__hours */}
+  <div
+    id="member-working-hours-body"
+    className={`userOverview__hours ${hoursCollapsed ? "is-collapsed" : ""}`}
+  >
+    {week.map((schedule) => {
+      const displayName =
+        DAY_LABELS.find((d) => d.key === schedule.dayOfWeek)?.label ??
+        schedule.dayOfWeek;
+
+      return (
+        <div key={schedule.dayOfWeek} className="userOverview__hoursRow">
+          <div className="userOverview__dayHeader">
+            <div className="userOverview__day">{displayName}</div>
+            <label className="userOverview__closed">
+              <input
+                type="checkbox"
+                checked={schedule.isOff}
+                onChange={(e) => toggleDayOff(schedule.dayOfWeek, e.target.checked)}
+              />
+              <span>Day off</span>
+            </label>
           </div>
-          {hoursStatus === "saved" && <span className="userOverview__pill">Saved</span>}
-        </div>
 
-        {hoursLoading && <p className="userOverview__state">Loading hours…</p>}
-        {hoursError && (
-          <p className="userOverview__state userOverview__state--error">{hoursError}</p>
-        )}
+          <div className="userOverview__blocks">
+            {schedule.isOff ? (
+              <div className="userOverview__closedNote">
+                This day is marked as off.
+              </div>
+            ) : (
+              schedule.slots.map((slot, index) => (
+                <div
+                  key={`${schedule.dayOfWeek}-${index}`}
+                  className="userOverview__timeBlock"
+                >
+                  <div className="userOverview__time">
+                    <label>
+                      <span>Start</span>
+                      <input
+                        className="userOverview__timeInput"
+                        type="time"
+                        value={slot.start}
+                        onChange={(e) =>
+                          updateSlot(schedule.dayOfWeek, index, "start", e.target.value)
+                        }
+                      />
+                    </label>
 
-        <div className="userOverview__hours">
-          {week.map((schedule) => {
-            const displayName =
-              DAY_LABELS.find((d) => d.key === schedule.dayOfWeek)?.label ?? schedule.dayOfWeek;
+                    <label>
+                      <span>End</span>
+                      <input
+                        className="userOverview__timeInput"
+                        type="time"
+                        value={slot.end}
+                        onChange={(e) =>
+                          updateSlot(schedule.dayOfWeek, index, "end", e.target.value)
+                        }
+                      />
+                    </label>
+                  </div>
 
-            return (
-              <div key={schedule.dayOfWeek} className="userOverview__hoursRow">
-                <div className="userOverview__dayHeader">
-                  <div className="userOverview__day">{displayName}</div>
-                  <label className="userOverview__closed">
-                    <input
-                      type="checkbox"
-                      checked={schedule.isOff}
-                      onChange={(e) => toggleDayOff(schedule.dayOfWeek, e.target.checked)}
-                    />
-                    <span>Day off</span>
-                  </label>
-                </div>
-
-                <div className="userOverview__blocks">
-                  {schedule.isOff ? (
-                    <div className="userOverview__closedNote">This day is marked as off.</div>
-                  ) : (
-                    schedule.slots.map((slot, index) => (
-                      <div
-                        key={`${schedule.dayOfWeek}-${index}`}
-                        className="userOverview__timeBlock"
-                      >
-                        <div className="userOverview__timeInputs">
-                          <label>
-                            <span>Start</span>
-                            <input
-                              type="time"
-                              value={slot.start}
-                              onChange={(e) =>
-                                updateSlot(schedule.dayOfWeek, index, "start", e.target.value)
-                              }
-                            />
-                          </label>
-
-                          <label>
-                            <span>End</span>
-                            <input
-                              type="time"
-                              value={slot.end}
-                              onChange={(e) =>
-                                updateSlot(schedule.dayOfWeek, index, "end", e.target.value)
-                              }
-                            />
-                          </label>
-                        </div>
-
-                        {schedule.slots.length > 1 && (
-                          <button
-                            type="button"
-                            className="userOverview__iconBtn"
-                            onClick={() => removeSlot(schedule.dayOfWeek, index)}
-                          >
-                            Remove
-                          </button>
-                        )}
-                      </div>
-                    ))
-                  )}
-
-                  {!schedule.isOff && (
+                  {schedule.slots.length > 1 && (
                     <button
                       type="button"
-                      className="userOverview__addBlock"
-                      onClick={() => addSlot(schedule.dayOfWeek)}
+                      className="userOverview__iconBtn"
+                      onClick={() => removeSlot(schedule.dayOfWeek, index)}
                     >
-                      + Add time block
+                      Remove
                     </button>
                   )}
                 </div>
-              </div>
+              ))
+            )}
+
+            {!schedule.isOff && (
+              <button
+                type="button"
+                className="userOverview__addBlock"
+                onClick={() => addSlot(schedule.dayOfWeek)}
+              >
+                + Add time block
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  {/* Actions – hide when collapsed so it feels like the card is closed */}
+  {!hoursCollapsed && (
+    <div className="userOverview__actionsBar">
+      <button
+        type="button"
+        className="userOverview__primary"
+        onClick={handleSaveHours}
+        disabled={hoursStatus === "saving" || !memberId}
+      >
+        {hoursStatus === "saving" ? "Saving…" : "Save working hours"}
+      </button>
+      <button
+        type="button"
+        className="userOverview__ghost"
+        onClick={() => navigate(-1)}
+      >
+        Cancel
+      </button>
+    </div>
+  )}
+</section>
+
+      <section className="userOverview__card" aria-label="Services">
+        <div className="userOverview__cardHeader">
+          <div>
+            <h2>Services</h2>
+            <p className="userOverview__hint">Choose which services this teammate can offer. Customers can only book assigned services.</p>
+          </div>
+          {(servicesStatus === "saved" || servicesNotice) && <span className="userOverview__pill">{servicesNotice ?? "Saved"}</span>}
+        </div>
+
+        {serviceOptionsLoading && <p className="userOverview__state">Loading services…</p>}
+        {serviceOptionsError && <p className="userOverview__state userOverview__state--error">{serviceOptionsError}</p>}
+        {servicesError && <p className="userOverview__state userOverview__state--error">{servicesError}</p>}
+
+        {!serviceOptionsLoading && !serviceOptionsError && serviceOptions.length === 0 && (
+          <p className="userOverview__state">No services available. Add services in the Services library first.</p>
+        )}
+
+        <div className="userOverview__servicesGrid">
+          {serviceOptions.map((svc) => {
+            const isSelected = selectedServiceIds.has(svc.id);
+            return (
+              <label key={svc.id} className="userOverview__serviceItem">
+                <div className="userOverview__serviceMeta">
+                  <span className="userOverview__serviceName">{svc.name}</span>
+                  <small className="userOverview__hint">
+                    {svc.duration} min · {svc.price ? `$${svc.price}` : "No price"}
+                  </small>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={(e) => toggleServiceSelection(svc.id, e.target.checked)}
+                  disabled={!member}
+                />
+              </label>
             );
           })}
         </div>
 
-        <div className="userOverview__actionsBar">
-          <button
-            type="button"
-            className="userOverview__primary"
-            onClick={handleSaveHours}
-            disabled={hoursStatus === "saving" || !memberId}
-          >
-            {hoursStatus === "saving" ? "Saving…" : "Save working hours"}
-          </button>
-          <button type="button" className="userOverview__ghost" onClick={() => navigate(-1)}>
-            Cancel
-          </button>
+        <div className="userOverview__actionsBar userOverview__actionsBar--space">
+          <div className="userOverview__hint">Changes apply to this teammate only.</div>
+          <div className="userOverview__actions">
+            <button
+              type="button"
+              className="userOverview__primary"
+              onClick={handleSaveServices}
+              disabled={servicesStatus === "saving" || !member}
+            >
+              {servicesStatus === "saving" ? "Saving…" : "Save services"}
+            </button>
+            <button type="button" className="userOverview__ghost" onClick={() => navigate(-1)}>
+              Cancel
+            </button>
+          </div>
         </div>
       </section>
     </div>
