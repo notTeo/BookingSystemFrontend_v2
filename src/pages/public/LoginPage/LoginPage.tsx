@@ -104,6 +104,9 @@ export default function SignInPage() {
               <span>Don&apos;t have an account?</span>
               <Link to="/register">Create one</Link>
             </p>
+            <p className="signin__footer">
+              <Link to="/reset-password-email">Forgot your password?</Link>
+            </p>
           </form>
         </section>
 

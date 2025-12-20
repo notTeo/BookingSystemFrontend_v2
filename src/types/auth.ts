@@ -39,3 +39,12 @@ export interface AuthTokens {
 export interface RefreshPayload {
   refreshToken: string;
 }
+
+export type ForgotPasswordPayload = {
+  email: string;
+}
+
+export type ResetPasswordPayload = {
+  token: string;
+  newPassword: string;
+}

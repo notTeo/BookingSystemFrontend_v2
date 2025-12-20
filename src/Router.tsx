@@ -31,6 +31,8 @@ import RegisterPage from "./pages/public/RegisterPage/RegisterPage";
 // Providers
 import { AuthProvider } from "./providers/AuthProvider";
 import { ShopProvider } from "./providers/ShopProvider";
+import ResetPasswordPage from "./pages/public/ResetPasswordPage/ResetPasswordPage";
+import ResetPasswordEmailPage from "./pages/public/ResetPasswordPage/RestPasswordEmailPage";
 export default function Router() {
   return (
     <BrowserRouter>
@@ -43,6 +45,9 @@ export default function Router() {
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/reset-password-email" element={<ResetPasswordEmailPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              
               <Route path="*" element={<NotFoundPage />} />
             </Route>
 

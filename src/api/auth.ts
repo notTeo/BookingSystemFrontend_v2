@@ -1,5 +1,5 @@
 import { request, setAccessToken } from "./http";
-import type { AuthTokens, LoginPayload, RefreshPayload, RegisterPayload } from "../types/auth";
+import type { AuthTokens, ForgotPasswordPayload, LoginPayload, RefreshPayload, RegisterPayload, ResetPasswordPayload } from "../types/auth";
 
 export async function registerUser(payload: RegisterPayload) {
   const data = await request<AuthTokens>({ method: "POST", url: "/auth/register", data: payload });
@@ -20,5 +20,15 @@ export async function refreshAccessToken(payload: RefreshPayload) {
     data: payload,
   });
   setAccessToken(data.accessToken);
+  return data;
+}
+
+export async function forgotPassword(payload: ForgotPasswordPayload) {
+  const data = await request<void>({ method: "POST", url: "/auth/forgot-password", data: payload });
+  return data;
+}
+
+export async function resetPassword(payload: ResetPasswordPayload) {
+  const data = await request<void>({ method: "POST", url: "/auth/reset-password", data: payload });
   return data;
 }
