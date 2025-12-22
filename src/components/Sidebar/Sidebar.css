@@ -157,7 +157,7 @@
   width: 18px;
   height: 2px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.86);
+  background: var(--text);
 }
 
 .app-sidebar__close span:first-child {
@@ -262,7 +262,7 @@
 }
 
 .app-sidebar__user__info div {
-  color: #fff;
+  color: var(--text);
   font-size: 1rem;
 }
 
@@ -327,7 +327,7 @@
     width: 22px;
     height: 2px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
+    background: var(--text);
   }
 
   .app-sidebar-burger.is-open {

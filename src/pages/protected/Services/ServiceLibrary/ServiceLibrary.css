@@ -74,7 +74,7 @@ service-library {
   .service-library__chip--active {
     background: var(--accent-soft);
     border-color: var(--accent);
-    color: #fff;
+    color: var(--accent-hover);
   }
   
   .service-library__panel {

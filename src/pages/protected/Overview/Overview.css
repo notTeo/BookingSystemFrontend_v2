@@ -69,9 +69,9 @@
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--overlay);
   border: 1px solid var(--border);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text);
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -115,7 +115,7 @@
   justify-content: flex-end;
 }
 
-/* Plan pill */
+/* Plan pill (theme-aware) */
 .overview__plan-pill {
   display: inline-flex;
   align-items: center;
@@ -124,25 +124,35 @@
   border-radius: 999px;
   font-size: 0.82rem;
   font-weight: 650;
+
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--overlay);
   color: var(--text-muted);
 }
 
+html[data-theme="light"] .overview__plan-pill {
+  color: var(--text);
+}
+
+/* PRO = purple */
 .overview__plan-pill--PRO {
-  border-color: rgba(59, 130, 246, 0.35);
-  background: var(--accent-soft);
-  color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(168, 85, 247, 0.35);
+  background: rgba(168, 85, 247, 0.14);
+  color: var(--text);
 }
+
+/* STARTER = neutral */
 .overview__plan-pill--STARTER {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.82);
+  border-color: var(--border-strong);
+  background: var(--overlay);
+  color: var(--text);
 }
+
+/* MEMBER = blue */
 .overview__plan-pill--MEMBER {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.035);
-  color: rgba(255, 255, 255, 0.76);
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.14);
+  color: var(--text);
 }
 
 /* Stats row */
@@ -156,7 +166,7 @@
 }
 
 .overview__stat {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--overlay);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   padding: 12px;
@@ -196,10 +206,14 @@
   justify-content: center;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--overlay);
   color: var(--text-muted);
   font-size: 0.85rem;
   font-weight: 750;
+}
+
+html[data-theme="light"] .overview__shops-count {
+  color: var(--text);
 }
 
 .overview__empty {
@@ -220,7 +234,7 @@
 .overview__shop-card {
   border-radius: var(--r-lg);
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--overlay);
   overflow: hidden;
 }
 
@@ -235,7 +249,7 @@
 }
 
 .overview__shop-link:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--overlay-hover);
   transform: translateY(-1px);
 }
 
@@ -270,9 +284,13 @@
   font-size: 0.75rem;
   font-weight: 750;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--overlay);
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+html[data-theme="light"] .overview__role-pill {
+  color: var(--text);
 }
 
 .overview__role-pill--owner,
@@ -281,15 +299,16 @@
 }
 .overview__role-pill--owner {
   background: var(--accent-soft);
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--text);
 }
+
 .overview__role-pill--manager,
 .overview__shop-card--manager {
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: var(--border-strong);
 }
 .overview__role-pill--staff,
 .overview__shop-card--staff {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--border);
 }
 .overview__role-pill--default,
 .overview__shop-card--default {
@@ -311,38 +330,4 @@
   .overview__profile-stats {
     grid-template-columns: 1fr;
   }
-}
-/* Base pill */
-.overview__plan-pill {
-  display: inline-flex;
-  align-items: center;
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.82);
-}
-
-/* MEMBER = neutral/gray (basic) */
-.overview__plan-pill--MEMBER {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.82);
-}
-
-/* STARTER = yellow */
-.overview__plan-pill--STARTER {
-  border-color: rgba(245, 158, 11, 0.45);
-  background: rgba(245, 158, 11, 0.14);
-  color: rgba(255, 226, 170, 0.96);
-}
-
-/* PRO = blue (premium) */
-.overview__plan-pill--PRO {
-  border-color: rgba(59, 130, 246, 0.45);
-  background: rgba(59, 130, 246, 0.16);
-  color: rgba(219, 234, 254, 0.96);
 }

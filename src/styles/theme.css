@@ -51,6 +51,12 @@
 
   /* Topbar */
   --topbar-bg: rgba(23, 24, 26, 0.9);
+
+  --plan-pro: #a855f7;        /* purple */
+  --plan-pro-soft: rgba(168, 85, 247, 0.16);
+
+  --plan-member: #3b82f6;     /* blue */
+  --plan-member-soft: rgba(59, 130, 246, 0.14);
 }
 
 /* ---------- Reset / base ---------- */
@@ -383,4 +389,11 @@ html[data-theme="light"] {
 
   /* Shadow should be softer on light */
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+  --plan-pro: #a855f7;
+  --plan-pro-soft: rgba(168, 85, 247, 0.14);
+
+  --plan-member: #3b82f6;
+  --plan-member-soft: rgba(59, 130, 246, 0.12);
+
 }
