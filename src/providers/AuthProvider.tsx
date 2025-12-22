@@ -1,47 +1,44 @@
 // AuthProvider.tsx
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 
-import { clearAuthCookies, getAccessToken } from "../api/http";
+import { clearClientState } from "../api/http";
 import { getCurrentUser } from "../api/user";
+import { logout as apiLogout } from "../api/auth";
 import type { AuthContextValue, UserProfile } from "../types";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(() => getAccessToken());
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
-    const latestToken = getAccessToken();
-    setToken((prev) => (prev === latestToken ? prev : latestToken));
-    if (!latestToken) {
-      setUser(null);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
     try {
       const currentUser = await getCurrentUser();
-      console.log(currentUser);
       setUser(currentUser ?? null);
-    } catch (error) {
-      console.error("getCurrentUser failed", error);
+    } catch {
       setUser(null);
     } finally {
       setIsLoading(false);
     }
   }, []);
+  
 
-  const logout = () => {
+  const logout = useCallback(async () => {
     setUser(null);
-    clearAuthCookies();
-  };
+    clearClientState(); // clears active shop cookie only
+
+    try {
+      await apiLogout(); // clears HttpOnly cookies on backend
+    } catch {
+      // ignore (user is already logged out client-side)
+    }
+  }, []);
 
   useEffect(() => {
     void refreshUser();
-  }, [token, refreshUser]);
+  }, [refreshUser]);
 
   const value: AuthContextValue = {
     user,

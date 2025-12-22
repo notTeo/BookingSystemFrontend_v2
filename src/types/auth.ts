@@ -36,10 +36,6 @@ export interface AuthTokens {
   user: UserProfile;
 }
 
-export interface RefreshPayload {
-  refreshToken: string;
-}
-
 export type ForgotPasswordPayload = {
   email: string;
 }
