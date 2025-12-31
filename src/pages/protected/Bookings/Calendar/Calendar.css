@@ -11,6 +11,13 @@
     padding: 6px 2px;
   }
   
+  .calendar-header__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  
   .calendar-title {
     margin: 0;
     font-size: 1.7rem;

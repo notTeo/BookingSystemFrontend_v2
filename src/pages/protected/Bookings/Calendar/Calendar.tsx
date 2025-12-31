@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./Calendar.css";
+import { Link, useParams } from "react-router-dom";
 import type {
   BookingStatus,
   BookingWithRelations,
@@ -28,10 +29,7 @@ type DraftFilters = {
   day: string; // YYYY-MM-DD
 };
 
-// Build a clean "one day" [from,to) range in ISO.
-// from = local day 00:00
-// to   = next day 00:00 (exclusive)
-function buildDayRangeIso(day: string): { from: string; to: string } | null {
+function buildDayRangeIsoUtc(day: string): { from: string; to: string } | null {
   if (!day) return null;
 
   const [yStr, mStr, dStr] = day.split("-");
@@ -40,14 +38,17 @@ function buildDayRangeIso(day: string): { from: string; to: string } | null {
   const d = Number(dStr);
   if (!y || !m || !d) return null;
 
-  const start = new Date(y, m - 1, d, 0, 0, 0, 0);
-  const end = new Date(y, m - 1, d + 1, 0, 0, 0, 0);
+  // midnight UTC of that day
+  const from = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
+  // midnight UTC of next day
+  const to = new Date(Date.UTC(y, m - 1, d + 1, 0, 0, 0, 0));
 
-  return { from: start.toISOString(), to: end.toISOString() };
+  return { from: from.toISOString(), to: to.toISOString() };
 }
 
 const Calendar: React.FC = () => {
   const shopId = getActiveShopId();
+  const { shopName } = useParams();
 
   const [draft, setDraft] = useState<DraftFilters>({
     status: "",
@@ -93,7 +94,7 @@ const Calendar: React.FC = () => {
       if (!Number.isNaN(n)) p.providerId = n;
     }
 
-    const range = buildDayRangeIso(draft.day);
+    const range = buildDayRangeIsoUtc(draft.day);
     if (range) {
       p.from = range.from;
       p.to = range.to;
@@ -117,7 +118,7 @@ const Calendar: React.FC = () => {
       if (!Number.isNaN(n)) next.providerId = n;
     }
 
-    const range = buildDayRangeIso(draft.day);
+    const range = buildDayRangeIsoUtc(draft.day);
     if (range) {
       next.from = range.from;
       next.to = range.to;
@@ -216,8 +217,20 @@ const Calendar: React.FC = () => {
   return (
     <div className="calendar-page">
       <div className="calendar-header">
-        <h1 className="calendar-title">Calendar</h1>
-        <p className="calendar-subtitle">Bookings</p>
+      <div className="calendar-header__row">
+          <div>
+            <h1 className="calendar-title">Calendar</h1>
+            <p className="calendar-subtitle">Bookings</p>
+          </div>
+          {shopName ? (
+            <Link
+              className="btn btn--primary"
+              to={`/shops/${encodeURIComponent(shopName)}/bookings/new`}
+            >
+              New booking
+            </Link>
+          ) : null}
+        </div>
       </div>
 
       <div className="card calendar-filters">
@@ -255,7 +268,9 @@ const Calendar: React.FC = () => {
                 </option>
               ))}
             </select>
-            {servicesError ? <small style={{ color: "var(--text-muted)" }}>{servicesError}</small> : null}
+            {servicesError ? (
+              <small style={{ color: "var(--text-muted)" }}>{servicesError}</small>
+            ) : null}
           </div>
 
           <div className="field calendar-filters__field">
@@ -279,7 +294,9 @@ const Calendar: React.FC = () => {
                 </option>
               ))}
             </select>
-            {providersError ? <small style={{ color: "var(--text-muted)" }}>{providersError}</small> : null}
+            {providersError ? (
+              <small style={{ color: "var(--text-muted)" }}>{providersError}</small>
+            ) : null}
           </div>
 
           <div className="field calendar-filters__field">
@@ -311,7 +328,9 @@ const Calendar: React.FC = () => {
       <div className="card calendar-results">
         <div className="calendar-results__header">
           <h2 className="calendar-results__title">Results</h2>
-          <div className="calendar-results__meta">{loading ? "Loading…" : `Count: ${bookings.length}`}</div>
+          <div className="calendar-results__meta">
+            {loading ? "Loading…" : `Count: ${bookings.length}`}
+          </div>
         </div>
 
         {error && <div className="calendar-alert calendar-alert--error">{error}</div>}
@@ -340,8 +359,12 @@ const Calendar: React.FC = () => {
 
                   <div className="calendar-item__body">
                     {start && <div className="calendar-item__line">Start: {String(start)}</div>}
-                    {serviceName && <div className="calendar-item__line">Service: {serviceName}</div>}
-                    {providerName && <div className="calendar-item__line">Provider: {providerName}</div>}
+                    {serviceName && (
+                      <div className="calendar-item__line">Service: {serviceName}</div>
+                    )}
+                    {providerName && (
+                      <div className="calendar-item__line">Provider: {providerName}</div>
+                    )}
                   </div>
 
                   <details className="calendar-item__debug">
