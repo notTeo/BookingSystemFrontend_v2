@@ -18,6 +18,18 @@ function statusLabel(s: string) {
   return String(s).replaceAll("_", " ");
 }
 
+const WEEK_ORDER: Record<string, number> = {
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
+  SUNDAY: 7,
+};
+
+const dayOrder = (d: unknown) => WEEK_ORDER[String(d).toUpperCase()] ?? 999;
+
 const ShopOverviewPage: React.FC = () => {
   const shopId = getActiveShopId();
   const { currentShop, isLoading, refreshShop } = useShop();
@@ -27,7 +39,10 @@ const ShopOverviewPage: React.FC = () => {
     refreshShop();
   }, [shopId, refreshShop]);
 
-  const hours = useMemo(() => currentShop?.shop?.workingHours ?? [], [currentShop]);
+  const hours = useMemo(
+    () => currentShop?.workingHours ?? currentShop?.shop?.workingHours ?? [],
+    [currentShop],
+  );
   const recent = useMemo(() => currentShop?.recentBookings ?? [], [currentShop]);
 
   if (!shopId) return <p className="shopOv__state">No shop selected.</p>;
@@ -43,16 +58,8 @@ const ShopOverviewPage: React.FC = () => {
           <div>
             <h1 className="shopOv__title">{shop.name}</h1>
             <p className="shopOv__subtitle">
-              {shop.address ? shop.address : "No address set"} •{" "}
-              <span
-                className={
-                  shop.active
-                    ? "shopOv__status shopOv__status--on"
-                    : "shopOv__status shopOv__status--off"
-                }
-              >
-                {shop.active ? "Active" : "Inactive"}
-              </span>
+              {shop.address ? shop.address : "No address set"}
+              
             </p>
           </div>
 
@@ -122,7 +129,7 @@ const ShopOverviewPage: React.FC = () => {
             <div className="shopOv__hours">
               {hours
                 .slice()
-                .sort((a, b) => String(a.dayOfWeek).localeCompare(String(b.dayOfWeek)))
+                .sort((a, b) => dayOrder(a.dayOfWeek) - dayOrder(b.dayOfWeek))
                 .map((h) => (
                   <div key={`${h.dayOfWeek}-${h.id ?? "x"}`} className="shopOv__hoursRow">
                     <div className="shopOv__day">{dayLabel(String(h.dayOfWeek))}</div>

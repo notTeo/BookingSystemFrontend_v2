@@ -1,175 +1,496 @@
 /* Calendar.css */
-/* Uses your global tokens + base components (.card, .row, .field, .input, .select, .btn) */
+/* Uses your global tokens + base components (.card, .row, .field, .input, .select, .btn, .badge) */
 
 .calendar-page {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .calendar-header {
-    padding: 6px 2px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar-header {
+  padding: 6px 2px;
+}
+
+.calendar-header__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.calendar-title {
+  margin: 0;
+  font-size: 1.7rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.calendar-subtitle {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* FILTERS */
+.calendar-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Desktop: one row scroll */
+.calendar-filters__row {
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}
+
+.calendar-filters__field {
+  margin-bottom: 0;
+  min-width: 180px;
+}
+
+.calendar-filters__actions {
+  margin-left: auto;
+  flex-wrap: nowrap;
+  gap: 10px;
+}
+
+/* Payload preview */
+.calendar-filters__preview {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.calendar-filters__preview-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.calendar-filters__code {
+  margin: 0;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 0.85rem;
+  overflow: auto;
+  max-height: 180px;
+}
+
+/* RESULTS */
+.calendar-results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar-results__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calendar-results__title {
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--text);
+}
+
+.calendar-results__meta {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* alerts */
+.calendar-alert {
+  background: var(--overlay);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  color: var(--text-muted);
+}
+
+.calendar-alert--error {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ===== GRID (TABLE) ===== */
+
+.calendar-grid-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: auto;
+  background: var(--bg-card);
+  max-height: 70vh;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Table */
+.calendar-grid {
+  width: max-content; /* allows horizontal scroll when many providers */
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Header cells */
+.cal-th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 650;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.cal-th--time {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  min-width: 90px;
+}
+
+/* Body cells */
+.cal-td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top;
+  background: transparent;
+  min-width: 220px;
+  height: 38px;
+}
+
+.cal-td--time {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  min-width: 90px;
+  font-size: 0.9rem;
+}
+
+.cal-td--empty {
+  background: transparent;
+}
+
+.cal-td--empty:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cal-td--booked {
+  background: transparent;
+}
+
+/* Provider header content */
+.cal-provider__name {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+/* ===== Booking card ===== */
+
+.cal-booking {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px;
+  position: relative;
+}
+
+.cal-booking__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cal-booking__title {
+  color: var(--text);
+  font-weight: 650;
+  font-size: 0.92rem;
+  line-height: 1.15;
+}
+
+.cal-booking__meta {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cal-booking__id {
+  color: var(--text-soft);
+}
+
+/* ===== Status badge colors (calendar-specific) ===== */
+
+.cal-badge {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.cal-badge--PENDING {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cal-badge--CONFIRMED {
+  background: rgba(34, 197, 94, 0.16);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cal-badge--CANCELED {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cal-badge--NO_SHOW {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.28);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cal-badge--COMPLETED {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Unknown/fallback */
+.cal-badge--DEFAULT {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* ===== Hover actions ===== */
+
+.cal-booking__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  margin-top: 2px;
+
+  opacity: 0;
+  transform: translateY(2px);
+  pointer-events: none;
+
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.cal-booking:hover .cal-booking__actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Make the action buttons compact even if you don't have btn--sm globally */
+.cal-booking__action-btn {
+  padding: 6px 8px;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+/* Optional: highlight the card on hover */
+.cal-booking:hover {
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Debug */
+.cal-booking__debug {
+  margin-top: 6px;
+  color: var(--text-muted);
+}
+
+.cal-booking__debug pre {
+  margin: 8px 0 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px;
+  overflow: auto;
+  max-height: 180px;
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+
+/* Tablet */
+@media (max-width: 920px) {
   .calendar-header__row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-  }
-  
-  .calendar-title {
-    margin: 0;
-    font-size: 1.7rem;
-    letter-spacing: -0.02em;
-    color: var(--text);
-  }
-  
-  .calendar-subtitle {
-    margin: 6px 0 0;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-  }
-  
-  /* FILTERS */
-  .calendar-filters {
-    display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: stretch;
   }
-  
-  /* Force ONE row: no wrap. If too tight, it scrolls horizontally. */
+
+  .calendar-header__row .row {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  /* Stack filters instead of forced single row */
   .calendar-filters__row {
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    overflow-x: auto;
-    padding-bottom: 2px; /* room for scrollbar */
-    scrollbar-gutter: stable;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding-bottom: 0;
+    gap: 10px;
   }
-  
+
   .calendar-filters__field {
-    margin-bottom: 0; /* global .field has margin-bottom; we want clean row */
-    min-width: 180px;
+    min-width: 0;
+    flex: 1 1 220px;
   }
-  
+
   .calendar-filters__actions {
-    margin-left: auto; /* push buttons to the far right */
-    flex-wrap: nowrap;
-    gap: 10px;
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  
-  /* Payload preview */
-  .calendar-filters__preview {
-    border-top: 1px solid var(--border);
-    padding-top: 12px;
-  }
-  
-  .calendar-filters__preview-label {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-  }
-  
-  .calendar-filters__code {
-    margin: 0;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-    padding: 10px 12px;
-    color: var(--text);
-    font-size: 0.85rem;
-    overflow: auto;
-    max-height: 180px;
-  }
-  
-  /* RESULTS */
-  .calendar-results {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
+
   .calendar-results__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  
-  .calendar-results__title {
-    margin: 0;
-    font-size: 1.02rem;
-    color: var(--text);
-  }
-  
-  .calendar-results__meta {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-  }
-  
-  /* alerts */
-  .calendar-alert {
-    background: var(--overlay);
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-    padding: 10px 12px;
-    color: var(--text-muted);
-  }
-  
-  .calendar-alert--error {
-    border-color: rgba(239, 68, 68, 0.35);
-    color: rgba(255, 255, 255, 0.92);
-  }
-  
-  /* list */
-  .calendar-list {
-    display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-  
-  .calendar-item {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--r-lg);
-    padding: 12px;
-  }
-  
-  .calendar-item__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .calendar-item__id {
-    color: var(--text);
-    font-weight: 650;
-  }
-  
-  .calendar-item__body {
-    display: flex;
-    flex-direction: column;
+    align-items: flex-start;
     gap: 6px;
   }
-  
-  .calendar-item__line {
-    color: var(--text-muted);
-    font-size: 0.92rem;
+
+  .calendar-grid-wrap {
+    max-height: 75vh;
   }
-  
-  .calendar-item__debug {
-    margin-top: 10px;
-    color: var(--text-muted);
+
+  .cal-td {
+    min-width: 180px;
   }
-  
-  .calendar-item__debug pre {
-    margin: 8px 0 0;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-    padding: 10px;
-    overflow: auto;
+}
+
+/* Phone */
+@media (max-width: 600px) {
+  .calendar-page {
+    gap: 10px;
   }
-  
+
+  .calendar-title {
+    font-size: 1.35rem;
+  }
+
+  .calendar-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .calendar-filters__field {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  /* Prevent iOS zoom on focus */
+  .calendar-filters__field .input,
+  .calendar-filters__field .select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .calendar-filters__actions .btn {
+    min-height: 44px;
+  }
+
+  .calendar-filters__code {
+    max-height: 140px;
+    font-size: 0.82rem;
+  }
+
+  /* Sticky tables are janky on mobile: disable stickies */
+  .cal-th,
+  .cal-th--time,
+  .cal-td--time {
+    position: static;
+  }
+
+  .calendar-grid {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cal-th {
+    padding: 10px 10px;
+    font-size: 0.9rem;
+  }
+
+  .cal-th--time,
+  .cal-td--time {
+    min-width: 72px;
+    font-size: 0.85rem;
+  }
+
+  .cal-td {
+    min-width: 160px;
+    height: 40px;
+    padding: 8px;
+  }
+
+  .cal-booking {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  /* No hover on phones: show actions always */
+  .cal-booking__actions {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .cal-booking__action-btn {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  .cal-booking__meta {
+    font-size: 0.82rem;
+  }
+
+  .cal-booking__debug pre {
+    max-height: 140px;
+  }
+}
+
+/* Ultra small */
+@media (max-width: 380px) {
+  .cal-td {
+    min-width: 140px;
+  }
+
+  .cal-th--time,
+  .cal-td--time {
+    min-width: 40px;
+  }
+}

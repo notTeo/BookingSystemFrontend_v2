@@ -56,7 +56,10 @@ const EditShop: React.FC = () => {
   const navigate = useNavigate();
   const shopId = getActiveShopId();
 
-  const hours = useMemo(() => currentShop?.shop?.workingHours ?? [], [currentShop]);
+  const hours = useMemo(
+    () => currentShop?.workingHours ?? currentShop?.shop?.workingHours ?? [],
+    [currentShop],
+  );
 
   const [form, setForm] = useState<FormState>(() => ({
     name: "",
@@ -88,9 +91,9 @@ const [deleteError, setDeleteError] = useState<string | null>(null);
       name: currentShop.shop.name ?? "",
       address: currentShop.shop.address ?? "",
       active: currentShop.shop.active ?? true,
-      workingHours: buildDaySchedules(currentShop.shop.workingHours),
+      workingHours: buildDaySchedules(hours),
     });
-  }, [currentShop]);
+  }, [currentShop, hours]);
 
   const isSubmitDisabled = useMemo(
     () => status === "pending" || !form.name.trim(),
@@ -256,6 +259,8 @@ const [deleteError, setDeleteError] = useState<string | null>(null);
     return <p className="edit-shop__loading">Loading shop details...</p>;
   if (!currentShop) return <p className="edit-shop__error">Shop details not available.</p>;
 
+
+  console.log(currentShop)
   return (
     <div className="edit-shop">
       <header className="edit-shop__header">

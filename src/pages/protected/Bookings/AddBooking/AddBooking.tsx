@@ -8,7 +8,11 @@ import { getPublicShopHours, getPublicSlots } from "../../../../api/public";
 import { listServices } from "../../../../api/services";
 import { getTeamOverview } from "../../../../api/team";
 import type { DayOfWeek } from "../../../../types/common";
-import type { PublicShopHour, PublicSlotsResponse, SlotSearchParams } from "../../../../types/public";
+import type {
+  PublicShopHour,
+  PublicSlotsResponse,
+  SlotSearchParams,
+} from "../../../../types/public";
 import type { Service } from "../../../../types/services";
 import type { TeamMemberSummary, TeamOverview } from "../../../../types/team";
 
@@ -76,15 +80,22 @@ const AddBooking: React.FC = () => {
   const [slotsError, setSlotsError] = useState<string>("");
 
   const [workingHours, setWorkingHours] = useState<PublicShopHour[] | null>(null);
-  const [workingHoursStatus, setWorkingHoursStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [workingHoursStatus, setWorkingHoursStatus] = useState<"idle" | "loading" | "error">(
+    "idle",
+  );
 
   const [selectedSlot, setSelectedSlot] = useState<SlotSelection | null>(null);
 
   const [submitStatus, setSubmitStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [submitError, setSubmitError] = useState<string>("");
 
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [note, setNote] = useState("");
+
   const providers = useMemo(() => {
     const members = overview?.members ?? [];
+    console.log(members)
     return members
       .slice()
       .filter((member) => member.active && member.bookable)
@@ -93,17 +104,18 @@ const AddBooking: React.FC = () => {
 
   const providerLookup = useMemo(() => {
     const map = new Map<number, TeamMemberSummary>();
-    providers.forEach((member) => map.set(member.id, member));
+    providers.forEach((member) => map.set(member.shopUserId, member));
     return map;
   }, [providers]);
 
-  const selectedService = useMemo(() => services.find((svc) => String(svc.id) === serviceId) ?? null, [
-    services,
-    serviceId,
-  ]);
+  const selectedService = useMemo(
+    () => services.find((svc) => String(svc.id) === serviceId) ?? null,
+    [services, serviceId],
+  );
 
   const selectedProvider = useMemo(() => {
     if (!providerId) return null;
+    console.log(providerId)
     return providers.find((provider) => String(provider.id) === providerId) ?? null;
   }, [providerId, providers]);
 
@@ -121,6 +133,7 @@ const AddBooking: React.FC = () => {
 
       return [{ providerId: Number(providerId), providerName, slots: sortedSlots }];
     }
+    
 
     const grouped = new Map<number, PublicSlotsResponse["slots"]>();
     sortedSlots.forEach((slot) => {
@@ -172,6 +185,7 @@ const AddBooking: React.FC = () => {
       try {
         const data = await getTeamOverview();
         setOverview(data);
+        
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unable to load providers.";
         setProvidersError(message);
@@ -253,7 +267,11 @@ const AddBooking: React.FC = () => {
         serviceId: Number(serviceId),
         startTime: selectedSlot.startTime,
         providerId: selectedSlot.providerId,
+        customerName: customerName.trim(),
+        customerPhone: customerPhone.trim(),
+        note: note.trim() || undefined,
       });
+      
       setSubmitStatus("success");
       setTimeout(() => {
         if (shopName) {
@@ -336,14 +354,18 @@ const AddBooking: React.FC = () => {
                   disabled={servicesLoading}
                   required
                 >
-                  <option value="">{servicesLoading ? "Loading services..." : "Select service"}</option>
+                  <option value="">
+                    {servicesLoading ? "Loading services..." : "Select service"}
+                  </option>
                   {services.map((svc) => (
                     <option key={svc.id} value={svc.id}>
                       {svc.name}
                     </option>
                   ))}
                 </select>
-                {servicesError ? <small className="add-booking__hint">{servicesError}</small> : null}
+                {servicesError ? (
+                  <small className="add-booking__hint">{servicesError}</small>
+                ) : null}
               </div>
 
               <div className="add-booking__field">
@@ -358,14 +380,18 @@ const AddBooking: React.FC = () => {
                   }}
                   disabled={providersLoading || !shopId}
                 >
-                  <option value="">{providersLoading ? "Loading providers..." : "Any provider"}</option>
+                  <option value="">
+                    {providersLoading ? "Loading providers..." : "Any provider"}
+                  </option>
                   {providers.map((provider) => (
-                    <option key={provider.id} value={provider.id}>
+                    <option key={provider.id} value={provider.shopUserId}>
                       {provider.firstName} {provider.lastName}
                     </option>
                   ))}
                 </select>
-                {providersError ? <small className="add-booking__hint">{providersError}</small> : null}
+                {providersError ? (
+                  <small className="add-booking__hint">{providersError}</small>
+                ) : null}
               </div>
 
               <div className="add-booking__field">
@@ -516,6 +542,44 @@ const AddBooking: React.FC = () => {
               <div>
                 <span className="add-booking__summaryLabel">Time</span>
                 <span>{selectedSlot ? formatTime(selectedSlot.startTime) : "—"}</span>
+              </div>
+            </div>
+
+            <div className="add-booking__grid">
+              <div className="add-booking__field">
+                <label htmlFor="customerName">Customer name</label>
+                <input
+                  id="customerName"
+                  className="input"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  required
+                  maxLength={100}
+                />
+              </div>
+
+              <div className="add-booking__field">
+                <label htmlFor="customerPhone">Customer phone</label>
+                <input
+                  id="customerPhone"
+                  className="input"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  required
+                  maxLength={30}
+                  placeholder="+44 …"
+                />
+              </div>
+
+              <div className="add-booking__field">
+                <label htmlFor="note">Note (optional)</label>
+                <textarea
+                  id="note"
+                  className="textarea"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  maxLength={280}
+                />
               </div>
             </div>
 

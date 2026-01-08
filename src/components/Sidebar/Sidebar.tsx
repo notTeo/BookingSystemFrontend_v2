@@ -88,16 +88,6 @@ const SideBar: React.FC = () => {
 
             <li className="app-sidebar__item">
               <NavLink
-                to={`/shops/${currentShop?.shop.name}/settings`}
-                onClick={close}
-                className={linkClass}
-              >
-                Settings
-              </NavLink>
-            </li>
-
-            <li className="app-sidebar__item">
-              <NavLink
                 to={`/shops/${currentShop?.shop.name}/calendar`}
                 onClick={close}
                 className={linkClass}
@@ -123,6 +113,16 @@ const SideBar: React.FC = () => {
                 className={linkClass}
               >
                 Services
+              </NavLink>
+            </li>
+
+            <li className="app-sidebar__item">
+              <NavLink
+                to={`/shops/${currentShop?.shop.name}/settings`}
+                onClick={close}
+                className={linkClass}
+              >
+                Settings
               </NavLink>
             </li>
           </ul>
