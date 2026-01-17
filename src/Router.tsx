@@ -23,11 +23,14 @@ import ShopOverview from "./pages/protected/Shops/ShopOverview/ShopOverview";
 import AllTeam from "./pages/protected/Team/AllTeam/AllTeam";
 import Invite from "./pages/protected/Team/Invite/Invite";
 import UserOverview from "./pages/protected/Team/UserOverview/UserOverview";
+import CustomerOverview from "./pages/protected/Customers/CustomerOverview/CustomerOverview";
+import AllCustomers from "./pages/protected/Customers/AllCustomers/AllCustomers";
 // PUBLIC pages
 import LoginPage from "./pages/public/LoginPage/LoginPage";
 import MainPage from "./pages/public/MainPage/MainPage";
 import NotFoundPage from "./pages/public/NotFoundPage/NotFoundPage";
 import RegisterPage from "./pages/public/RegisterPage/RegisterPage";
+import BookingPage from "./pages/public/BookingPage/BookingPage";
 // Providers
 import { AuthProvider } from "./providers/AuthProvider";
 import { ShopProvider } from "./providers/ShopProvider";
@@ -47,6 +50,7 @@ export default function Router() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/reset-password-email" element={<ResetPasswordEmailPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/book/:bookingEndpoint" element={<BookingPage />} />
               
               <Route path="*" element={<NotFoundPage />} />
             </Route>
@@ -71,9 +75,11 @@ export default function Router() {
                   <Route path="bookings" element={<AllBookings />} />
                   <Route path="bookings/new" element={<AddBooking />} />
                   <Route path="services" element={<ServiceLibrary />} />
+                  <Route path="customers" element={<AllCustomers />} />
                   <Route path="team" element={<AllTeam />} />
                   <Route path="team/:teamName" element={<UserOverview />} />
                   <Route path="team/invite" element={<Invite />} />
+                  <Route path="customers/:customerId" element={<CustomerOverview />} />
                 </Route>
               </Route>
             </Route>

@@ -9,7 +9,9 @@ const DashboardLayout: React.FC = () => {
       <SideBar />
 
       <main className="app-main">
-        <Outlet />
+        <div className="app-main__inner">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

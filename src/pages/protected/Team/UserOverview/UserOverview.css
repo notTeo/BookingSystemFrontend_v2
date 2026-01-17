@@ -1,273 +1,9 @@
-.userOverview {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.userOverview__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.userOverview__eyebrow {
-  margin: 0 0 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.8rem;
-  color: var(--text-soft);
-}
-
-.userOverview__title {
-  margin: 0 0 6px;
-}
-
-.userOverview__subtitle {
-  margin: 0;
-  color: var(--text-muted);
-}
-
-.userOverview__muted {
-  margin: 6px 0 0;
-  color: var(--text-soft);
-}
-
-.userOverview__actions {
-  display: flex;
-  gap: 10px;
-}
-
-.userOverview__ghost {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 10px 14px;
-  border-radius: var(--r-md);
-  font-weight: 600;
-}
-
-.userOverview__ghost:hover {
-  border-color: rgba(59, 130, 246, 0.55);
-  color: rgba(59, 130, 246, 0.95);
-}
-
-.userOverview__card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-}
-
-.userOverview__cardHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.userOverview__hint {
-  color: var(--text-muted);
-  margin: 4px 0 0;
-  display: block;
-}
-
-.userOverview__grid {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.userOverview__field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.userOverview__label {
-  font-weight: 600;
-}
-
-.userOverview__input {
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
-  color: var(--text);
-}
-
-.userOverview__input:disabled {
-  opacity: 0.7;
-}
-
-.userOverview__toggle {
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.userOverview__toggle input {
-  width: 24px;
-  height: 24px;
-}
-
-.userOverview__pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 700;
-}
-
-.userOverview__state {
-  margin: 0;
-  color: var(--text-muted);
-}
-
-.userOverview__state--error {
-  color: var(--danger);
-}
-
-.userOverview__hours {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.userOverview__hoursRow {
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.01);
-}
-
-.userOverview__dayHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.userOverview__day {
-  font-weight: 700;
-}
-
-.userOverview__closed {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-muted);
-}
-
-.userOverview__blocks {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.userOverview__closedNote {
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.userOverview__timeBlock {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  border: 1px dashed var(--border);
-  padding: 10px;
-  border-radius: var(--r-md);
-}
-
-.userOverview__timeInputs {
-  display: flex;
-  gap: 12px;
-}
-
-.userOverview__timeInputs input {
-  padding: 8px 10px;
-  border-radius: var(--r-md);
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
-  color: var(--text);
-}
-
-.userOverview__iconBtn {
-  background: none;
-  border: 1px solid var(--border);
-  padding: 8px 12px;
-  border-radius: var(--r-md);
-  color: var(--text);
-}
-
-.userOverview__addBlock {
-  background: none;
-  border: 1px dashed var(--border);
-  padding: 8px 12px;
-  border-radius: var(--r-md);
-  color: var(--text);
-  text-align: left;
-  width: fit-content;
-}
-
-.userOverview__actionsBar {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.userOverview__primary {
-  background: var(--accent-soft);
-  border: 1px solid rgba(59, 130, 246, 0.45);
-  color: rgba(255, 255, 255, 0.95);
-  padding: 10px 14px;
-  border-radius: var(--r-md);
-  font-weight: 700;
-}
-
-@media (max-width: 900px) {
-  .userOverview__header {
-    flex-direction: column;
-  }
-
-  .userOverview__actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .userOverview__timeBlock {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .userOverview__timeInputs {
-    flex-direction: column;
-  }
-}
-
-
 /* =========================================================
    UserOverview.css — styled like EditShop, uses Global Tokens
    ========================================================= */
 
 /* Root layout */
 .userOverview {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 8px 0 44px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -317,44 +53,6 @@
   gap: 10px;
 }
 
-.userOverview__ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 999px;
-  font-weight: 650;
-  cursor: pointer;
-  user-select: none;
-  text-decoration: none;
-
-  height: 40px;
-  padding: 0 16px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.92);
-  transition:
-    background var(--t-fast),
-    border-color var(--t-fast),
-    transform var(--t-fast),
-    color var(--t-fast),
-    filter var(--t-fast);
-}
-
-.userOverview__ghost:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: var(--border-strong);
-}
-
-.userOverview__ghost:active {
-  transform: translateY(1px);
-}
-
-.userOverview__ghost:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
 /* ---------------------------------------------------------
    Cards
    --------------------------------------------------------- */
@@ -377,6 +75,8 @@
   align-items: flex-start;
   gap: 14px;
   margin-bottom: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
 }
 
 .userOverview__cardHeader h2 {
@@ -409,7 +109,6 @@
    --------------------------------------------------------- */
 
 .userOverview__state {
-  max-width: 980px;
   margin: 0;
   padding: 10px 12px;
   border-radius: var(--r-lg);
@@ -492,6 +191,48 @@
   gap: 12px;
 }
 
+.userOverview__toggle input {
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 15, 16, 0.6);
+  position: relative;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    box-shadow var(--t-fast);
+}
+
+.userOverview__toggle input::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.25);
+  transition: transform var(--t-fast), background var(--t-fast);
+}
+
+.userOverview__toggle input:checked {
+  border-color: rgba(59, 130, 246, 0.6);
+  background: rgba(59, 130, 246, 0.45);
+}
+
+.userOverview__toggle input:checked::after {
+  transform: translateX(20px);
+}
+
+.userOverview__toggle input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
 .userOverview__toggle > span {
   display: flex;
   flex-direction: column;
@@ -507,272 +248,15 @@
   font-size: 0.82rem;
 }
 
-.userOverview__toggle input[type="checkbox"] {
-  width: 44px;
-  height: 24px;
-  cursor: pointer;
-  accent-color: var(--accent);
-}
 
-/* ---------------------------------------------------------
-   Working hours (per-member)
-   --------------------------------------------------------- */
 
-.userOverview__hours {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Day row outer shell */
-.userOverview__hoursRow {
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-/* Day header */
-.userOverview__dayHeader {
-  width: 100%;
-  border: 0;
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-}
-
-.userOverview__day {
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  font-size: 0.86rem;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-/* Day off checkbox */
-.userOverview__closed {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.userOverview__closed input {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  accent-color: var(--accent);
-}
-
-/* Blocks container */
-.userOverview__blocks {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.userOverview__closedNote {
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  border: 1px dashed var(--border-strong);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Single time block */
-.userOverview__timeBlock {
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.02);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Time inputs grid */
-.userOverview__timeInputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.userOverview__timeInputs label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.userOverview__timeInputs label span {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-/* Time inputs themselves */
-.userOverview__timeInputs input[type="time"] {
-  width: 100%;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 8px 10px;
-  outline: none;
-  color: var(--text);
-  font-size: 0.9rem;
-  transition:
-    border-color var(--t-fast),
-    box-shadow var(--t-fast),
-    background var(--t-fast);
-}
-
-.userOverview__timeInputs input[type="time"]:focus {
-  border-color: rgba(59, 130, 246, 0.55);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-/* Remove block button */
-.userOverview__iconBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border-radius: 999px;
-  font-weight: 650;
-  cursor: pointer;
-  user-select: none;
-
-  height: 34px;
-  padding: 0 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
-  color: var(--text);
-  align-self: flex-start;
-  font-size: 0.88rem;
-  transition:
-    background var(--t-fast),
-    border-color var(--t-fast),
-    transform var(--t-fast),
-    color var(--t-fast);
-}
-
-.userOverview__iconBtn:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: var(--border-strong);
-}
-
-.userOverview__iconBtn:active {
-  transform: translateY(1px);
-}
-
-.userOverview__iconBtn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-/* Add block button */
-.userOverview__addBlock {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 999px;
-  font-weight: 650;
-  cursor: pointer;
-  user-select: none;
-
-  height: 40px;
-  padding: 0 14px;
-  font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed var(--border-strong);
-  color: var(--text);
-  transition:
-    background var(--t-fast),
-    border-color var(--t-fast),
-    transform var(--t-fast),
-    color var(--t-fast);
-}
-
-.userOverview__addBlock:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.userOverview__addBlock:active {
-  transform: translateY(1px);
-}
-
-.userOverview__addBlock:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-/* ---------------------------------------------------------
-   Hours actions (Save / Cancel)
-   --------------------------------------------------------- */
-
-.userOverview__actionsBar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding-top: 6px;
-}
-
-/* Primary save button (hours) */
-.userOverview__primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 999px;
-  font-weight: 650;
-  cursor: pointer;
-  user-select: none;
-
-  height: 42px;
-  padding: 0 16px;
-  font-size: 0.92rem;
-  border: 1px solid rgba(59, 130, 246, 0.45);
-  background: var(--accent);
-  color: rgba(255, 255, 255, 0.95);
-  transition:
-    background var(--t-fast),
-    border-color var(--t-fast),
-    transform var(--t-fast),
-    color var(--t-fast),
-    filter var(--t-fast);
-}
-
-.userOverview__primary:hover {
-  background: var(--accent-hover);
-}
-
-.userOverview__primary:active {
-  transform: translateY(1px);
-}
-
-.userOverview__primary:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-.userOverview__primary:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.userOverview__actionsBar--space {
+  .userOverview__actionsBar--space {
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 12px 16px;
   }
-  
+
   .userOverview__primary {
     background: var(--accent-soft);
     border: 1px solid rgba(59, 130, 246, 0.45);
@@ -781,41 +265,6 @@
     border-radius: var(--r-md);
     font-weight: 700;
   }
-
-  .userOverview__servicesGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-  }
-
-  .userOverview__serviceItem {
-    border: 1px solid var(--border);
-    border-radius: var(--r-md);
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.02);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .userOverview__serviceMeta {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .userOverview__serviceName {
-    font-weight: 700;
-  }
-  /*NEW*/
-  .userOverview__actionsBar--space {
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 12px 16px;
-  }
-  
 
   .userOverview__servicesGrid {
     display: grid;
@@ -889,6 +338,10 @@
   transition: filter var(--t-fast);
 }
 
+.userOverview__cardHeader--clickable + .userOverview__hours {
+  margin-top: 8px;
+}
+
 .userOverview__cardHeader--clickable:hover {
   filter: brightness(1.05);
 }
@@ -897,6 +350,10 @@
   outline: none;
   box-shadow: 0 0 0 3px var(--focus-ring);
   border-radius: var(--r-md);
+}
+
+.userOverview__cardHeader--clickable h2 {
+  margin: 0;
 }
 
 .userOverview__chev {
@@ -929,14 +386,14 @@
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
 }
 
 /* Day header (edit-shop__day-header) */
 .userOverview__dayHeader {
   width: 100%;
   border: 0;
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent;
   color: var(--text);
   display: flex;
   align-items: center;
@@ -944,10 +401,17 @@
   gap: 12px;
   padding: 12px 12px;
   text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast);
 }
 
 .userOverview__dayHeader:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.userOverview__dayHeader:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--focus-ring);
 }
 
 .userOverview__day {
@@ -1001,7 +465,7 @@
   padding: 10px 12px;
   border-radius: var(--r-md);
   border: 1px dashed var(--border-strong);
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent;
   color: var(--text-muted);
   font-size: 0.9rem;
 }
@@ -1010,7 +474,7 @@
 .userOverview__timeBlock {
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -1107,7 +571,7 @@
   height: 34px;
   padding: 0 12px;
   font-size: 0.88rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: transparent;
   border: 1px solid var(--border);
   color: var(--text);
   align-self: flex-start;
@@ -1123,7 +587,7 @@
   height: 40px;
   padding: 0 14px;
   font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent;
   border: 1px dashed var(--border-strong);
   color: var(--text);
 }
@@ -1135,7 +599,7 @@
 /* Actions under hours (similar to edit-shop__actions) */
 .userOverview__actionsBar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 10px;
   padding-top: 6px;
 }
@@ -1149,9 +613,10 @@
 }
 
 .userOverview__ghost {
-  background: rgba(255, 255, 255, 0.04);
+  background: transparent;
   border-color: var(--border);
   color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
 }
 
 .userOverview__ghost:hover {

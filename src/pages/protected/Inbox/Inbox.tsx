@@ -2,19 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { acceptInvite, declineInvite, listInvites } from "../../../api/user";
 import type { Invite } from "../../../types/shop";
+import { useI18n } from "../../../i18n";
 import "./Inbox.css";
-
-const statusLabels: Record<Invite["status"], string> = {
-  PENDING: "Pending",
-  ACCEPTED: "Accepted",
-  DECLINED: "Declined",
-};
-
-const roleLabels: Record<Invite["role"], string> = {
-  OWNER: "Owner",
-  MANAGER: "Manager",
-  STAFF: "Staff",
-};
 
 function formatDate(dateString: string) {
   const date = new Date(dateString);
@@ -30,6 +19,7 @@ type InviteBuckets = {
 const EMPTY_BUCKETS: InviteBuckets = { received: [], sent: [] };
 
 const Inbox: React.FC = () => {
+  const { t } = useI18n();
   const [buckets, setBuckets] = useState<InviteBuckets>(EMPTY_BUCKETS);
   const [activeTab, setActiveTab] = useState<"received" | "sent">("received");
 
@@ -49,13 +39,13 @@ const Inbox: React.FC = () => {
 
       setBuckets({ received, sent });
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to load inbox.";
+      const message = err instanceof Error ? err.message : t("Failed to load inbox.");
       setError(message);
       setBuckets(EMPTY_BUCKETS);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     void loadInvites();
@@ -91,25 +81,37 @@ const Inbox: React.FC = () => {
         ),
       }));
     } catch (err) {
-      const message = err instanceof Error ? err.message : `Could not ${action} invite.`;
+      const message = err instanceof Error ? err.message : t("Could not update invite.");
       setError(message);
     } finally {
       setActingOn(null);
     }
   };
 
+  const statusLabels: Record<Invite["status"], string> = {
+    PENDING: t("Pending"),
+    ACCEPTED: t("Accepted"),
+    DECLINED: t("Declined"),
+  };
+
+  const roleLabels: Record<Invite["role"], string> = {
+    OWNER: t("Owner"),
+    MANAGER: t("Manager"),
+    STAFF: t("Staff"),
+  };
+
   return (
     <div className="inboxPage">
       <header className="inboxPage__header">
         <div>
-          <p className="inboxPage__eyebrow">Inbox</p>
-          <h1 className="inboxPage__title">Invitations</h1>
-          <p className="inboxPage__subtitle">View received or sent invitations.</p>
+          <p className="inboxPage__eyebrow">{t("Inbox")}</p>
+          <h1 className="inboxPage__title">{t("Invitations")}</h1>
+          <p className="inboxPage__subtitle">{t("View received or sent invitations.")}</p>
         </div>
 
         <div className="inboxPage__headerActions">
           <button className="btn btn--ghost" type="button" onClick={loadInvites} disabled={loading}>
-            Refresh
+            {t("Refresh")}
           </button>
         </div>
       </header>
@@ -117,13 +119,13 @@ const Inbox: React.FC = () => {
       <section className="card inboxPage__card" aria-label="Inbox invites">
         <div className="inboxPage__cardHead">
           <div className="inboxPage__cardHeadLeft">
-            <h2>Invites</h2>
+            <h2>{t("Invites")}</h2>
             <p className="inboxPage__hint">
-              Received pending: <strong>{counts.receivedPending}</strong>
+              {t("Received pending")}: <strong>{counts.receivedPending}</strong>
             </p>
           </div>
 
-          <div className="inboxPage__tabs" role="tablist" aria-label="Invite tabs">
+          <div className="inboxPage__tabs" role="tablist" aria-label={t("Invite tabs")}>
             <button
               type="button"
               className={`inboxPage__tab ${activeTab === "received" ? "is-active" : ""}`}
@@ -131,7 +133,7 @@ const Inbox: React.FC = () => {
               role="tab"
               aria-selected={activeTab === "received"}
             >
-              Received <span className="inboxPage__tabCount">{counts.received}</span>
+              {t("Received")} <span className="inboxPage__tabCount">{counts.received}</span>
             </button>
 
             <button
@@ -141,19 +143,19 @@ const Inbox: React.FC = () => {
               role="tab"
               aria-selected={activeTab === "sent"}
             >
-              Sent <span className="inboxPage__tabCount">{counts.sent}</span>
+              {t("Sent")} <span className="inboxPage__tabCount">{counts.sent}</span>
             </button>
           </div>
         </div>
 
-        {loading && <p className="inboxPage__state">Loading invites…</p>}
+        {loading && <p className="inboxPage__state">{t("Loading invites…")}</p>}
         {error && <p className="inboxPage__state inboxPage__state--error">{error}</p>}
 
         {!loading && !error && currentList.length === 0 && (
           <p className="inboxPage__state">
             {activeTab === "received"
-              ? "No received invites right now."
-              : "No sent invites right now."}
+              ? t("No received invites right now.")
+              : t("No sent invites right now.")}
           </p>
         )}
 
@@ -167,21 +169,23 @@ const Inbox: React.FC = () => {
                 <article
                   key={invite.id}
                   className="inboxPage__invite"
-                  aria-label={`Invite ${invite.id}`}
+                  aria-label={`${t("Invite")} ${invite.id}`}
                 >
                   <div className="inboxPage__inviteHeader">
                     <div className="inboxPage__identity">
                       <p className="inboxPage__mini">
-                        {activeTab === "received" ? "Invite to join" : "Invite sent"}
+                        {activeTab === "received" ? t("Invite to join") : t("Invite sent")}
                       </p>
                       <h3 className="inboxPage__inviteTitle">
-                        Shop: {invite.shop.name} — {roleLabels[invite.role] ?? invite.role}
+                        {t("Shop")}: {invite.shop.name} — {roleLabels[invite.role] ?? invite.role}
                       </h3>
                       <p className="inboxPage__meta">
-                        Sent from {invite.sender.firstName} {invite.sender.lastName},{" "}
+                        {t("Sent from")} {invite.sender.firstName} {invite.sender.lastName},{" "}
                         {invite.sender.email}
                       </p>
-                      <p className="inboxPage__meta">Created {formatDate(invite.createdAt)}</p>
+                      <p className="inboxPage__meta">
+                        {t("Created")} {formatDate(invite.createdAt)}
+                      </p>
                     </div>
 
                     <span
@@ -202,7 +206,7 @@ const Inbox: React.FC = () => {
                           disabled={actingOn === invite.id}
                           onClick={() => handleAction(invite.id, "decline")}
                         >
-                          {actingOn === invite.id ? "Declining…" : "Decline"}
+                          {actingOn === invite.id ? t("Declining…") : t("Decline")}
                         </button>
                         <button
                           className="btn btn--primary"
@@ -210,14 +214,14 @@ const Inbox: React.FC = () => {
                           disabled={actingOn === invite.id}
                           onClick={() => handleAction(invite.id, "accept")}
                         >
-                          {actingOn === invite.id ? "Accepting…" : "Accept"}
+                          {actingOn === invite.id ? t("Accepting…") : t("Accept")}
                         </button>
                       </div>
                     ) : (
                       <p className="inboxPage__muted">
                         {activeTab === "sent"
-                          ? "You can’t act on sent invites."
-                          : "No further action available."}
+                          ? t("You can’t act on sent invites.")
+                          : t("No further action available.")}
                       </p>
                     )}
                   </div>

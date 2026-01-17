@@ -32,6 +32,7 @@ export interface PublicBookingPayload {
   startTime: string; // ISO string
   customerName?: string | null;
   customerPhone: string;
+  customerEmail: string;
   note?: string | null;
 }
 

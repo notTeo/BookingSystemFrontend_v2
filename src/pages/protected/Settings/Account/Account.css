@@ -4,19 +4,15 @@
 
 /* Root layout */
 .accountPage {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 8px 0 44px;
 }
 
 .accountPage--loading {
-  max-width: 980px;
-  margin: 16px auto;
+  margin: 16px 0;
   padding: 14px 16px;
   border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--bg-card);
-  box-shadow: var(--shadow);
+  border-radius: var(--r-md);
+  background: transparent;
+  box-shadow: none;
 }
 
 /* Inner wrapper */
@@ -64,6 +60,37 @@
   gap: 8px;
 }
 
+/* Hero */
+.accountPage__hero {
+  padding: 18px;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+.accountPage__heroMain {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.accountPage__heroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.accountPage__heroName {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.accountPage__heroEmail {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
 /* Simple badge style (plan / inactive) */
 .badge {
   display: inline-flex;
@@ -71,7 +98,7 @@
   padding: 4px 10px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: var(--bg-elevated);
+  background: transparent;
   font-size: 0.78rem;
   color: var(--text-soft);
 }
@@ -86,27 +113,22 @@
    Cards (wrap your .card with account styles)
    --------------------------------------------------------- */
 
-.accountPage__card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 16px;
-  box-shadow: var(--shadow);
+.accountPage__panel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 18px 0;
+  box-shadow: none;
 }
 
-/* Danger card variant (delete account) */
-.accountPage__card--danger {
-  
-  border: 2px rgba(239, 68, 68, 0.35) solid;
-  background: linear-gradient(
-      90deg,
-      rgba(239, 68, 68, 0.06),
-      rgba(239, 68, 68, 0.02)
-    ),
-    var(--bg-card);
-  border-radius: 20px;
-  padding: 15px;
-  }
+/* Danger panel variant (delete account) */
+.accountPage__panel--danger {
+  border-top: 2px solid rgba(239, 68, 68, 0.6);
+  border-bottom: 2px solid rgba(239, 68, 68, 0.6);
+  background: transparent;
+  border-radius: 0;
+  padding: 18px 0;
+}
 
 /* Card header */
 .accountPage__cardHead {
@@ -115,6 +137,10 @@
   align-items: flex-start;
   gap: 14px;
   margin-bottom: 12px;
+}
+
+.accountPage__cardHead--split {
+  align-items: center;
 }
 
 .accountPage__cardHead h2 {
@@ -127,6 +153,18 @@
   color: var(--text-muted);
   font-size: 0.9rem;
   line-height: 1.35;
+}
+
+.accountPage__hint {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.accountPage__hint--inline {
+  margin-top: 4px;
+  color: var(--text-soft);
 }
 
 /* Clickable header (working hours) */
@@ -155,14 +193,29 @@
    Grid layout: Profile / Security
    --------------------------------------------------------- */
 
-.accountPage__grid {
+.accountPage__layout {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 14px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 16px;
 }
 
-@media (max-width: 720px) {
-  .accountPage__grid {
+.accountPage__column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.accountPage__column .accountPage__panel + .accountPage__panel {
+  border-top: 1px solid var(--border);
+}
+
+.accountPage__panel--compact .accountPage__cardHead--split {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .accountPage__layout {
     grid-template-columns: 1fr;
   }
 }
@@ -205,6 +258,12 @@
   font-weight: 700;
   font-size: 1rem;
   color: var(--accent);
+}
+
+.accountPage__avatar--lg {
+  width: 54px;
+  height: 54px;
+  font-size: 1.2rem;
 }
 
 /* ---------------------------------------------------------
@@ -258,24 +317,57 @@
   padding-top: 6px;
 }
 
+.accountPage__actions--danger {
+  justify-content: flex-start;
+}
+
+.accountPage__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+}
+
+.accountPage__langBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    color var(--t-fast),
+    background var(--t-fast);
+}
+
+.accountPage__langBtn.is-active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 /* Alerts (profile/password/delete) */
 .accountPage__alert {
-  border-radius: var(--r-lg);
+  border-radius: var(--r-md);
   padding: 12px 14px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent;
   color: var(--text);
   font-size: 0.86rem;
 }
 
 .accountPage__alert--error {
-  border-color: rgba(239, 68, 68, 0.35);
-  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+  background: transparent;
 }
 
 .accountPage__alert--success {
-  border-color: rgba(34, 197, 94, 0.35);
-  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.45);
+  background: transparent;
 }
 
 /* ---------------------------------------------------------
@@ -396,14 +488,14 @@
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
 }
 
 /* Day header (left label + closed toggle) */
 .accountPage__dayHeader {
   width: 100%;
   border: 0;
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent;
   color: var(--text);
   display: flex;
   align-items: center;
@@ -446,7 +538,7 @@
   padding: 10px 12px;
   border-radius: var(--r-md);
   border: 1px dashed var(--border-strong);
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent;
   color: var(--text-muted);
   font-size: 0.9rem;
 }
@@ -455,7 +547,7 @@
 .accountPage__timeBlock {
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -490,7 +582,7 @@
   height: 34px;
   padding: 0 12px;
   font-size: 0.88rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: transparent;
   border-radius: 999px;
   border: 1px solid var(--border);
   color: var(--text);
@@ -554,7 +646,7 @@
    Danger zone actions
    --------------------------------------------------------- */
 
-.accountPage__card--danger .accountPage__actions {
+.accountPage__panel--danger .accountPage__actions {
   justify-content: flex-start;
 }
 
@@ -582,6 +674,16 @@
   .accountPage__badges {
     flex-wrap: wrap;
   }
+
+  .accountPage__cardHead--split {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .accountPage__heroMain {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 560px) {
@@ -589,47 +691,12 @@
     flex-wrap: wrap;
     justify-content: flex-start;
   }
-}
 
-/* Danger zone */
-.edit-shop__danger {
-  border-color: rgba(239, 68, 68, 0.35);
-  background: linear-gradient(
-      90deg,
-      rgba(239, 68, 68, 0.06),
-      rgba(239, 68, 68, 0.02)
-    ),
-    var(--bg-card);
-}
+  .accountPage__actions .btn {
+    width: 100%;
+  }
 
-.edit-shop__dangerActions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 12px;
-}
-
-.edit-shop__dangerBtn {
-  min-width: 160px;
-  height: 42px;
-  padding: 0 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(239, 68, 68, 0.45);
-  background: #b91c1c;
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-  transition: filter var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
-}
-
-.edit-shop__dangerBtn:hover {
-  filter: brightness(1.05);
-}
-
-.edit-shop__dangerBtn:active {
-  transform: translateY(1px);
-}
-
-.edit-shop__dangerBtn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+  .accountPage__hero {
+    padding: 14px;
+  }
 }

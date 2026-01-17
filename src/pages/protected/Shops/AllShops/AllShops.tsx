@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setActiveShopId } from "../../../../api/http";
 import { listUserShops } from "../../../../api/shop";
 import type { ShopSummary } from "../../../../types";
+import { useI18n } from "../../../../i18n";
 
 import "./AllShops.css";
 
@@ -33,6 +34,7 @@ const formatDate = (value?: string) => {
 };
 
 const AllShops: React.FC = () => {
+  const { t } = useI18n();
   const [shops, setShops] = useState<ShopSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,14 +49,14 @@ const AllShops: React.FC = () => {
         setShops(response ?? []);
       } catch (err) {
         console.error("Failed to load shops", err);
-        setError("Unable to load shops right now. Please try again.");
+        setError(t("Unable to load shops right now. Please try again."));
       } finally {
         setIsLoading(false);
       }
     };
 
     void loadShops();
-  }, []);
+  }, [t]);
 
   const stats = useMemo(() => {
     const total = shops.length;
@@ -81,73 +83,75 @@ const AllShops: React.FC = () => {
       <div className="all-shops__inner">
         <header className="all-shops__header">
           <div>
-            <h1 className="all-shops__title">All shops overview</h1>
+            <h1 className="all-shops__title">{t("All shops overview")}</h1>
             <p className="all-shops__subtitle">
-              View every shop you&apos;re part of, switch context, and jump into management.
+              {t("View every shop you’re part of, switch context, and jump into management.")}
             </p>
           </div>
           <Link to="/new-shop" className="btn btn--primary all-shops__cta">
-            Create shop
+            {t("Create shop")}
           </Link>
         </header>
 
         <section className="all-shops__stats">
           <div className="all-shops__stat-card card">
-            <p className="all-shops__stat-label">Total shops</p>
+            <p className="all-shops__stat-label">{t("Total shops")}</p>
             <p className="all-shops__stat-value">{stats.total}</p>
-            <p className="all-shops__stat-meta">You&apos;re a member of {stats.total} shop(s).</p>
+            <p className="all-shops__stat-meta">
+              {t("You’re a member of")} {stats.total} {t("shop(s).")}
+            </p>
           </div>
           <div className="all-shops__stat-card card">
-            <p className="all-shops__stat-label">Active</p>
+            <p className="all-shops__stat-label">{t("Active")}</p>
             <p className="all-shops__stat-value">{stats.active}</p>
-            <p className="all-shops__stat-meta">Currently enabled locations.</p>
+            <p className="all-shops__stat-meta">{t("Currently enabled locations.")}</p>
           </div>
           <div className="all-shops__stat-card card">
-            <p className="all-shops__stat-label">Owner roles</p>
+            <p className="all-shops__stat-label">{t("Owner roles")}</p>
             <p className="all-shops__stat-value">{stats.owners}</p>
-            <p className="all-shops__stat-meta">Shops where you&apos;re listed as OWNER.</p>
+            <p className="all-shops__stat-meta">{t("Shops where you’re listed as OWNER.")}</p>
           </div>
           <div className="all-shops__stat-card card">
-            <p className="all-shops__stat-label">Bookable slots</p>
+            <p className="all-shops__stat-label">{t("Bookable slots")}</p>
             <p className="all-shops__stat-value">{stats.bookable}</p>
-            <p className="all-shops__stat-meta">Shops marked bookable for you.</p>
+            <p className="all-shops__stat-meta">{t("Shops marked bookable for you.")}</p>
           </div>
         </section>
 
         <section className="card all-shops__table-card">
           <div className="all-shops__table-head">
             <div>
-              <h2 className="all-shops__table-title">Your shops</h2>
-              <p className="all-shops__table-subtitle">Click a row to open that shop.</p>
+              <h2 className="all-shops__table-title">{t("Your shops")}</h2>
+              <p className="all-shops__table-subtitle">
+                {t("Click a row to open that shop.")}
+              </p>
             </div>
             <p className="all-shops__last-updated">
-              Last updated: {formatDate(stats.mostRecentUpdate)}
+              {t("Last updated")}: {formatDate(stats.mostRecentUpdate)}
             </p>
           </div>
 
           {isLoading ? (
-            <p className="all-shops__state">Loading shops...</p>
+            <p className="all-shops__state">{t("Loading shops...")}</p>
           ) : error ? (
             <p className="all-shops__state all-shops__state--error">{error}</p>
           ) : shops.length === 0 ? (
             <div className="all-shops__empty">
-              <p>No shops yet.</p>
-              <p className="all-shops__empty-sub">
-                Create your first location to start managing it.
-              </p>
+              <p>{t("No shops yet.")}</p>
+              <p className="all-shops__empty-sub">{t("Create your first location to start managing it.")}</p>
             </div>
           ) : (
             <div className="all-shops__table-wrapper">
               <table className="all-shops__table">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Bookable</th>
-                    <th>Address</th>
-                    <th>Created</th>
-                    <th>Updated</th>
+                    <th>{t("Name")}</th>
+                    <th>{t("Role")}</th>
+                    <th>{t("Status")}</th>
+                    <th>{t("Bookable")}</th>
+                    <th>{t("Address")}</th>
+                    <th>{t("Created")}</th>
+                    <th>{t("Updated")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -169,25 +173,25 @@ const AllShops: React.FC = () => {
                       >
                         <td>
                           <div className="all-shops__name">{shop.name}</div>
-                          <p className="all-shops__subtext">Click to manage this shop</p>
+                          <p className="all-shops__subtext">{t("Click to manage this shop")}</p>
                         </td>
                         <td>
                           <span className={`all-shops__role all-shops__role--${roleClass}`}>
-                            {shop.role ?? "Member"}
+                            {shop.role ?? t("Member")}
                           </span>
                         </td>
                         <td>
                           <span
                             className={`all-shops__pill all-shops__pill--${shop.active ? "success" : "muted"}`}
                           >
-                            {shop.active ? "Active" : "Inactive"}
+                            {shop.active ? t("Active") : t("Inactive")}
                           </span>
                         </td>
                         <td>
                           <span
                             className={`all-shops__pill all-shops__pill--${shop.bookable ? "accent" : "muted"}`}
                           >
-                            {shop.bookable ? "Bookable" : "Not bookable"}
+                            {shop.bookable ? t("Bookable") : t("Not bookable")}
                           </span>
                         </td>
                         <td className="all-shops__address">{shop.address ?? "—"}</td>

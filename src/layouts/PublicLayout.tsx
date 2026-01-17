@@ -5,10 +5,10 @@ import TopBar from "../components/TopBar/TopBar";
 
 const PublicLayout: React.FC = () => {
   return (
-    <div>
+    <div className="public__layout">
       <TopBar />
 
-      <main>
+      <main className="public__main">
         <Outlet />
       </main>
     </div>

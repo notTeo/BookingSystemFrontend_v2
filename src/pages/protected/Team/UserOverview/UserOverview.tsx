@@ -15,29 +15,24 @@ import { listServices } from "../../../../api/services";
 import type { DayOfWeek } from "../../../../types/common";
 import type { Service } from "../../../../types/services";
 import type { TeamMemberSummary, WeekSchedule } from "../../../../types/team";
+import { useI18n } from "../../../../i18n";
 import "./UserOverview.css";
 
-const DAY_LABELS: { key: DayOfWeek; label: string }[] = [
-  { key: "MONDAY", label: "Monday" },
-  { key: "TUESDAY", label: "Tuesday" },
-  { key: "WEDNESDAY", label: "Wednesday" },
-  { key: "THURSDAY", label: "Thursday" },
-  { key: "FRIDAY", label: "Friday" },
-  { key: "SATURDAY", label: "Saturday" },
-  { key: "SUNDAY", label: "Sunday" },
-];
-
-const ROLE_OPTIONS = [
-  { value: "OWNER", label: "Owner" },
-  { value: "MANAGER", label: "Manager" },
-  { value: "STAFF", label: "Staff" },
+const DAY_KEYS: DayOfWeek[] = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
 ];
 
 const DEFAULT_SLOT = { start: "09:00", end: "17:00" } as const;
 
 function buildEmptyWeek(): WeekSchedule[] {
-  return DAY_LABELS.map((day) => ({
-    dayOfWeek: day.key,
+  return DAY_KEYS.map((day) => ({
+    dayOfWeek: day,
     isOff: true,
     slots: [],
   }));
@@ -64,6 +59,7 @@ const UserOverview: React.FC = () => {
   const { teamName, shopName } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useI18n();
 
   const memberFromState = useMemo(
     () => (location.state as { member?: TeamMemberSummary } | undefined)?.member,
@@ -98,6 +94,28 @@ const UserOverview: React.FC = () => {
   const [hoursCollapsed, setHoursCollapsed] = useState(false);
   const toggleHoursCollapsed = () => setHoursCollapsed((p) => !p);
 
+  const roleOptions = useMemo(
+    () => [
+      { value: "OWNER", label: t("Owner") },
+      { value: "MANAGER", label: t("Manager") },
+      { value: "STAFF", label: t("Staff") },
+    ],
+    [t],
+  );
+
+  const dayLabels = useMemo(
+    () => ({
+      MONDAY: t("Monday"),
+      TUESDAY: t("Tuesday"),
+      WEDNESDAY: t("Wednesday"),
+      THURSDAY: t("Thursday"),
+      FRIDAY: t("Friday"),
+      SATURDAY: t("Saturday"),
+      SUNDAY: t("Sunday"),
+    }),
+    [t],
+  );
+
   const loadMemberFromApi = useCallback(async () => {
     if (member || !memberId) return;
 
@@ -111,18 +129,18 @@ const UserOverview: React.FC = () => {
       );
 
       if (!found) {
-        setMemberError("Member not found for this shop.");
+        setMemberError(t("Member not found for this shop."));
         return;
       }
 
       setMember(found);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to load member.";
+      const message = err instanceof Error ? err.message : t("Unable to load member.");
       setMemberError(message);
     } finally {
       setMemberLoading(false);
     }
-  }, [member, memberId]);
+  }, [member, memberId, t]);
 
   const loadHours = useCallback(async () => {
     if (!member) return;
@@ -134,13 +152,13 @@ const UserOverview: React.FC = () => {
       const data = await getMemberHours(member.id);
       setWeek(normalizeWeek(data));
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to load working hours.";
+      const message = err instanceof Error ? err.message : t("Unable to load working hours.");
       setHoursError(message);
       setWeek(buildEmptyWeek());
     } finally {
       setHoursLoading(false);
     }
-  }, [member]);
+  }, [member, t]);
 
   const loadServicesCatalog = useCallback(async () => {
     setServiceOptionsLoading(true);
@@ -150,12 +168,12 @@ const UserOverview: React.FC = () => {
       const options = await listServices();
       setServiceOptions(options);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to load services.";
+      const message = err instanceof Error ? err.message : t("Unable to load services.");
       setServiceOptionsError(message);
     } finally {
       setServiceOptionsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const loadMemberServices = useCallback(async () => {
     if (!member) return;
@@ -167,11 +185,11 @@ const UserOverview: React.FC = () => {
       const assigned = await getMemberServices(member.id);
       setSelectedServiceIds(new Set(assigned.map((svc) => svc.id)));
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to load assigned services.";
+      const message = err instanceof Error ? err.message : t("Unable to load assigned services.");
       setServicesError(message);
       setSelectedServiceIds(new Set());
     }
-  }, [member]);
+  }, [member, t]);
 
   useEffect(() => {
     loadMemberFromApi();
@@ -253,7 +271,7 @@ const UserOverview: React.FC = () => {
       await replaceMemberHours(member.id, week);
       setHoursStatus("saved");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to update hours.";
+      const message = err instanceof Error ? err.message : t("Unable to update hours.");
       setHoursError(message);
       setHoursStatus("idle");
     }
@@ -268,9 +286,9 @@ const UserOverview: React.FC = () => {
     try {
       const result = await toggleMemberStatus(member.id);
       setMember((prev) => (prev ? { ...prev, active: result.updated.active } : prev));
-      setMemberNotice(result.updated.active ? "Member activated." : "Member paused.");
+      setMemberNotice(result.updated.active ? t("Member activated.") : t("Member paused."));
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to update status.";
+      const message = err instanceof Error ? err.message : t("Unable to update status.");
       setMemberError(message);
     }
   };
@@ -285,10 +303,10 @@ const UserOverview: React.FC = () => {
       const result = await toggleMemberBookable(member.id);
       setMember((prev) => (prev ? { ...prev, bookable: result.updated.bookable } : prev));
       setMemberNotice(
-        result.updated.bookable ? "Member is now bookable." : "Member hidden from booking.",
+        result.updated.bookable ? t("Member is now bookable.") : t("Member hidden from booking."),
       );
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to update bookable status.";
+      const message = err instanceof Error ? err.message : t("Unable to update bookable status.");
       setMemberError(message);
     }
   };
@@ -306,9 +324,9 @@ const UserOverview: React.FC = () => {
           ? { ...prev, role: updated.role, active: updated.active, bookable: updated.bookable }
           : prev,
       );
-      setMemberNotice("Role updated.");
+      setMemberNotice(t("Role updated."));
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to update role.";
+      const message = err instanceof Error ? err.message : t("Unable to update role.");
       setMemberError(message);
     }
   };
@@ -338,9 +356,9 @@ const UserOverview: React.FC = () => {
       const updated = await syncMemberServices(member.id, Array.from(selectedServiceIds));
       setSelectedServiceIds(new Set(updated.map((svc) => svc.id)));
       setServicesStatus("saved");
-      setServicesNotice("Services updated");
+      setServicesNotice(t("Services updated"));
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to update services.";
+      const message = err instanceof Error ? err.message : t("Unable to update services.");
       setServicesError(message);
       setServicesStatus("idle");
     }
@@ -350,23 +368,22 @@ const UserOverview: React.FC = () => {
     <div className="userOverview">
       <header className="userOverview__header">
         <div>
-          <p className="userOverview__eyebrow">Team member</p>
           <h1 className="userOverview__title">
-            {member ? `${member.firstName} ${member.lastName}` : "User overview"}
+            {member ? `${member.firstName} ${member.lastName}` : t("User overview")}
           </h1>
           <p className="userOverview__subtitle">
-            Manage access, availability, and working hours for this teammate.
+            {t("Manage access, availability, and working hours for this teammate.")}
           </p>
-          {member && <p className="userOverview__muted">{member.email ?? "No email on file"}</p>}
+          {member && <p className="userOverview__muted">{member.email ?? t("No email on file")}</p>}
         </div>
         <div className="userOverview__actions">
           <Link className="userOverview__ghost" to={backToTeamHref}>
-            ← Back to team
+            {t("← Back to team")}
           </Link>
         </div>
       </header>
 
-      {memberLoading && <p className="userOverview__state">Loading member…</p>}
+      {memberLoading && <p className="userOverview__state">{t("Loading member…")}</p>}
       {memberError && (
         <p className="userOverview__state userOverview__state--error">{memberError}</p>
       )}
@@ -374,9 +391,9 @@ const UserOverview: React.FC = () => {
       <section className="userOverview__card" aria-label="Member access">
         <div className="userOverview__cardHeader">
           <div>
-            <h2>Access & visibility</h2>
+            <h2>{t("Access & visibility")}</h2>
             <p className="userOverview__hint">
-              Control the role, activity, and booking visibility of this person.
+              {t("Control the role, activity, and booking visibility of this person.")}
             </p>
           </div>
           {memberNotice && <span className="userOverview__pill">{memberNotice}</span>}
@@ -384,29 +401,29 @@ const UserOverview: React.FC = () => {
 
         <div className="userOverview__grid">
           <div className="userOverview__field">
-            <span className="userOverview__label">Role</span>
+            <span className="userOverview__label">{t("Role")}</span>
             <select
               className="userOverview__input"
-              value={member?.role ?? ROLE_OPTIONS[2].value}
+              value={member?.role ?? roleOptions[2].value}
               onChange={(e) => handleRoleChange(e.target.value as TeamMemberSummary["role"])}
               disabled={!member}
             >
-              {ROLE_OPTIONS.map((option) => (
+              {roleOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
             <small className="userOverview__hint">
-              Roles control what the teammate can manage in the shop.
+              {t("Roles control what the teammate can manage in the shop.")}
             </small>
           </div>
 
           <label className="userOverview__toggle">
             <span>
-              <strong>Active</strong>
+              <strong>{t("Active")}</strong>
               <small className="userOverview__hint">
-                Inactive members cannot log in to this shop.
+                {t("Inactive members cannot log in to this shop.")}
               </small>
             </span>
             <input
@@ -419,9 +436,9 @@ const UserOverview: React.FC = () => {
 
           <label className="userOverview__toggle">
             <span>
-              <strong>Bookable</strong>
+              <strong>{t("Bookable")}</strong>
               <small className="userOverview__hint">
-                Hide or show this teammate when customers book.
+                {t("Hide or show this teammate when customers book.")}
               </small>
             </span>
             <input
@@ -444,9 +461,9 @@ const UserOverview: React.FC = () => {
     aria-controls="member-working-hours-body"
   >
     <div>
-      <h2>Working hours</h2>
+      <h2>{t("Working hours")}</h2>
       <p className="userOverview__hint">
-        Set the days and hours this teammate is available for bookings.
+        {t("Set the days and hours this teammate is available for bookings.")}
       </p>
     </div>
 
@@ -455,9 +472,9 @@ const UserOverview: React.FC = () => {
             </h1>
   </button>
 
-  {hoursStatus === "saved" && <span className="userOverview__pill">Saved</span>}
+  {hoursStatus === "saved" && <span className="userOverview__pill">{t("Saved")}</span>}
 
-  {hoursLoading && <p className="userOverview__state">Loading hours…</p>}
+  {hoursLoading && <p className="userOverview__state">{t("Loading hours…")}</p>}
   {hoursError && (
     <p className="userOverview__state userOverview__state--error">{hoursError}</p>
   )}
@@ -468,28 +485,26 @@ const UserOverview: React.FC = () => {
     className={`userOverview__hours ${hoursCollapsed ? "is-collapsed" : ""}`}
   >
     {week.map((schedule) => {
-      const displayName =
-        DAY_LABELS.find((d) => d.key === schedule.dayOfWeek)?.label ??
-        schedule.dayOfWeek;
+      const displayName = dayLabels[schedule.dayOfWeek] ?? schedule.dayOfWeek;
 
       return (
         <div key={schedule.dayOfWeek} className="userOverview__hoursRow">
           <div className="userOverview__dayHeader">
             <div className="userOverview__day">{displayName}</div>
-            <label className="userOverview__closed">
+              <label className="userOverview__closed">
               <input
                 type="checkbox"
                 checked={schedule.isOff}
                 onChange={(e) => toggleDayOff(schedule.dayOfWeek, e.target.checked)}
               />
-              <span>Day off</span>
+              <span>{t("Closed")}</span>
             </label>
           </div>
 
           <div className="userOverview__blocks">
             {schedule.isOff ? (
               <div className="userOverview__closedNote">
-                This day is marked as off.
+                {t("This day is marked as off.")}
               </div>
             ) : (
               schedule.slots.map((slot, index) => (
@@ -499,7 +514,7 @@ const UserOverview: React.FC = () => {
                 >
                   <div className="userOverview__time">
                     <label>
-                      <span>Start</span>
+                      <span>{t("Start")}</span>
                       <input
                         className="userOverview__timeInput"
                         type="time"
@@ -511,7 +526,7 @@ const UserOverview: React.FC = () => {
                     </label>
 
                     <label>
-                      <span>End</span>
+                      <span>{t("End")}</span>
                       <input
                         className="userOverview__timeInput"
                         type="time"
@@ -529,7 +544,7 @@ const UserOverview: React.FC = () => {
                       className="userOverview__iconBtn"
                       onClick={() => removeSlot(schedule.dayOfWeek, index)}
                     >
-                      Remove
+                      {t("Remove")}
                     </button>
                   )}
                 </div>
@@ -542,7 +557,7 @@ const UserOverview: React.FC = () => {
                 className="userOverview__addBlock"
                 onClick={() => addSlot(schedule.dayOfWeek)}
               >
-                + Add time block
+                {t("+ Add time block")}
               </button>
             )}
           </div>
@@ -560,14 +575,14 @@ const UserOverview: React.FC = () => {
         onClick={handleSaveHours}
         disabled={hoursStatus === "saving" || !memberId}
       >
-        {hoursStatus === "saving" ? "Saving…" : "Save working hours"}
+        {hoursStatus === "saving" ? t("Saving…") : t("Save working hours")}
       </button>
       <button
         type="button"
         className="userOverview__ghost"
         onClick={() => navigate(-1)}
       >
-        Cancel
+        {t("Cancel")}
       </button>
     </div>
   )}
@@ -576,18 +591,24 @@ const UserOverview: React.FC = () => {
       <section className="userOverview__card" aria-label="Services">
         <div className="userOverview__cardHeader">
           <div>
-            <h2>Services</h2>
-            <p className="userOverview__hint">Choose which services this teammate can offer. Customers can only book assigned services.</p>
+            <h2>{t("Services")}</h2>
+            <p className="userOverview__hint">
+              {t("Choose which services this teammate can offer. Customers can only book assigned services.")}
+            </p>
           </div>
-          {(servicesStatus === "saved" || servicesNotice) && <span className="userOverview__pill">{servicesNotice ?? "Saved"}</span>}
+          {(servicesStatus === "saved" || servicesNotice) && (
+            <span className="userOverview__pill">{servicesNotice ?? t("Saved")}</span>
+          )}
         </div>
 
-        {serviceOptionsLoading && <p className="userOverview__state">Loading services…</p>}
+        {serviceOptionsLoading && <p className="userOverview__state">{t("Loading services…")}</p>}
         {serviceOptionsError && <p className="userOverview__state userOverview__state--error">{serviceOptionsError}</p>}
         {servicesError && <p className="userOverview__state userOverview__state--error">{servicesError}</p>}
 
         {!serviceOptionsLoading && !serviceOptionsError && serviceOptions.length === 0 && (
-          <p className="userOverview__state">No services available. Add services in the Services library first.</p>
+          <p className="userOverview__state">
+            {t("No services available. Add services in the Services library first.")}
+          </p>
         )}
 
         <div className="userOverview__servicesGrid">
@@ -598,7 +619,7 @@ const UserOverview: React.FC = () => {
                 <div className="userOverview__serviceMeta">
                   <span className="userOverview__serviceName">{svc.name}</span>
                   <small className="userOverview__hint">
-                    {svc.duration} min · {svc.price ? `$${svc.price}` : "No price"}
+                    {svc.duration} {t("min")} · {svc.price ? `$${svc.price}` : t("No price")}
                   </small>
                 </div>
                 <input
@@ -613,7 +634,7 @@ const UserOverview: React.FC = () => {
         </div>
 
         <div className="userOverview__actionsBar userOverview__actionsBar--space">
-          <div className="userOverview__hint">Changes apply to this teammate only.</div>
+          <div className="userOverview__hint">{t("Changes apply to this teammate only.")}</div>
           <div className="userOverview__actions">
             <button
               type="button"
@@ -621,10 +642,10 @@ const UserOverview: React.FC = () => {
               onClick={handleSaveServices}
               disabled={servicesStatus === "saving" || !member}
             >
-              {servicesStatus === "saving" ? "Saving…" : "Save services"}
+              {servicesStatus === "saving" ? t("Saving…") : t("Save services")}
             </button>
             <button type="button" className="userOverview__ghost" onClick={() => navigate(-1)}>
-              Cancel
+              {t("Cancel")}
             </button>
           </div>
         </div>

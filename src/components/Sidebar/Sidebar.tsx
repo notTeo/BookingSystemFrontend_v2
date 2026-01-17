@@ -1,14 +1,29 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import {
+  ArrowLeft,
+  Briefcase,
+  CalendarDays,
+  Home,
+  Inbox,
+  LayoutDashboard,
+  LogOut,
+  PlusCircle,
+  Settings,
+  Store,
+  Users,
+} from "lucide-react";
 
 import { setActiveShopId } from "../../api/http";
 import { useAuth } from "../../providers/AuthProvider";
 import { useShop } from "../../providers/ShopProvider";
+import { useI18n } from "../../i18n";
 import "./Sidebar.css";
 
 const SideBar: React.FC = () => {
   const { user, logout } = useAuth();
   const { currentShop, setCurrentShop } = useShop();
+  const { t } = useI18n();
 
   const [open, setOpen] = useState(false);
 
@@ -29,7 +44,7 @@ const SideBar: React.FC = () => {
         type="button"
         className={`app-sidebar-burger ${open ? "is-open" : ""}`}
         onClick={toggle}
-        aria-label="Menu"
+        aria-label={t("Menu")}
       >
         <span />
         <span />
@@ -43,14 +58,14 @@ const SideBar: React.FC = () => {
       <aside className={`app-sidebar ${open ? "is-open" : ""}`}>
         <div className="app-sidebar__header">
           {/* X LEFT */}
-          <button type="button" className="app-sidebar__close" onClick={close} aria-label="Close">
+          <button type="button" className="app-sidebar__close" onClick={close} aria-label={t("Close")}>
             <span />
             <span />
           </button>
 
           {/* Title – show shop name when in shop mode */}
           <h2 className="app-sidebar__title">
-            {hasActiveShop ? (currentShop?.shop.name ?? "Shop") : "Dashboard"}
+            {hasActiveShop ? (currentShop?.shop.name ?? t("Shop")) : t("Dashboard")}
           </h2>
 
           {/* BACK RIGHT */}
@@ -63,10 +78,10 @@ const SideBar: React.FC = () => {
                 setCurrentShop(null);
                 close();
               }}
-              aria-label="Back"
-              title="Back"
+              aria-label={t("Back")}
+              title={t("Back")}
             >
-              ‹
+              <ArrowLeft className="icon" aria-hidden="true" />
             </Link>
           ) : (
             <span className="app-sidebar__back app-sidebar__back--spacer" />
@@ -82,7 +97,8 @@ const SideBar: React.FC = () => {
                 className={linkClass}
                 end
               >
-                Shop Overview
+                <LayoutDashboard className="icon" aria-hidden="true" />
+                {t("Shop Overview")}
               </NavLink>
             </li>
 
@@ -92,7 +108,8 @@ const SideBar: React.FC = () => {
                 onClick={close}
                 className={linkClass}
               >
-                Calendar
+                <CalendarDays className="icon" aria-hidden="true" />
+                {t("Calendar")}
               </NavLink>
             </li>
 
@@ -102,7 +119,19 @@ const SideBar: React.FC = () => {
                 onClick={close}
                 className={linkClass}
               >
-                Team
+                <Users className="icon" aria-hidden="true" />
+                {t("Team")}
+              </NavLink>
+            </li>
+
+            <li className="app-sidebar__item">
+              <NavLink
+                to={`/shops/${currentShop?.shop.name}/customers`}
+                onClick={close}
+                className={linkClass}
+              >
+                <Users className="icon" aria-hidden="true" />
+                {t("Customers")}
               </NavLink>
             </li>
 
@@ -112,7 +141,8 @@ const SideBar: React.FC = () => {
                 onClick={close}
                 className={linkClass}
               >
-                Services
+                <Briefcase className="icon" aria-hidden="true" />
+                {t("Services")}
               </NavLink>
             </li>
 
@@ -122,7 +152,8 @@ const SideBar: React.FC = () => {
                 onClick={close}
                 className={linkClass}
               >
-                Settings
+                <Settings className="icon" aria-hidden="true" />
+                {t("Settings")}
               </NavLink>
             </li>
           </ul>
@@ -130,32 +161,37 @@ const SideBar: React.FC = () => {
           <ul className="app-sidebar__list">
             <li className="app-sidebar__item">
               <NavLink to="/overview" onClick={close} className={linkClass} end>
-                Overview
+                <Home className="icon" aria-hidden="true" />
+                {t("Overview")}
               </NavLink>
             </li>
 
             <li className="app-sidebar__item">
               <NavLink to="/inbox" onClick={close} className={linkClass}>
-                Inbox
+                <Inbox className="icon" aria-hidden="true" />
+                {t("Inbox")}
               </NavLink>
             </li>
 
             <li className="app-sidebar__item">
               <NavLink to="/shops" onClick={close} className={linkClass}>
-                All Shops
+                <Store className="icon" aria-hidden="true" />
+                {t("All Shops")}
               </NavLink>
             </li>
 
             <li className="app-sidebar__item">
               <NavLink to="/new-shop" onClick={close} className={linkClass}>
-                Create Shop
+                <PlusCircle className="icon" aria-hidden="true" />
+                {t("Create Shop")}
               </NavLink>
             </li>
 
             {/* Single Settings item instead of Account + Billing */}
             <li className="app-sidebar__item">
               <NavLink to="/settings/account" onClick={close} className={linkClass}>
-                Settings
+                <Settings className="icon" aria-hidden="true" />
+                {t("Settings")}
               </NavLink>
             </li>
           </ul>
@@ -183,7 +219,8 @@ const SideBar: React.FC = () => {
               close();
             }}
           >
-            Logout
+            <LogOut className="icon" aria-hidden="true" />
+            {t("Logout")}
           </button>
         </div>
       </aside>

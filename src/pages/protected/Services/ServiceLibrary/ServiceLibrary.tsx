@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createService, listServices, updateService } from "../../../../api/services";
 import type { Service, ServicePayload } from "../../../../types/services";
+import { useI18n } from "../../../../i18n";
 import "./ServiceLibrary.css";
 
 type ServiceStatus = "Active" | "Archived";
@@ -32,6 +33,7 @@ const defaultFormState: ServiceFormState = {
 };
 
 const ServiceLibrary: React.FC = () => {
+  const { t } = useI18n();
   const [services, setServices] = useState<ServiceRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +61,8 @@ const ServiceLibrary: React.FC = () => {
           })),
         );
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Unable to load services. Please try again.";
+        const message =
+          err instanceof Error ? err.message : t("Unable to load services. Please try again.");
         setError(message);
       } finally {
         setIsLoading(false);
@@ -67,9 +70,10 @@ const ServiceLibrary: React.FC = () => {
     };
 
     loadServices();
-  }, []);
+  }, [t]);
 
-  const toStatusLabel = (service: ServiceRow): ServiceStatus => (service.active ? "Active" : "Archived");
+  const toStatusLabel = (service: ServiceRow): ServiceStatus =>
+    service.active ? "Active" : "Archived";
 
   const filteredServices = useMemo(() => {
     return services.filter((service) => {
@@ -137,7 +141,7 @@ const ServiceLibrary: React.FC = () => {
       setIsModalOpen(false);
       resetForm();
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to save service.";
+      const message = err instanceof Error ? err.message : t("Unable to save service.");
       setError(message);
     } finally {
       setIsSaving(false);
@@ -159,7 +163,7 @@ const ServiceLibrary: React.FC = () => {
       setServices((prev) => prev.map((svc) => (svc.id === archiveTarget.id ? { ...svc, ...updated } : svc)));
       setArchiveTarget(null);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to archive service.";
+      const message = err instanceof Error ? err.message : t("Unable to archive service.");
       setError(message);
     } finally {
       setIsArchiving(false);
@@ -174,7 +178,7 @@ const ServiceLibrary: React.FC = () => {
 
   const renderStatusPill = (status: ServiceStatus) => (
     <span className={`service-library__status-pill service-library__status-pill--${status.toLowerCase()}`}>
-      {status}
+      {t(status)}
     </span>
   );
 
@@ -194,7 +198,7 @@ const ServiceLibrary: React.FC = () => {
         <div className="service-library__state service-library__state--error">
           <p>{error}</p>
           <button className="btn btn--primary" onClick={() => window.location.reload()}>
-            Retry
+            {t("Retry")}
           </button>
         </div>
       );
@@ -203,10 +207,10 @@ const ServiceLibrary: React.FC = () => {
     if (services.length === 0) {
       return (
         <div className="service-library__state">
-          <h3>No services yet</h3>
-          <p>Add your first service to start building your catalog.</p>
+          <h3>{t("No services yet")}</h3>
+          <p>{t("Add your first service to start building your catalog.")}</p>
           <button className="btn btn--primary" onClick={openCreateModal}>
-            Create your first service
+            {t("Create your first service")}
           </button>
         </div>
       );
@@ -215,8 +219,8 @@ const ServiceLibrary: React.FC = () => {
     if (filteredServices.length === 0) {
       return (
         <div className="service-library__state">
-          <h3>No services match your filters</h3>
-          <p>Try adjusting your search or status filter.</p>
+          <h3>{t("No services match your filters")}</h3>
+          <p>{t("Try adjusting your search or status filter.")}</p>
         </div>
       );
     }
@@ -226,12 +230,12 @@ const ServiceLibrary: React.FC = () => {
         <table className="service-library__table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Default duration</th>
-              <th>Default price</th>
-              <th>Status</th>
-              <th className="service-library__actions-col">Actions</th>
+              <th>{t("Name")}</th>
+              <th>{t("Category")}</th>
+              <th>{t("Default duration")}</th>
+              <th>{t("Default price")}</th>
+              <th>{t("Status")}</th>
+              <th className="service-library__actions-col">{t("Actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -242,20 +246,23 @@ const ServiceLibrary: React.FC = () => {
                   <div className="service-library__cell-subtext">{service.description}</div>
                   {service.offeredByCount !== undefined && (
                     <div className="service-library__cell-footnote">
-                      {service.offeredByCount} team {service.offeredByCount === 1 ? "member" : "members"} offer this service
+                      {service.offeredByCount} {t("team")}{" "}
+                      {service.offeredByCount === 1 ? t("member") : t("members")} {t("offer this service")}
                     </div>
                   )}
                 </td>
                 <td>{service.category || "—"}</td>
-                <td>{service.duration} min</td>
+                <td>
+                  {service.duration} {t("min")}
+                </td>
                 <td>{service.price !== undefined ? `$${service.price}` : "—"}</td>
                 <td>{renderStatusPill(toStatusLabel(service))}</td>
                 <td className="service-library__actions">
                   <button className="btn btn--ghost" onClick={() => openEditModal(service)}>
-                    Edit
+                    {t("Edit")}
                   </button>
                   <button className="btn btn--ghost service-library__archive" onClick={() => handleArchiveRequest(service)}>
-                    Archive
+                    {t("Archive")}
                   </button>
                 </td>
               </tr>
@@ -271,12 +278,13 @@ const ServiceLibrary: React.FC = () => {
       <div className="service-library__inner">
         <header className="service-library__header">
           <div>
-            <p className="service-library__eyebrow">Services management</p>
-            <h1>Services</h1>
-            <p className="service-library__subtitle">Manage your catalog. Team assignments are configured elsewhere.</p>
+            <h1>{t("Services")}</h1>
+            <p className="service-library__subtitle">
+              {t("Manage your catalog. Team assignments are configured elsewhere.")}
+            </p>
           </div>
           <button className="btn btn--primary" onClick={openCreateModal}>
-            + New service
+            {t("+ New service")}
           </button>
         </header>
 
@@ -284,7 +292,7 @@ const ServiceLibrary: React.FC = () => {
           <div className="service-library__search">
             <input
               type="search"
-              placeholder="Search by service name"
+              placeholder={t("Search by service name")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -296,7 +304,7 @@ const ServiceLibrary: React.FC = () => {
                 className={`service-library__chip ${statusFilter === status ? "service-library__chip--active" : ""}`}
                 onClick={() => setStatusFilter(status as "All" | ServiceStatus)}
               >
-                {status}
+                {t(status)}
               </button>
             ))}
           </div>
@@ -310,49 +318,51 @@ const ServiceLibrary: React.FC = () => {
           <div className="service-library__modal">
             <div className="service-library__modal-header">
               <div>
-                <p className="service-library__eyebrow">{editingService ? "Edit service" : "New service"}</p>
-                <h2>{editingService ? editingService.name : "Create service"}</h2>
+                <p className="service-library__eyebrow">
+                  {editingService ? t("Edit service") : t("New service")}
+                </p>
+                <h2>{editingService ? editingService.name : t("Create service")}</h2>
               </div>
-              <button className="service-library__close" onClick={closeModals} aria-label="Close">
+              <button className="service-library__close" onClick={closeModals} aria-label={t("Close")}>
                 ×
               </button>
             </div>
 
             <form className="service-library__form" onSubmit={handleSave}>
               <label>
-                <span>Name *</span>
+                <span>{t("Name")} *</span>
                 <input
                   required
                   type="text"
                   value={formState.name}
                   onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                  placeholder="Service name"
+                  placeholder={t("Service name")}
                 />
               </label>
 
               <label>
-                <span>Description</span>
+                <span>{t("Description")}</span>
                 <textarea
                   rows={3}
                   value={formState.description}
                   onChange={(e) => setFormState({ ...formState, description: e.target.value })}
-                  placeholder="What is included"
+                  placeholder={t("What is included")}
                 />
               </label>
 
               <label>
-                <span>Category</span>
+                <span>{t("Category")}</span>
                 <input
                   type="text"
                   value={formState.category}
                   onChange={(e) => setFormState({ ...formState, category: e.target.value })}
-                  placeholder="e.g. Advisory"
+                  placeholder={t("e.g. Advisory")}
                 />
               </label>
 
               <div className="service-library__grid">
                 <label>
-                  <span>Default duration (minutes)</span>
+                  <span>{t("Default duration (minutes)")}</span>
                   <input
                     type="number"
                     min={0}
@@ -362,7 +372,7 @@ const ServiceLibrary: React.FC = () => {
                 </label>
 
                 <label>
-                  <span>Default price (USD)</span>
+                  <span>{t("Default price (USD)")}</span>
                   <input
                     type="number"
                     min={0}
@@ -370,7 +380,7 @@ const ServiceLibrary: React.FC = () => {
                     onChange={(e) =>
                       setFormState({ ...formState, price: e.target.value ? Number(e.target.value) : undefined })
                     }
-                    placeholder="Optional"
+                    placeholder={t("Optional")}
                   />
                 </label>
               </div>
@@ -382,16 +392,16 @@ const ServiceLibrary: React.FC = () => {
                     checked={formState.active}
                     onChange={(e) => setFormState({ ...formState, active: e.target.checked })}
                   />
-                  <span>{formState.active ? "Active" : "Archived"}</span>
+                  <span>{formState.active ? t("Active") : t("Archived")}</span>
                 </label>
               </div>
 
               <div className="service-library__actions-row">
                 <button type="button" className="btn btn--ghost" onClick={closeModals}>
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 <button type="submit" className="btn btn--primary" disabled={isSaving}>
-                  {isSaving ? "Saving…" : "Save"}
+                  {isSaving ? t("Saving…") : t("Save")}
                 </button>
               </div>
             </form>
@@ -402,17 +412,16 @@ const ServiceLibrary: React.FC = () => {
       {archiveTarget && (
         <div className="service-library__overlay" role="alertdialog" aria-modal="true">
           <div className="service-library__confirm">
-            <h3>Archive this service?</h3>
+            <h3>{t("Archive this service?")}</h3>
             <p>
-              {archiveTarget.name} will move to Archived. You can reactivate it later from this list. Team assignments
-              stay unchanged.
+              {t("Archive will move")} {archiveTarget.name} {t("to Archived. You can reactivate it later from this list. Team assignments stay unchanged.")}
             </p>
             <div className="service-library__actions-row">
               <button className="btn btn--ghost" onClick={() => setArchiveTarget(null)} disabled={isArchiving}>
-                Cancel
+                {t("Cancel")}
               </button>
               <button className="btn btn--danger" onClick={confirmArchive} disabled={isArchiving}>
-                {isArchiving ? "Archiving…" : "Archive"}
+                {isArchiving ? t("Archiving…") : t("Archive")}
               </button>
             </div>
           </div>

@@ -15,5 +15,5 @@ export interface ServicePayload {
   duration: number;
   price: number;
   description?: string;
-  active?: boolean;
+  active: boolean;
 }

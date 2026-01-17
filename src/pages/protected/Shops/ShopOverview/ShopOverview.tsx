@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./ShopOverview.css";
 import { getActiveShopId } from "../../../../api/http";
 import { useShop } from "../../../../providers/ShopProvider";
+import { useI18n } from "../../../../i18n";
 
 function formatMoneyEUR(n: number) {
   const safe = Number.isFinite(n) ? n : 0;
@@ -33,6 +34,7 @@ const dayOrder = (d: unknown) => WEEK_ORDER[String(d).toUpperCase()] ?? 999;
 const ShopOverviewPage: React.FC = () => {
   const shopId = getActiveShopId();
   const { currentShop, isLoading, refreshShop } = useShop();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!shopId) return;
@@ -45,9 +47,9 @@ const ShopOverviewPage: React.FC = () => {
   );
   const recent = useMemo(() => currentShop?.recentBookings ?? [], [currentShop]);
 
-  if (!shopId) return <p className="shopOv__state">No shop selected.</p>;
-  if (isLoading) return <p className="shopOv__state">Loading shop…</p>;
-  if (!currentShop) return <p className="shopOv__state">Shop not found or not loaded.</p>;
+  if (!shopId) return <p className="shopOv__state">{t("No shop selected.")}</p>;
+  if (isLoading) return <p className="shopOv__state">{t("Loading shop…")}</p>;
+  if (!currentShop) return <p className="shopOv__state">{t("Shop not found or not loaded.")}</p>;
 
   const { shop, totalBookings, activeServices, teamMembers, monthlyRevenue } = currentShop;
 
@@ -58,8 +60,7 @@ const ShopOverviewPage: React.FC = () => {
           <div>
             <h1 className="shopOv__title">{shop.name}</h1>
             <p className="shopOv__subtitle">
-              {shop.address ? shop.address : "No address set"}
-              
+              {shop.address ? shop.address : t("No address set")}
             </p>
           </div>
 
@@ -68,16 +69,10 @@ const ShopOverviewPage: React.FC = () => {
               className="btn btn--ghost"
               to={`/shops/${encodeURIComponent(shop.name)}/calendar`}
             >
-              Calendar
-            </Link>
-            <Link
-              className="btn btn--ghost"
-              to={`/shops/${encodeURIComponent(shop.name)}/bookings`}
-            >
-              Bookings
+              {t("Calendar")}
             </Link>
             <Link className="btn btn--primary" to={`/shops/${encodeURIComponent(shop.name)}/edit`}>
-              Manage
+              {t("Manage")}
             </Link>
           </div>
         </div>
@@ -85,27 +80,27 @@ const ShopOverviewPage: React.FC = () => {
 
       <section className="shopOv__kpis" aria-label="Shop stats">
         <div className="shopOv__kpi card">
-          <div className="shopOv__kpiLabel">Total bookings</div>
+          <div className="shopOv__kpiLabel">{t("Total bookings")}</div>
           <div className="shopOv__kpiValue">{totalBookings}</div>
-          <div className="shopOv__kpiHint">All time</div>
+          <div className="shopOv__kpiHint">{t("All time")}</div>
         </div>
 
         <div className="shopOv__kpi card">
-          <div className="shopOv__kpiLabel">Monthly revenue</div>
+          <div className="shopOv__kpiLabel">{t("Monthly revenue")}</div>
           <div className="shopOv__kpiValue">{formatMoneyEUR(monthlyRevenue)}</div>
-          <div className="shopOv__kpiHint">This month</div>
+          <div className="shopOv__kpiHint">{t("This month")}</div>
         </div>
 
         <div className="shopOv__kpi card">
-          <div className="shopOv__kpiLabel">Team members</div>
+          <div className="shopOv__kpiLabel">{t("Team members")}</div>
           <div className="shopOv__kpiValue">{teamMembers}</div>
-          <div className="shopOv__kpiHint">Active staff</div>
+          <div className="shopOv__kpiHint">{t("Active staff")}</div>
         </div>
 
         <div className="shopOv__kpi card">
-          <div className="shopOv__kpiLabel">Active services</div>
+          <div className="shopOv__kpiLabel">{t("Active services")}</div>
           <div className="shopOv__kpiValue">{activeServices}</div>
-          <div className="shopOv__kpiHint">Bookable</div>
+          <div className="shopOv__kpiHint">{t("Bookable")}</div>
         </div>
       </section>
 
@@ -114,14 +109,14 @@ const ShopOverviewPage: React.FC = () => {
         <section className="shopOv__card card" aria-label="Working hours">
           <div className="shopOv__cardHead">
             <div>
-              <h2>Working hours</h2>
-              <p>Weekly opening hours used for bookings.</p>
+              <h2>{t("Working hours")}</h2>
+              <p>{t("Weekly opening hours used for bookings.")}</p>
             </div>
             <Link
               className="btn btn--ghost"
               to={`/shops/${encodeURIComponent(shop.name)}/settings`}
             >
-              Edit
+              {t("Edit")}
             </Link>
           </div>
 
@@ -134,7 +129,7 @@ const ShopOverviewPage: React.FC = () => {
                   <div key={`${h.dayOfWeek}-${h.id ?? "x"}`} className="shopOv__hoursRow">
                     <div className="shopOv__day">{dayLabel(String(h.dayOfWeek))}</div>
                     {h.isClosed ? (
-                      <div className="shopOv__closedPill">Closed</div>
+                      <div className="shopOv__closedPill">{t("Closed")}</div>
                     ) : (
                       <div className="shopOv__time">
                         {h.openTime} – {h.closeTime}
@@ -145,7 +140,7 @@ const ShopOverviewPage: React.FC = () => {
             </div>
           ) : (
             <div className="shopOv__empty">
-              No working hours set yet. Add hours so customers can book.
+              {t("No working hours set yet. Add hours so customers can book.")}
             </div>
           )}
         </section>
@@ -154,25 +149,25 @@ const ShopOverviewPage: React.FC = () => {
         <section className="shopOv__card card" aria-label="Recent bookings">
           <div className="shopOv__cardHead">
             <div>
-              <h2>Recent bookings</h2>
-              <p>Latest appointments for this shop.</p>
+              <h2>{t("Recent bookings")}</h2>
+              <p>{t("Latest appointments for this shop.")}</p>
             </div>
             <Link
               className="btn btn--ghost"
               to={`/shops/${encodeURIComponent(shop.name)}/bookings`}
             >
-              View all
+              {t("View all")}
             </Link>
           </div>
 
           {recent.length ? (
             <div className="shopOv__table">
               <div className="shopOv__tableHead">
-                <div>Customer</div>
-                <div>Service</div>
-                <div>Staff</div>
-                <div>Date</div>
-                <div>Status</div>
+                <div>{t("Customer")}</div>
+                <div>{t("Service")}</div>
+                <div>{t("Staff")}</div>
+                <div>{t("Date")}</div>
+                <div>{t("Status")}</div>
               </div>
 
               {recent.slice(0, 8).map((b) => (
@@ -194,7 +189,7 @@ const ShopOverviewPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="shopOv__empty">No bookings yet.</div>
+            <div className="shopOv__empty">{t("No bookings yet.")}</div>
           )}
         </section>
       </div>

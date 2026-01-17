@@ -18,6 +18,15 @@
   gap: 16px;
 }
 
+.calendar-header__row > * {
+  min-width: 0;
+}
+
+.calendar-header__actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .calendar-title {
   margin: 0;
   font-size: 1.7rem;
@@ -40,17 +49,16 @@
 
 /* Desktop: one row scroll */
 .calendar-filters__row {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: flex-end;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-gutter: stable;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: visible;
+  padding-bottom: 0;
 }
 
 .calendar-filters__field {
   margin-bottom: 0;
-  min-width: 180px;
+  min-width: 0;
+  flex: 1 1 220px;
 }
 
 .calendar-filters__actions {
@@ -59,29 +67,6 @@
   gap: 10px;
 }
 
-/* Payload preview */
-.calendar-filters__preview {
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
-}
-
-.calendar-filters__preview-label {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.calendar-filters__code {
-  margin: 0;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 10px 12px;
-  color: var(--text);
-  font-size: 0.85rem;
-  overflow: auto;
-  max-height: 180px;
-}
 
 /* RESULTS */
 .calendar-results {
@@ -106,6 +91,29 @@
 .calendar-results__meta {
   color: var(--text-muted);
   font-size: 0.9rem;
+}
+
+.calendar-results__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-view-toggle {
+  height: 40px;
+  width: 40px;
+  padding: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+}
+
+.calendar-view-toggle .icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* alerts */
@@ -160,7 +168,10 @@
   position: sticky;
   left: 0;
   z-index: 4;
-  min-width: 90px;
+  min-width: 52px;
+  width: 1%;
+  white-space: nowrap;
+  padding: 8px 8px;
 }
 
 /* Body cells */
@@ -180,8 +191,11 @@
   z-index: 2;
   background: var(--bg-card);
   color: var(--text-muted);
-  min-width: 90px;
+  min-width: 52px;
+  width: 1%;
+  white-space: nowrap;
   font-size: 0.9rem;
+  padding: 8px 8px;
 }
 
 .cal-td--empty {
@@ -208,7 +222,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   padding: 10px;
@@ -237,7 +250,28 @@
   gap: 4px;
 }
 
+.cal-booking__meta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .cal-booking__id {
+  color: var(--text-soft);
+}
+
+.cal-booking__link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.cal-booking__link:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.cal-booking__phone {
   color: var(--text-soft);
 }
 
@@ -290,6 +324,64 @@
   color: rgba(255, 255, 255, 0.86);
 }
 
+/* ===== List view ===== */
+.calendar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar-list__table-wrap {
+  width: 100%;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--bg-card);
+}
+
+.calendar-list__table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.calendar-list__table th,
+.calendar-list__table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.calendar-list__table th:first-child,
+.calendar-list__table td:first-child {
+  width: 72px;
+  white-space: nowrap;
+}
+
+.calendar-list__table thead th {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.calendar-list__actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.calendar-list__actions-col {
+  text-align: right;
+}
+
+.calendar-list__subtext {
+  margin-top: 4px;
+  color: var(--text-soft);
+  font-size: 0.85rem;
+}
+
 /* ===== Hover actions ===== */
 
 .cal-booking__actions {
@@ -312,17 +404,43 @@
   pointer-events: auto;
 }
 
+@media (hover: none) {
+  .cal-booking__actions {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
 /* Make the action buttons compact even if you don't have btn--sm globally */
 .cal-booking__action-btn {
-  padding: 6px 8px;
-  font-size: 0.78rem;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  line-height: 1.1;
+  color: var(--text);
+  border: none;
+  background: transparent;
 }
+.cal-booking__action-btn:hover{
+  cursor: pointer;
+  background-color: #000000;
+  transition: 0.7s ease-in-out;
+}
+.cal-booking__action-btn .icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
 
 /* Optional: highlight the card on hover */
 .cal-booking:hover {
   border-color: var(--border-strong);
-  background: rgba(255, 255, 255, 0.02);
 }
 
 /* Debug */
@@ -346,7 +464,7 @@
    =========================== */
 
 /* Tablet */
-@media (max-width: 920px) {
+@media (max-width: 1100px) {
   .calendar-header__row {
     flex-direction: column;
     align-items: stretch;
@@ -357,17 +475,19 @@
     justify-content: flex-start;
   }
 
-  /* Stack filters instead of forced single row */
+  .calendar-header__actions {
+    justify-content: flex-start;
+  }
+
   .calendar-filters__row {
-    flex-wrap: wrap;
-    overflow-x: visible;
-    padding-bottom: 0;
     gap: 10px;
   }
 
-  .calendar-filters__field {
-    min-width: 0;
-    flex: 1 1 220px;
+  .calendar-filters__actions {
+    width: 100%;
+    margin-left: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .calendar-filters__actions {
@@ -470,8 +590,8 @@
   }
 
   .cal-booking__action-btn {
-    padding: 8px 10px;
-    font-size: 0.8rem;
+    width: 40px;
+    height: 40px;
   }
 
   .cal-booking__meta {
@@ -480,6 +600,16 @@
 
   .cal-booking__debug pre {
     max-height: 140px;
+  }
+
+  .calendar-list__table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .calendar-list__actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 

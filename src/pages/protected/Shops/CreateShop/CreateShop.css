@@ -95,6 +95,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .create-shop__success {
@@ -186,6 +187,13 @@
   color: var(--text-muted);
 }
 
+.create-shop__readonly {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
 .create-shop__previewText {
   margin: 0;
   color: var(--text-muted);
@@ -233,5 +241,16 @@
 
   .create-shop__info {
     position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .create-shop__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .create-shop__actions .btn {
+    width: 100%;
   }
 }

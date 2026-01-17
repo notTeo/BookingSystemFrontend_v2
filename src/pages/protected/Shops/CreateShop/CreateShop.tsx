@@ -6,29 +6,24 @@ import { createShop } from "../../../../api/shop";
 import { useAuth } from "../../../../providers/AuthProvider";
 import { useShop } from "../../../../providers/ShopProvider";
 import type { CreateShopPayload } from "../../../../types/shop";
+import { useI18n } from "../../../../i18n";
 
 import "./CreateShop.css";
 
 type FormState = {
   name: string;
   address: string;
-  timezone: string;
-  bookingUrl: string;
-  phone: string;
-  website: string;
-  description: string;
-  allowWalkIns: boolean;
+  websiteUrl: string;
+  showDirectionsLink: boolean;
+  includeCalendarLink: boolean;
 };
 
 const EMPTY_FORM: FormState = {
   name: "",
   address: "",
-  timezone: "",
-  bookingUrl: "",
-  phone: "",
-  website: "",
-  description: "",
-  allowWalkIns: true,
+  websiteUrl: "",
+  showDirectionsLink: true,
+  includeCalendarLink: false,
 };
 
 const DEFAULT_OPENING_HOURS: CreateShopPayload["openingHours"] = [
@@ -83,6 +78,24 @@ const CreateShop: React.FC = () => {
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
   const { refreshShop } = useShop();
+  const { t } = useI18n();
+
+  const normalizeUrl = useCallback((value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) return "";
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return `https://${trimmed}`;
+  }, []);
+
+  const buildBookingEndpoint = useCallback((name: string) => {
+    const slug = name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    const base = slug || "shop";
+    return `${base}.bookly.com`;
+  }, []);
 
   const handleChange = useCallback<
     React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -109,10 +122,9 @@ const CreateShop: React.FC = () => {
       event.preventDefault();
       if (!form.name.trim()) {
         setStatus("error");
-        setError("Please add a shop name to continue.");
+        setError(t("Please add a shop name to continue."));
         return;
       }
-
       setStatus("pending");
       setError(null);
 
@@ -120,6 +132,9 @@ const CreateShop: React.FC = () => {
         const payload: CreateShopPayload = {
           name: form.name.trim(),
           address: form.address.trim() || null,
+          websiteUrl: form.websiteUrl.trim() ? normalizeUrl(form.websiteUrl) : null,
+          showDirectionsLink: form.showDirectionsLink,
+          includeCalendarLink: form.includeCalendarLink,
           openingHours: DEFAULT_OPENING_HOURS,
         };
 
@@ -132,29 +147,42 @@ const CreateShop: React.FC = () => {
       } catch (err) {
         console.error("Create shop failed", err);
         setStatus("error");
-        setError(err instanceof Error ? err.message : "Unable to create shop. Please try again.");
+        setError(
+          err instanceof Error ? err.message : t("Unable to create shop. Please try again."),
+        );
       }
     },
-    [form.name, form.address, refreshShop, refreshUser, navigate],
+    [
+      form.name,
+      form.address,
+      form.websiteUrl,
+      form.showDirectionsLink,
+      form.includeCalendarLink,
+      refreshShop,
+      refreshUser,
+      navigate,
+      t,
+      normalizeUrl,
+    ],
   );
 
   const summaryItems = useMemo(
     () => [
-      "Give your shop a friendly name customers will recognize.",
-      "Add your city to show up in local search results.",
-      "Use a booking link slug that matches your brand.",
-      "Toggle walk-ins if you want to allow on-the-spot bookings.",
+      t("Give your shop a friendly name customers will recognize."),
+      t("Your booking link is generated from the shop name."),
+      t("Include a website URL so guests can learn more about your shop."),
+      t("Toggle calendar and directions links for booking confirmations."),
     ],
-    [],
+    [t],
   );
 
   return (
     <div className="create-shop">
       <header className="create-shop__header">
         <div className="create-shop__titles">
-          <h1 className="create-shop__title">Create a new shop</h1>
+          <h1 className="create-shop__title">{t("Create a new shop")}</h1>
           <p className="create-shop__subtitle">
-            Set up your shop profile so customers know where to book and how to reach you.
+            {t("Set up your shop profile so customers know where to book and how to reach you.")}
           </p>
         </div>
       </header>
@@ -164,12 +192,12 @@ const CreateShop: React.FC = () => {
           <form className="create-shop__form stack-lg" onSubmit={handleSubmit}>
             <div className="create-shop__formRow">
               <div className="field">
-                <label htmlFor="name">Shop name</label>
+                <label htmlFor="name">{t("Shop name")}</label>
                 <input
                   id="name"
                   name="name"
                   className="input"
-                  placeholder="Ex: Downtown Cuts"
+                  placeholder={t("Ex: Downtown Cuts")}
                   value={form.name}
                   onChange={handleChange}
                   required
@@ -177,12 +205,12 @@ const CreateShop: React.FC = () => {
               </div>
 
               <div className="field">
-                <label htmlFor="address">Location</label>
+                <label htmlFor="address">{t("Location")}</label>
                 <input
                   id="address"
                   name="address"
                   className="input"
-                  placeholder="City, country"
+                  placeholder={t("City, country")}
                   value={form.address}
                   onChange={handleChange}
                   required
@@ -192,92 +220,58 @@ const CreateShop: React.FC = () => {
 
             <div className="create-shop__formRow">
               <div className="field">
-                <label htmlFor="timezone">Timezone</label>
-                <select
-                  id="timezone"
-                  name="timezone"
-                  className="select input"
-                  value={form.timezone}
+                <label htmlFor="websiteUrl">{t("Website")}</label>
+                <input
+                  id="websiteUrl"
+                  name="websiteUrl"
+                  className="input"
+                  placeholder={t("https://yourshop.com")}
+                  value={form.websiteUrl}
                   onChange={handleChange}
-                  required
-                >
-                  <option value="" disabled>
-                    Select a timezone
-                  </option>
-                  <option value="UTC">UTC</option>
-                  <option value="Europe/Berlin">Europe/Berlin</option>
-                  <option value="America/New_York">America/New_York</option>
-                  <option value="Asia/Singapore">Asia/Singapore</option>
-                </select>
+                  type="url"
+                />
               </div>
 
               <div className="field">
-                <label htmlFor="bookingUrl">Booking link</label>
-                <div className="input input--with-prefix">
-                  <span className="input__prefix">bookings.app/</span>
-                  <input
-                    id="bookingUrl"
-                    name="bookingUrl"
-                    className="input input--bare"
-                    placeholder="downtown-cuts"
-                    value={form.bookingUrl}
-                    onChange={handleChange}
-                    required
-                  />
+                <label>{t("Booking URL")}</label>
+                <div className="input create-shop__readonly">
+                  {form.name.trim()
+                    ? buildBookingEndpoint(form.name)
+                    : t("Generated after you name the shop")}
                 </div>
               </div>
-            </div>
-
-            <div className="create-shop__formRow">
-              <div className="field">
-                <label htmlFor="phone">Phone number</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  className="input"
-                  placeholder="+49 123 4567"
-                  value={form.phone}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="field">
-                <label htmlFor="website">Website</label>
-                <input
-                  id="website"
-                  name="website"
-                  className="input"
-                  placeholder="https://yourshop.com"
-                  value={form.website}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="field">
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                className="input create-shop__textarea"
-                placeholder="Services offered, style, parking info, etc."
-                value={form.description}
-                onChange={handleChange}
-                rows={4}
-              />
             </div>
 
             <label className="create-shop__checkbox">
               <input
                 type="checkbox"
-                name="allowWalkIns"
-                checked={form.allowWalkIns}
+                name="showDirectionsLink"
+                checked={form.showDirectionsLink}
                 onChange={handleChange}
               />
               <div className="create-shop__checkboxCopy">
-                <span className="create-shop__checkboxTitle">Allow walk-ins</span>
+                <span className="create-shop__checkboxTitle">
+                  {t("Include directions link")}
+                </span>
                 <span className="create-shop__checkboxSub">
-                  Keep this enabled if you accept on-site bookings without an online reservation.
+                  {t("Add a Google Maps directions link in booking confirmations.")}
+                </span>
+              </div>
+            </label>
+
+            <label className="create-shop__checkbox">
+              <input
+                type="checkbox"
+                name="includeCalendarLink"
+                checked={form.includeCalendarLink}
+                onChange={handleChange}
+              />
+              <div className="create-shop__checkboxCopy">
+                <span className="create-shop__checkboxTitle">
+                  {t("Include calendar link")}
+                </span>
+                <span className="create-shop__checkboxSub">
+                  {t("Provide a Google Calendar link for customers to save bookings.")}
                 </span>
               </div>
             </label>
@@ -289,26 +283,29 @@ const CreateShop: React.FC = () => {
                 onClick={() => setForm(EMPTY_FORM)}
                 disabled={status === "pending"}
               >
-                Reset
+                {t("Reset")}
               </button>
               <button className="btn btn--primary" type="submit" disabled={status === "pending"}>
-                {status === "pending" ? "Creating…" : "Save shop"}
+                {status === "pending" ? t("Creating…") : t("Save shop")}
               </button>
             </div>
 
             {status === "success" && (
-              <p className="create-shop__success">Shop created! Redirecting you now…</p>
+              <p className="create-shop__success">
+                {t("Shop created! Redirecting you now…")}
+              </p>
             )}
             {status === "error" && error && <p className="create-shop__error">{error}</p>}
           </form>
         </section>
 
         <aside className="card create-shop__info">
-          <div className="create-shop__badge">Preview</div>
-          <h3 className="create-shop__infoTitle">How your shop shows up</h3>
+          <div className="create-shop__badge">{t("Preview")}</div>
+          <h3 className="create-shop__infoTitle">{t("How your shop shows up")}</h3>
           <p className="create-shop__infoText">
-            Customers will see these details on your booking link and in their confirmation emails.
-            Keep it short, friendly, and accurate.
+            {t(
+              "Customers will see these details on your booking link and in their confirmation emails. Keep it short, friendly, and accurate.",
+            )}
           </p>
 
           <ul className="create-shop__list">
@@ -320,25 +317,28 @@ const CreateShop: React.FC = () => {
           <div className="create-shop__preview card card--ghost">
             <div className="create-shop__previewHeader">
               <div>
-                <div className="create-shop__previewName">{form.name || "Your shop name"}</div>
+                <div className="create-shop__previewName">{form.name || t("Your shop name")}</div>
                 <div className="create-shop__previewMeta">
-                  {form.address || "City"} • {form.timezone || "Timezone"}
+                  {form.address || t("City")}
                 </div>
               </div>
-              <span className="create-shop__pill">Booking</span>
+              <span className="create-shop__pill">{t("Booking")}</span>
             </div>
 
             <p className="create-shop__previewText">
-              {form.description ||
-                "Describe what you do, how long services take, and any special instructions."}
+              {form.name.trim()
+                ? buildBookingEndpoint(form.name)
+                : t("Your booking URL appears once you name your shop.")}
             </p>
 
             <div className="create-shop__previewFooter">
               <span className="create-shop__pill create-shop__pill--muted">
-                {form.allowWalkIns ? "Walk-ins allowed" : "Online bookings only"}
+                {form.includeCalendarLink ? t("Calendar links on") : t("Calendar links off")}
               </span>
-              {form.bookingUrl && (
-                <span className="create-shop__previewLink">bookings.app/{form.bookingUrl}</span>
+              {form.name.trim() && (
+                <span className="create-shop__previewLink">
+                  {buildBookingEndpoint(form.name)}
+                </span>
               )}
             </div>
           </div>

@@ -39,6 +39,10 @@ export interface ShopSummary {
   id: number;
   name: string;
   address?: string | null;
+  bookingEndpoint?: string | null;
+  websiteUrl?: string | null;
+  showDirectionsLink?: boolean;
+  includeCalendarLink?: boolean;
   active: boolean;
   role?: ShopRole;
   bookable?: boolean;
@@ -68,8 +72,11 @@ export interface ShopOverviewStats {
 export interface CreateShopPayload {
   name: string;
   address?: string | null;
+  websiteUrl?: string | null;
+  showDirectionsLink?: boolean;
+  includeCalendarLink?: boolean;
   openingHours: Array<{
-    dayOfWeek: string;
+    dayOfWeek: DayOfWeek;
     openTime: string;
     closeTime: string;
     isClosed?: boolean;
@@ -79,9 +86,12 @@ export interface CreateShopPayload {
 export interface UpdateShopPayload {
   name?: string;
   address?: string | null;
+  websiteUrl?: string | null;
+  showDirectionsLink?: boolean;
+  includeCalendarLink?: boolean;
   active?: boolean;
   openingHours?: Array<{
-    dayOfWeek: string;
+    dayOfWeek: DayOfWeek;
     openTime?: string;
     closeTime?: string;
     isClosed?: boolean;

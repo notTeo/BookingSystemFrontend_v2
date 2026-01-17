@@ -53,4 +53,16 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 560px) {
+  .inviteForm__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inviteForm__footer .btn {
+    width: 100%;
+  }
 }

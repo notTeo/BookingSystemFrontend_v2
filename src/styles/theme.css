@@ -1,6 +1,8 @@
 
 /* ---------- Theme tokens ---------- */
 :root {
+  --font-sans: "Nunito Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+
   /* Surfaces */
   --bg: #0f0f10; /* app background */
   --bg-elevated: #17181a; /* topbar/sidebar */
@@ -67,6 +69,14 @@
 }
 
 html,
+html {
+  font-size: clamp(14px, 1.2vw + 10px, 16px);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body,
 #root {
   height: 100%;
@@ -76,9 +86,10 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 img,
@@ -87,12 +98,66 @@ svg {
   max-width: 100%;
 }
 
+.icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  color: currentColor;
+  stroke: currentColor;
+}
+
+.btn .icon {
+  width: 18px;
+  height: 18px;
+}
+
 button,
 input,
 select,
 textarea {
   font: inherit;
   color: inherit;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg-input);
+  display: grid;
+  place-content: center;
+  margin: 0;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    box-shadow var(--t-fast);
+}
+
+input[type="checkbox"]::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scale(0);
+  transition: transform var(--t-fast);
+}
+
+input[type="checkbox"]:checked {
+  border-color: rgba(59, 130, 246, 0.6);
+  background: rgba(59, 130, 246, 0.14);
+}
+
+input[type="checkbox"]:checked::after {
+  transform: scale(1);
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 /* ---------- Typography ---------- */
@@ -166,7 +231,8 @@ a:hover {
 .app-main {
   flex: 1;
   grid-area: main;
-  padding: var(--page-pad);
+  padding: calc(var(--page-pad) + 8px) var(--page-pad) var(--page-pad);
+  min-width: 0;
 }
 
 .app-main__inner {
@@ -351,7 +417,7 @@ a:hover {
 
   /* Reserve space so the fixed burger doesn't overlap page content */
   .app-main {
-    padding-top: calc(var(--page-pad) + 56px); /* 44px burger + 12px top gap */
+    padding-top: calc(var(--page-pad) + 2rem); 
   }
 }
 

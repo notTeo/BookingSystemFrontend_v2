@@ -5,7 +5,7 @@
 
 .signin {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   padding: 0 !important;
   display: block;
   background: var(--bg);
@@ -363,4 +363,3 @@
     text-align: center;
   }
 }
-

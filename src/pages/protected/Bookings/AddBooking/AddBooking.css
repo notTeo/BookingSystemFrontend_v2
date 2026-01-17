@@ -34,6 +34,10 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    padding: 6px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
   }
   
   .add-booking__step {
@@ -45,6 +49,10 @@
     font-weight: 600;
     font-size: 0.85rem;
     cursor: pointer;
+    transition:
+      background var(--t-fast),
+      border-color var(--t-fast),
+      color var(--t-fast);
   }
   
   .add-booking__step:disabled {
@@ -69,6 +77,8 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
   
   .add-booking__panelHead h2 {
@@ -84,6 +94,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
   }
   
   .add-booking__grid {
@@ -102,6 +113,12 @@
     font-size: 0.82rem;
     color: var(--text-muted);
   }
+
+  .add-booking__field .input,
+  .add-booking__field .select,
+  .add-booking__field .textarea {
+    width: 100%;
+  }
   
   .add-booking__hint {
     color: var(--text-muted);
@@ -111,6 +128,7 @@
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    flex-wrap: wrap;
   }
   
   .add-booking__state {
@@ -126,6 +144,10 @@
     color: var(--success);
   }
   
+  .add-booking__state--warning {
+    color: var(--warning);
+  }
+  
   .add-booking__slots {
     display: flex;
     flex-direction: column;
@@ -136,6 +158,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding: 12px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
   }
   
   .add-booking__slotGroupHeader {
@@ -157,6 +183,7 @@
     color: var(--text);
     cursor: pointer;
     transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+    min-height: 40px;
   }
   
   .add-booking__slot:hover {
@@ -198,4 +225,20 @@
   .add-booking__summaryLabel {
     font-size: 0.82rem;
     color: var(--text-muted);
+  }
+
+  @media (max-width: 560px) {
+    .add-booking__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .add-booking__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .add-booking__actions .btn {
+      width: 100%;
+    }
   }

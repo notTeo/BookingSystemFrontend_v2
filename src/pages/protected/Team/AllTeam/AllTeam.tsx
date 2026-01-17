@@ -5,13 +5,8 @@ import { getActiveShopId } from "../../../../api/http";
 import { getTeamOverview } from "../../../../api/team";
 import type { TeamMemberSummary, TeamOverview } from "../../../../types/team";
 import InviteForm from "../Invite/InviteForm";
+import { useI18n } from "../../../../i18n";
 import "./AllTeam.css";
-
-const roleLabels: Record<string, string> = {
-  OWNER: "Owner",
-  MANAGER: "Manager",
-  STAFF: "Staff",
-};
 
 function formatDate(dateString: string) {
   const date = new Date(dateString);
@@ -24,6 +19,7 @@ function formatDate(dateString: string) {
 }
 
 const AllTeam: React.FC = () => {
+  const { t } = useI18n();
   const [overview, setOverview] = useState<TeamOverview | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +31,7 @@ const AllTeam: React.FC = () => {
 
   const loadTeam = useCallback(async () => {
     if (!shopId) {
-      setError("Select a shop to view its team.");
+      setError(t("Select a shop to view its team."));
       setIsLoading(false);
       return;
     }
@@ -47,12 +43,12 @@ const AllTeam: React.FC = () => {
       const data = await getTeamOverview();
       setOverview(data);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to load team.";
+      const message = err instanceof Error ? err.message : t("Failed to load team.");
       setError(message);
     } finally {
       setIsLoading(false);
     }
-  }, [shopId]);
+  }, [shopId, t]);
 
   useEffect(() => {
     loadTeam();
@@ -64,6 +60,15 @@ const AllTeam: React.FC = () => {
   }, [overview]);
 
   const activeCount = useMemo(() => overview?.activeMembers ?? 0, [overview]);
+
+  const roleLabels: Record<string, string> = useMemo(
+    () => ({
+      OWNER: t("Owner"),
+      MANAGER: t("Manager"),
+      STAFF: t("Staff"),
+    }),
+    [t],
+  );
 
   const handleInviteSent = () => {
     setShowInvite(false);
@@ -82,25 +87,24 @@ const AllTeam: React.FC = () => {
     <div className="teamPage">
       <header className="teamPage__header">
         <div>
-          <p className="teamPage__eyebrow">Team</p>
-          <h1 className="teamPage__title">Team members</h1>
+          <h1 className="teamPage__title">{t("Team members")}</h1>
           <p className="teamPage__subtitle">
             {overview?.shop?.name
-              ? `People helping run ${overview.shop.name}.`
-              : "Invite and manage staff for this shop."}
+              ? `${t("People helping run")} ${overview.shop.name}.`
+              : t("Invite and manage staff for this shop.")}
           </p>
         </div>
 
         <div className="teamPage__actions">
           <button className="btn btn--ghost" type="button" onClick={loadTeam}>
-            Refresh
+            {t("Refresh")}
           </button>
           <button
             className="btn btn--primary"
             type="button"
             onClick={() => setShowInvite((prev) => !prev)}
           >
-            {showInvite ? "Close" : "Invite member"}
+            {showInvite ? t("Close") : t("Invite member")}
           </button>
         </div>
       </header>
@@ -109,13 +113,13 @@ const AllTeam: React.FC = () => {
         <section className="card teamPage__inviteCard" aria-label="Invite team member">
           <div className="teamPage__cardHead">
             <div>
-              <h2>Invite a teammate</h2>
+              <h2>{t("Invite a teammate")}</h2>
               <p className="teamPage__cardHint">
-                Send an email invite with a role and optional welcome message.
+                {t("Send an email invite with a role and optional welcome message.")}
               </p>
             </div>
             <Link className="teamPage__secondaryLink" to="../team/invite">
-              Full invite page
+              {t("Full invite page")}
             </Link>
           </div>
           <InviteForm onSent={handleInviteSent} />
@@ -124,51 +128,51 @@ const AllTeam: React.FC = () => {
 
       <section className="teamPage__stats" aria-label="Team stats">
         <div className="card teamPage__stat">
-          <p className="teamPage__statLabel">Total members</p>
+          <p className="teamPage__statLabel">{t("Total members")}</p>
           <p className="teamPage__statValue">{overview?.totalMembers ?? "-"}</p>
-          <p className="teamPage__statHint">All users linked to this shop</p>
+          <p className="teamPage__statHint">{t("All users linked to this shop")}</p>
         </div>
         <div className="card teamPage__stat">
-          <p className="teamPage__statLabel">Active</p>
+          <p className="teamPage__statLabel">{t("Active")}</p>
           <p className="teamPage__statValue">{activeCount}</p>
-          <p className="teamPage__statHint">Currently active members</p>
+          <p className="teamPage__statHint">{t("Currently active members")}</p>
         </div>
         <div className="card teamPage__stat">
-          <p className="teamPage__statLabel">Inactive</p>
+          <p className="teamPage__statLabel">{t("Inactive")}</p>
           <p className="teamPage__statValue">
             {Math.max((overview?.totalMembers ?? 0) - activeCount, 0)}
           </p>
-          <p className="teamPage__statHint">Paused or disabled</p>
+          <p className="teamPage__statHint">{t("Paused or disabled")}</p>
         </div>
       </section>
 
       <section className="card teamPage__listCard" aria-label="Team members">
         <div className="teamPage__cardHead">
           <div>
-            <h2>People</h2>
-            <p className="teamPage__cardHint">Status, roles, and join dates for the team.</p>
+            <h2>{t("People")}</h2>
+            <p className="teamPage__cardHint">{t("Status, roles, and join dates for the team.")}</p>
           </div>
           {overview?.shop?.name && (
             <span className="badge badge--primary">{overview.shop.name}</span>
           )}
         </div>
 
-        {isLoading && <p className="teamPage__state">Loading team…</p>}
+        {isLoading && <p className="teamPage__state">{t("Loading team…")}</p>}
         {error && <p className="teamPage__state teamPage__state--error">{error}</p>}
 
         {!isLoading && !error && sortedMembers.length === 0 && (
-          <p className="teamPage__state">No team members yet. Invite someone to get started.</p>
+          <p className="teamPage__state">{t("No team members yet. Invite someone to get started.")}</p>
         )}
 
         {!isLoading && !error && sortedMembers.length > 0 && (
           <div className="teamPage__table" role="table">
             <div className="teamPage__row teamPage__row--head" role="row">
-              <div>Name</div>
-              <div>Role</div>
-              <div>Status</div>
-              <div>Bookable</div>
-              <div>Joined</div>
-              <div className="teamPage__actionsHead">Actions</div>
+              <div>{t("Name")}</div>
+              <div>{t("Role")}</div>
+              <div>{t("Status")}</div>
+              <div>{t("Bookable")}</div>
+              <div>{t("Joined")}</div>
+              <div className="teamPage__actionsHead">{t("Actions")}</div>
             </div>
 
             {sortedMembers.map((member: TeamMemberSummary) => (
@@ -184,7 +188,7 @@ const AllTeam: React.FC = () => {
                     navigateToMember(member);
                   }
                 }}
-                aria-label={`View ${member.firstName} ${member.lastName}`}
+                aria-label={`${t("View")} ${member.firstName} ${member.lastName}`}
               >
                 <div className="teamPage__cellMain">
                   <div className="teamPage__avatar">
@@ -195,7 +199,7 @@ const AllTeam: React.FC = () => {
                     <p className="teamPage__name">
                       {member.firstName} {member.lastName}
                     </p>
-                    <p className="teamPage__email">{member.email ?? "No email"}</p>
+                    <p className="teamPage__email">{member.email ?? t("No email")}</p>
                   </div>
                 </div>
 
@@ -207,7 +211,7 @@ const AllTeam: React.FC = () => {
                   <span
                     className={`teamPage__pill ${member.active ? "teamPage__pill--success" : "teamPage__pill--muted"}`}
                   >
-                    {member.active ? "Active" : "Paused"}
+                    {member.active ? t("Active") : t("Paused")}
                   </span>
                 </div>
 
@@ -215,7 +219,7 @@ const AllTeam: React.FC = () => {
                   <span
                     className={`teamPage__pill ${member.bookable ? "teamPage__pill--primary" : "teamPage__pill--muted"}`}
                   >
-                    {member.bookable ? "Bookable" : "Not bookable"}
+                    {member.bookable ? t("Bookable") : t("Not bookable")}
                   </span>
                 </div>
 
@@ -229,7 +233,7 @@ const AllTeam: React.FC = () => {
                       navigateToMember(member);
                     }}
                   >
-                    Configure
+                    {t("Configure")}
                   </button>
                 </div>
               </div>

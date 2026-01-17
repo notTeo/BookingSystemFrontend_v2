@@ -2,17 +2,15 @@ import React, { useState } from "react";
 
 import { sendInvite } from "../../../../api/shop";
 import type { InvitePayload } from "../../../../types/shop";
+import { useI18n } from "../../../../i18n";
+import { getFriendlyError } from "../../../../utils/errors";
 
 interface InviteFormProps {
   onSent?: () => void;
 }
 
-const roleOptions: Array<{ value: InvitePayload["role"]; label: string; hint: string }> = [
-  { value: "MANAGER", label: "Manager", hint: "Can manage settings and services." },
-  { value: "STAFF", label: "Staff", hint: "Can take bookings and manage their schedule." },
-];
-
 const InviteForm: React.FC<InviteFormProps> = ({ onSent }) => {
+  const { t } = useI18n();
   const [form, setForm] = useState<InvitePayload>({
     email: "",
     role: "STAFF",
@@ -38,32 +36,37 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSent }) => {
         role: form.role,
         message: form.message?.trim() || undefined,
       });
-      setStatus({ loading: false, error: "", success: "Invitation sent." });
+      setStatus({ loading: false, error: "", success: t("Invitation sent.") });
       setForm({ email: "", role: "STAFF", message: "" });
       onSent?.();
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to send invite.";
+      const message = getFriendlyError(err, t, "We couldn't send that invite. Please try again.");
       setStatus({ loading: false, error: message, success: "" });
     }
   };
+
+  const roleOptions: Array<{ value: InvitePayload["role"]; label: string; hint: string }> = [
+    { value: "MANAGER", label: t("Manager"), hint: t("Can manage settings and services.") },
+    { value: "STAFF", label: t("Staff"), hint: t("Can take bookings and manage their schedule.") },
+  ];
 
   return (
     <form className="inviteForm" onSubmit={handleSubmit}>
       <div className="inviteForm__grid">
         <label className="field">
-          <span>Email</span>
+          <span>{t("Email")}</span>
           <input
             required
             className="input"
             type="email"
             value={form.email}
             onChange={(e) => updateField("email", e.target.value)}
-            placeholder="teammate@email.com"
+            placeholder={t("teammate@email.com")}
           />
         </label>
 
         <label className="field">
-          <span>Role</span>
+          <span>{t("Role")}</span>
           <select
             className="select"
             value={form.role}
@@ -82,13 +85,13 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSent }) => {
       </div>
 
       <label className="field">
-        <span>Message (optional)</span>
+        <span>{t("Message (optional)")}</span>
         <textarea
           className="textarea"
           rows={3}
           value={form.message || ""}
           onChange={(e) => updateField("message", e.target.value)}
-          placeholder="Add a short welcome note"
+          placeholder={t("Add a short welcome note")}
         />
       </label>
 
@@ -101,7 +104,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSent }) => {
 
       <div className="inviteForm__footer">
         <button className="btn btn--primary" type="submit" disabled={status.loading}>
-          {status.loading ? "Sending…" : "Send invite"}
+          {status.loading ? t("Sending…") : t("Send invite")}
         </button>
       </div>
     </form>

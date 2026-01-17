@@ -7,6 +7,8 @@ import { getActiveShopId } from "../../../../api/http";
 import { getPublicShopHours, getPublicSlots } from "../../../../api/public";
 import { listServices } from "../../../../api/services";
 import { getTeamOverview } from "../../../../api/team";
+import { useI18n } from "../../../../i18n";
+import { getFriendlyError } from "../../../../utils/errors";
 import type { DayOfWeek } from "../../../../types/common";
 import type {
   PublicShopHour,
@@ -15,16 +17,6 @@ import type {
 } from "../../../../types/public";
 import type { Service } from "../../../../types/services";
 import type { TeamMemberSummary, TeamOverview } from "../../../../types/team";
-
-const DAY_LABELS: Record<DayOfWeek, string> = {
-  MONDAY: "Mon",
-  TUESDAY: "Tue",
-  WEDNESDAY: "Wed",
-  THURSDAY: "Thu",
-  FRIDAY: "Fri",
-  SATURDAY: "Sat",
-  SUNDAY: "Sun",
-};
 
 type Step = 1 | 2 | 3;
 
@@ -60,6 +52,7 @@ const AddBooking: React.FC = () => {
   const navigate = useNavigate();
   const { shopName } = useParams();
   const shopId = getActiveShopId();
+  const { t } = useI18n();
 
   const [step, setStep] = useState<Step>(1);
 
@@ -95,7 +88,6 @@ const AddBooking: React.FC = () => {
 
   const providers = useMemo(() => {
     const members = overview?.members ?? [];
-    console.log(members)
     return members
       .slice()
       .filter((member) => member.active && member.bookable)
@@ -115,7 +107,6 @@ const AddBooking: React.FC = () => {
 
   const selectedProvider = useMemo(() => {
     if (!providerId) return null;
-    console.log(providerId)
     return providers.find((provider) => String(provider.id) === providerId) ?? null;
   }, [providerId, providers]);
 
@@ -129,7 +120,7 @@ const AddBooking: React.FC = () => {
     if (providerId) {
       const providerName = selectedProvider
         ? `${selectedProvider.firstName} ${selectedProvider.lastName}`.trim()
-        : "Selected provider";
+        : t("Selected provider");
 
       return [{ providerId: Number(providerId), providerName, slots: sortedSlots }];
     }
@@ -146,11 +137,13 @@ const AddBooking: React.FC = () => {
     return Array.from(grouped.entries())
       .map(([id, groupedSlots]) => {
         const member = providerLookup.get(id);
-        const name = member ? `${member.firstName} ${member.lastName}`.trim() : `Provider #${id}`;
+        const name = member
+          ? `${member.firstName} ${member.lastName}`.trim()
+          : `${t("Provider")} #${id}`;
         return { providerId: id, providerName: name, slots: groupedSlots };
       })
       .sort((a, b) => a.providerName.localeCompare(b.providerName));
-  }, [slots, providerId, selectedProvider, providerLookup]);
+  }, [slots, providerId, selectedProvider, providerLookup, t]);
 
   useEffect(() => {
     const loadServices = async () => {
@@ -161,7 +154,7 @@ const AddBooking: React.FC = () => {
         const data = await listServices();
         setServices(data);
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Unable to load services.";
+        const message = err instanceof Error ? err.message : t("Unable to load services.");
         setServicesError(message);
       } finally {
         setServicesLoading(false);
@@ -169,12 +162,12 @@ const AddBooking: React.FC = () => {
     };
 
     loadServices();
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const loadProviders = async () => {
       if (!shopId) {
-        setProvidersError("Select a shop to load providers.");
+        setProvidersError(t("Select a shop to load providers."));
         setOverview(null);
         return;
       }
@@ -187,7 +180,7 @@ const AddBooking: React.FC = () => {
         setOverview(data);
         
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Unable to load providers.";
+        const message = err instanceof Error ? err.message : t("Unable to load providers.");
         setProvidersError(message);
         setOverview(null);
       } finally {
@@ -196,7 +189,7 @@ const AddBooking: React.FC = () => {
     };
 
     loadProviders();
-  }, [shopId]);
+  }, [shopId, t]);
 
   const resetSlots = () => {
     setSlots([]);
@@ -249,7 +242,7 @@ const AddBooking: React.FC = () => {
         await loadWorkingHours(shopId);
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to load available slots.";
+      const message = err instanceof Error ? err.message : t("Unable to load available slots.");
       setSlotsError(message);
     } finally {
       setSlotsLoading(false);
@@ -281,8 +274,7 @@ const AddBooking: React.FC = () => {
         }
       }, 900);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to create booking.";
-      setSubmitError(message);
+      setSubmitError(getFriendlyError(err, t, "We couldn't create the booking. Please try again."));
       setSubmitStatus("error");
     }
   };
@@ -290,23 +282,46 @@ const AddBooking: React.FC = () => {
   const selectedProviderName = selectedSlot?.providerId
     ? (() => {
         const member = providerLookup.get(selectedSlot.providerId ?? 0);
-        if (!member) return selectedSlot.providerId ? `Provider #${selectedSlot.providerId}` : "";
+        if (!member)
+          return selectedSlot.providerId ? `${t("Provider")} #${selectedSlot.providerId}` : "";
         return `${member.firstName} ${member.lastName}`.trim();
       })()
     : selectedProvider
       ? `${selectedProvider.firstName} ${selectedProvider.lastName}`.trim()
-      : "Any provider";
+      : t("Any provider");
+
+  const dayLabels = useMemo<Record<DayOfWeek, string>>(
+    () => ({
+      MONDAY: t("Mon"),
+      TUESDAY: t("Tue"),
+      WEDNESDAY: t("Wed"),
+      THURSDAY: t("Thu"),
+      FRIDAY: t("Fri"),
+      SATURDAY: t("Sat"),
+      SUNDAY: t("Sun"),
+    }),
+    [t],
+  );
+
+  const conflictHint = useMemo(() => {
+    if (!submitError) return "";
+    const lower = submitError.toLowerCase();
+    if (lower.includes("conflict") || lower.includes("overlap") || lower.includes("booked")) {
+      return t("This time conflicts with another booking. Please choose a different slot.");
+    }
+    return "";
+  }, [submitError, t]);
 
   return (
     <div className="add-booking">
       <header className="add-booking__header">
         <div>
-          <h1 className="add-booking__title">New booking</h1>
-          <p className="add-booking__subtitle">Create a manual booking for your calendar.</p>
+          <h1 className="add-booking__title">{t("New booking")}</h1>
+          <p className="add-booking__subtitle">{t("Create a manual booking for your calendar.")}</p>
         </div>
         {shopName ? (
           <Link className="btn btn--ghost" to={`/shops/${encodeURIComponent(shopName)}/calendar`}>
-            Back to calendar
+            {t("Back to calendar")}
           </Link>
         ) : null}
       </header>
@@ -318,7 +333,7 @@ const AddBooking: React.FC = () => {
             type="button"
             onClick={() => setStep(1)}
           >
-            1. Preferences
+            {t("1. Preferences")}
           </button>
           <button
             className={`add-booking__step ${step === 2 ? "add-booking__step--active" : ""}`}
@@ -326,7 +341,7 @@ const AddBooking: React.FC = () => {
             onClick={() => setStep(2)}
             disabled={!canSearch}
           >
-            2. Pick a time
+            {t("2. Pick a time")}
           </button>
           <button
             className={`add-booking__step ${step === 3 ? "add-booking__step--active" : ""}`}
@@ -334,7 +349,7 @@ const AddBooking: React.FC = () => {
             onClick={() => setStep(3)}
             disabled={!selectedSlot}
           >
-            3. Confirm
+            {t("3. Confirm")}
           </button>
         </div>
 
@@ -342,7 +357,7 @@ const AddBooking: React.FC = () => {
           <form className="add-booking__panel" onSubmit={handleFindTimes}>
             <div className="add-booking__grid">
               <div className="add-booking__field">
-                <label htmlFor="serviceId">Service</label>
+                <label htmlFor="serviceId">{t("Service")}</label>
                 <select
                   id="serviceId"
                   className="select"
@@ -355,7 +370,7 @@ const AddBooking: React.FC = () => {
                   required
                 >
                   <option value="">
-                    {servicesLoading ? "Loading services..." : "Select service"}
+                    {servicesLoading ? t("Loading services...") : t("Select service")}
                   </option>
                   {services.map((svc) => (
                     <option key={svc.id} value={svc.id}>
@@ -369,7 +384,7 @@ const AddBooking: React.FC = () => {
               </div>
 
               <div className="add-booking__field">
-                <label htmlFor="providerId">Provider (optional)</label>
+                <label htmlFor="providerId">{t("Provider (optional)")}</label>
                 <select
                   id="providerId"
                   className="select"
@@ -381,7 +396,7 @@ const AddBooking: React.FC = () => {
                   disabled={providersLoading || !shopId}
                 >
                   <option value="">
-                    {providersLoading ? "Loading providers..." : "Any provider"}
+                    {providersLoading ? t("Loading providers...") : t("Any provider")}
                   </option>
                   {providers.map((provider) => (
                     <option key={provider.id} value={provider.shopUserId}>
@@ -395,7 +410,7 @@ const AddBooking: React.FC = () => {
               </div>
 
               <div className="add-booking__field">
-                <label htmlFor="date">Date</label>
+                <label htmlFor="date">{t("Date")}</label>
                 <input
                   id="date"
                   className="input"
@@ -412,7 +427,7 @@ const AddBooking: React.FC = () => {
 
             <div className="add-booking__actions">
               <button className="btn btn--primary" type="submit" disabled={!canSearch}>
-                Find available times
+                {t("Find available times")}
               </button>
             </div>
           </form>
@@ -422,24 +437,26 @@ const AddBooking: React.FC = () => {
           <div className="add-booking__panel">
             <div className="add-booking__panelHead">
               <div>
-                <h2>Pick a time</h2>
+                <h2>{t("Pick a time")}</h2>
                 <p>
-                  {selectedService?.name ?? "Selected service"} • {formatDate(date)}
+                  {selectedService?.name ?? t("Selected service")} • {formatDate(date)}
                 </p>
               </div>
               <div className="add-booking__panelActions">
                 <button className="btn btn--ghost" type="button" onClick={() => setStep(1)}>
-                  Edit preferences
+                  {t("Edit preferences")}
                 </button>
               </div>
             </div>
 
-            {slotsLoading && <p className="add-booking__state">Loading available times…</p>}
+            {slotsLoading && <p className="add-booking__state">{t("Loading available times…")}</p>}
             {!slotsLoading && slotsError && (
               <p className="add-booking__state add-booking__state--error">{slotsError}</p>
             )}
             {!slotsLoading && !slotsError && slots.length === 0 && (
-              <p className="add-booking__state">No available times for the selected day.</p>
+              <p className="add-booking__state">
+                {t("No available times for the selected day.")}
+              </p>
             )}
 
             {!slotsLoading && !slotsError && slotGroups.length > 0 && (
@@ -480,18 +497,18 @@ const AddBooking: React.FC = () => {
 
             {!providerId && (
               <div className="add-booking__hours card card--ghost">
-                <h3>Working hours</h3>
-                {workingHoursStatus === "loading" && <p>Loading working hours…</p>}
-                {workingHoursStatus === "error" && <p>Working hours unavailable.</p>}
+                <h3>{t("Working hours")}</h3>
+                {workingHoursStatus === "loading" && <p>{t("Loading working hours…")}</p>}
+                {workingHoursStatus === "error" && <p>{t("Working hours unavailable.")}</p>}
                 {workingHoursStatus === "idle" && (!workingHours || workingHours.length === 0) && (
-                  <p>Working hours unavailable.</p>
+                  <p>{t("Working hours unavailable.")}</p>
                 )}
                 {workingHoursStatus === "idle" && workingHours && workingHours.length > 0 && (
                   <ul>
                     {workingHours.map((hour) => (
                       <li key={hour.dayOfWeek}>
-                        <strong>{DAY_LABELS[hour.dayOfWeek]}</strong>{" "}
-                        {hour.isClosed ? "Closed" : `${hour.openTime} – ${hour.closeTime}`}
+                        <strong>{dayLabels[hour.dayOfWeek]}</strong>{" "}
+                        {hour.isClosed ? t("Closed") : `${hour.openTime} – ${hour.closeTime}`}
                       </li>
                     ))}
                   </ul>
@@ -506,7 +523,7 @@ const AddBooking: React.FC = () => {
                 disabled={!selectedSlot}
                 onClick={() => setStep(3)}
               >
-                Continue to confirm
+                {t("Continue to confirm")}
               </button>
             </div>
           </div>
@@ -516,38 +533,38 @@ const AddBooking: React.FC = () => {
           <div className="add-booking__panel">
             <div className="add-booking__panelHead">
               <div>
-                <h2>Confirm booking</h2>
-                <p>Review details before creating the booking.</p>
+                <h2>{t("Confirm booking")}</h2>
+                <p>{t("Review details before creating the booking.")}</p>
               </div>
               <div className="add-booking__panelActions">
                 <button className="btn btn--ghost" type="button" onClick={() => setStep(2)}>
-                  Back to times
+                  {t("Back to times")}
                 </button>
               </div>
             </div>
 
             <div className="add-booking__summary card card--ghost">
               <div>
-                <span className="add-booking__summaryLabel">Service</span>
+                <span className="add-booking__summaryLabel">{t("Service")}</span>
                 <span>{selectedService?.name ?? "—"}</span>
               </div>
               <div>
-                <span className="add-booking__summaryLabel">Provider</span>
+                <span className="add-booking__summaryLabel">{t("Provider")}</span>
                 <span>{selectedProviderName}</span>
               </div>
               <div>
-                <span className="add-booking__summaryLabel">Date</span>
+                <span className="add-booking__summaryLabel">{t("Date")}</span>
                 <span>{formatDate(date)}</span>
               </div>
               <div>
-                <span className="add-booking__summaryLabel">Time</span>
+                <span className="add-booking__summaryLabel">{t("Time")}</span>
                 <span>{selectedSlot ? formatTime(selectedSlot.startTime) : "—"}</span>
               </div>
             </div>
 
             <div className="add-booking__grid">
               <div className="add-booking__field">
-                <label htmlFor="customerName">Customer name</label>
+                <label htmlFor="customerName">{t("Customer name")}</label>
                 <input
                   id="customerName"
                   className="input"
@@ -559,7 +576,7 @@ const AddBooking: React.FC = () => {
               </div>
 
               <div className="add-booking__field">
-                <label htmlFor="customerPhone">Customer phone</label>
+                <label htmlFor="customerPhone">{t("Customer phone")}</label>
                 <input
                   id="customerPhone"
                   className="input"
@@ -567,12 +584,12 @@ const AddBooking: React.FC = () => {
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   required
                   maxLength={30}
-                  placeholder="+44 …"
+                  placeholder={t("+44 …")}
                 />
               </div>
 
               <div className="add-booking__field">
-                <label htmlFor="note">Note (optional)</label>
+                <label htmlFor="note">{t("Note (optional)")}</label>
                 <textarea
                   id="note"
                   className="textarea"
@@ -586,9 +603,12 @@ const AddBooking: React.FC = () => {
             {submitStatus === "error" && (
               <p className="add-booking__state add-booking__state--error">{submitError}</p>
             )}
+            {submitStatus === "error" && conflictHint && (
+              <p className="add-booking__state add-booking__state--warning">{conflictHint}</p>
+            )}
             {submitStatus === "success" && (
               <p className="add-booking__state add-booking__state--success">
-                Booking created. Redirecting to calendar…
+                {t("Booking created. Redirecting to calendar…")}
               </p>
             )}
 
@@ -599,7 +619,7 @@ const AddBooking: React.FC = () => {
                 onClick={handleConfirm}
                 disabled={submitStatus === "saving"}
               >
-                {submitStatus === "saving" ? "Creating booking…" : "Confirm booking"}
+                {submitStatus === "saving" ? t("Creating booking…") : t("Confirm booking")}
               </button>
             </div>
           </div>

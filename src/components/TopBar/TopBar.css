@@ -8,20 +8,22 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(18, 18, 18, 0.88);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(15, 15, 16, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
 }
 
 .public__topbarInner {
-  height: 64px;
-  max-width: 1200px;
+  position: relative;
+  height: var(--nav-height);
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 18px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
 }
 
 .public__brand {
@@ -29,25 +31,217 @@
   color: var(--text);
   font-weight: 800;
   letter-spacing: -0.02em;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   white-space: nowrap;
+  transition: opacity var(--t-fast), transform var(--t-fast);
 }
 
 .public__brand:hover {
-  opacity: 0.92;
+  transform: translateY(-1px);
+  opacity: 0.9;
 }
 
 .public__nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100dvh;
+  width: min(78vw, 320px);
+  padding: calc(var(--nav-height) + 18px) 18px 24px;
+  background: rgba(15, 15, 16, 0.98);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -18px 0 40px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: none;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform var(--t-med), visibility var(--t-med);
+  z-index: 60;
+}
+
+.public__nav.is-open {
+  pointer-events: auto;
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.public__drawerClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+
+.public__drawerClose:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.public__drawerClose span {
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+
+.public__drawerClose span:first-child {
+  transform: rotate(45deg);
+}
+
+.public__drawerClose span:last-child {
+  transform: rotate(-45deg);
+}
+
+.public__navSection {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.public__navSection--links {
+  gap: 8px;
+}
+
+.public__navLink {
+  min-height: 44px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  width: 100%;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  border-radius: 12px;
+  transition: color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+}
+
+.public__navLink:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.public__navSection--actions {
+  gap: 12px;
+}
+
+.public__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.public__langBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 6px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    color var(--t-fast),
+    background var(--t-fast);
+}
+
+.public__langBtn.is-active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Make nav buttons look consistent in the bar */
 .public__nav .btn {
-  height: 40px;
-  padding: 0 14px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.public__navSection--actions .btn {
+  width: 100%;
+}
+
+.public__menuToggle {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+
+  align-items: flex-start; /* LEFT align the bars */
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+
+  padding-left: 11px; /* makes the left align look correct */
+  position: relative;
+
+  transition:
+    background var(--t-fast),
+    transform var(--t-fast);
+}
+
+.public__menuToggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.public__menuToggle > span {
+  display: block;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+  transition: transform var(--t-fast), opacity var(--t-fast);
+}
+
+.public__menuToggle > span:nth-child(1) { width: 22px; }
+.public__menuToggle > span:nth-child(2) { width: 17px; }
+.public__menuToggle > span:nth-child(3) { width: 12px; }
+
+.public__menuToggle.is-open span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  background: currentColor;
+}
+
+.public__menuToggle.is-open span:first-child {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.public__menuToggle.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.public__menuToggle.is-open span:last-child {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .app-topbar__logout {
@@ -61,17 +255,102 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.14);
 }
 
-/* Small screens */
-@media (max-width: 520px) {
+.public__navOverlay {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 6, 10, 0.4);
+  backdrop-filter: blur(1px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-med);
+  z-index: 55;
+  visibility: hidden;
+}
+
+.public__navOverlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.public__navLink:focus-visible,
+.public__menuToggle:focus-visible,
+.public__langBtn:focus-visible,
+.public__drawerClose:focus-visible,
+.public__nav .btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+@media (min-width: 980px) {
   .public__topbarInner {
-    height: auto;
-    padding: 12px 14px;
-    align-items: flex-start;
+    padding: 0 20px;
+  }
+
+  .public__menuToggle {
+    display: none;
+  }
+
+  .public__navOverlay {
+    display: none;
   }
 
   .public__nav {
+    position: static;
+    height: auto;
+    width: auto;
+    padding: 0;
+    background: transparent;
+    border-left: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    overflow: visible;
+    pointer-events: auto;
+    transform: none;
+    visibility: visible;
+  }
+
+  .public__drawerClose {
+    display: none;
+  }
+
+  .public__navSection {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .public__navSection--links {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .public__navLink {
+    min-height: auto;
+    padding: 8px 10px;
+    width: auto;
+  }
+
+  .public__navSection--actions {
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 8px;
   }
+
+  .public__navSection--actions .btn {
+    width: auto;
+  }
+}
+
+.public__layout {
+  background: var(--bg);
+}
+
+.public__main {
+  background: inherit;
 }

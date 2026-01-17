@@ -1,23 +1,26 @@
 .landing {
-  min-height: 100vh;
-  background: var(--bg);
+  min-height: 100dvh;
+  background:
+    radial-gradient(1000px 500px at 10% -10%, rgba(59, 130, 246, 0.16), transparent),
+    radial-gradient(900px 450px at 90% -10%, rgba(34, 197, 94, 0.12), transparent),
+    var(--bg);
   color: var(--text);
 }
 
 .landing__main {
   max-width: 1160px;
   margin: 0 auto;
-  padding: 28px 18px 50px;
+  padding: 96px 18px 60px;
 }
 
 .landing__hero {
-  padding: 18px 0 26px;
+  padding: 12px 0 32px;
 }
 
 .landing__heroInner {
   display: grid;
-  grid-template-columns: 1.25fr 0.95fr;
-  gap: 16px;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
   align-items: center;
 }
 
@@ -31,8 +34,8 @@
 
 .landing__title {
   margin: 0;
-  font-size: 2.1rem;
-  line-height: 1.08;
+  font-size: 2.35rem;
+  line-height: 1.05;
   letter-spacing: -0.03em;
   font-weight: 950;
 }
@@ -45,14 +48,14 @@
 }
 
 .landing__ctaRow {
-  margin-top: 16px;
+  margin-top: 18px;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
 .landing__trustRow {
-  margin-top: 12px;
+  margin-top: 14px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -68,7 +71,6 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* Preview */
 .landing__preview {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -198,19 +200,40 @@
 .landing__statValue {
   margin-top: 6px;
   font-size: 1.2rem;
-  font-weight: 950;
-  letter-spacing: -0.02em;
+  font-weight: 900;
 }
 
-.landing__note {
-  margin: 10px 0 0 0;
-  color: rgba(255, 255, 255, 0.62);
+.landing__miniGrid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.landing__miniCard {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+}
+
+.landing__miniTitle {
   font-size: 0.9rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 8px;
 }
 
-/* Sections */
+.landing__miniRow {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+
 .landing__section {
-  padding: 26px 0;
+  margin-top: 32px;
 }
 
 .landing__sectionHead {
@@ -218,29 +241,19 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .landing__h2 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 950;
-  letter-spacing: -0.02em;
-}
-
-.landing__h3 {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 900;
+  font-size: 1.45rem;
 }
 
 .landing__muted {
-  margin: 6px 0 0 0;
+  margin: 0;
   color: var(--text-muted);
-  line-height: 1.45;
 }
 
-/* Features */
 .landing__grid {
   display: grid;
   gap: 12px;
@@ -251,14 +264,189 @@
 }
 
 .landing__feature {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
   padding: 16px;
-  box-shadow: var(--shadow);
 }
 
-/* Pricing */
+.landing__h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.landing__workflow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.landing__workflowItem {
+  padding: 16px;
+}
+
+.landing__workflowStep {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(59, 130, 246, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.landing__workflowSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+  gap: 24px;
+}
+
+.landing__workflowPanel {
+  position: relative;
+  padding: 4px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.landing__workflowPanel::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    var(--accent),
+    rgba(59, 130, 246, 0.25)
+  );
+}
+
+.landing__workflowItem {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  padding: 16px 12px 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.landing__workflowItem:last-child {
+  border-bottom: none;
+}
+
+.landing__workflowIcon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    rgba(59, 130, 246, 0.12)
+  );
+}
+
+.landing__workflowIcon .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.landing__workflowAside {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border-top: 2px solid rgba(59, 130, 246, 0.55);
+  border-bottom: 2px solid rgba(59, 130, 246, 0.55);
+  background: linear-gradient(90deg, var(--accent-soft), rgba(15, 15, 16, 0));
+}
+
+.landing__workflowPunch {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.landing__workflowPoints {
+  display: grid;
+  gap: 10px;
+}
+
+.landing__workflowPoint {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.landing__workflowPoint:last-child {
+  border-bottom: none;
+}
+
+.landing__featureSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.landing__featureStack {
+  display: grid;
+  gap: 14px;
+}
+
+.landing__featureRow {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.landing__featureRow:last-child {
+  border-bottom: none;
+}
+
+.landing__featureIcon {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.landing__featurePanel {
+  padding: 18px 0;
+  border-top: 2px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.03) 10px,
+    rgba(15, 15, 16, 0) 10px,
+    rgba(15, 15, 16, 0) 20px
+  );
+  padding-inline: 18px;
+}
+
+.landing__featureTitle {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.landing__featureBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.landing__featureBadges span {
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
 .landing__pricing {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -266,170 +454,66 @@
 }
 
 .landing__priceCard {
+  padding: 18px;
   position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 16px;
-  box-shadow: var(--shadow);
 }
 
 .landing__priceCard--featured {
-  border-color: rgba(59, 130, 246, 0.35);
-  background: rgba(59, 130, 246, 0.06);
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.08);
 }
 
 .landing__ribbon {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 4px 10px;
+  top: 16px;
+  right: 16px;
+  padding: 4px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  background: rgba(59, 130, 246, 0.12);
-  font-weight: 900;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .landing__plan {
-  font-weight: 900;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
 }
 
 .landing__priceLine {
-  margin-top: 10px;
+  margin: 8px 0 14px;
   display: flex;
   align-items: baseline;
-  gap: 8px;
-}
-
-.landing__priceNum {
-  font-size: 1.6rem;
-  font-weight: 950;
-  letter-spacing: -0.03em;
-}
-
-.landing__priceUnit {
-  color: rgba(255, 255, 255, 0.65);
-  font-weight: 800;
-}
-
-.landing__bullets {
-  margin: 12px 0 0 0;
-  padding-left: 18px;
-  color: rgba(255, 255, 255, 0.82);
-  display: grid;
   gap: 6px;
 }
 
+.landing__priceNum {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.landing__priceUnit {
+  color: var(--text-muted);
+}
+
+.landing__bullets {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
 .landing__priceBtn {
-  margin-top: 14px;
   width: 100%;
   justify-content: center;
 }
 
-/* Bottom CTA */
-.landing__bottomCta {
-  padding: 26px 0 10px;
-}
-
-.landing__bottomInner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow);
-}
-
-/* Footer */
-.landing__footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.landing__footerInner {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 16px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.landing__footerLinks {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.landing__navLink {
-  color: rgba(255, 255, 255, 0.78);
-  text-decoration: none;
-  font-weight: 750;
-}
-
-.landing__navLink:hover {
-  color: rgba(255, 255, 255, 0.92);
-}
-
-/* Responsive */
-@media (max-width: 980px) {
-  .landing__heroInner {
-    grid-template-columns: 1fr;
-  }
-
-  .landing__grid--3 {
-    grid-template-columns: 1fr;
-  }
-
-  .landing__pricing {
-    grid-template-columns: 1fr;
-  }
-
-  .landing__bottomInner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 520px) {
-  .landing__main {
-    padding: 22px 14px 40px;
-  }
-
-  .landing__title {
-    font-size: 1.75rem;
-  }
-
-  .landing__previewRow {
-    grid-template-columns: 70px 1fr;
-  }
-
-  .landing__status {
-    justify-self: start;
-  }
-
-  .landing__previewStats {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* FAQ */
 .landing__faq {
   display: grid;
   gap: 10px;
-}
-
-.landing__faqItem {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 14px 16px;
-  box-shadow: var(--shadow);
 }
 
 .landing__faqItem summary {
@@ -464,4 +548,103 @@
 
 .landing__faqItem p {
   margin: 10px 0 0 0;
+}
+
+.landing__bottomCta {
+  margin-top: 32px;
+}
+
+.landing__bottomInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+}
+
+.landing__footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 18px 0 28px;
+}
+
+.landing__footerInner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.landing__footerLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.landing__navLink {
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  font-weight: 750;
+}
+
+.landing__navLink:hover {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 980px) {
+  .landing__heroInner {
+    grid-template-columns: 1fr;
+  }
+
+  .landing__grid--3,
+  .landing__pricing,
+  .landing__workflow {
+    grid-template-columns: 1fr;
+  }
+
+  .landing__workflowSplit,
+  .landing__featureSplit {
+    grid-template-columns: 1fr;
+  }
+
+  .landing__workflowAside {
+    padding: 16px;
+  }
+
+  .landing__featurePanel {
+    padding-inline: 12px;
+  }
+
+  .landing__bottomInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .landing__miniGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .landing__main {
+    padding: 22px 14px 40px;
+  }
+
+  .landing__title {
+    font-size: 1.85rem;
+  }
+
+  .landing__previewRow {
+    grid-template-columns: 70px 1fr;
+  }
+
+  .landing__status {
+    justify-self: start;
+  }
+
+  .landing__previewStats {
+    grid-template-columns: 1fr;
+  }
 }

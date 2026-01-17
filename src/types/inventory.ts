@@ -19,5 +19,4 @@ export interface InventoryPayload {
   category?: string;
   photoUrl?: string;
   active?: boolean;
-  lowStock?: boolean;
 }

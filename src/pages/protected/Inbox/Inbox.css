@@ -3,9 +3,6 @@
    ========================================================= */
 
 .inboxPage {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 8px 0 44px;
 }
 
 .inboxPage__header {
@@ -71,6 +68,7 @@
   border: 1px solid var(--border);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.03);
+  flex-wrap: wrap;
 }
 
 .inboxPage__tab {
@@ -169,6 +167,7 @@
   margin: 0;
   font-size: 1.05rem;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .inboxPage__meta {
@@ -214,6 +213,7 @@
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.03);
   color: var(--text);
+  overflow-wrap: anywhere;
 }
 
 /* Footer */

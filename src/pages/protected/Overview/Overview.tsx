@@ -4,14 +4,16 @@ import { Link } from "react-router-dom";
 import "./Overview.css";
 import { setActiveShopId } from "../../../api/http";
 import { useAuth } from "../../../providers/AuthProvider";
+import { useI18n } from "../../../i18n";
 
 const Overview: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useI18n();
 
   if (!user) {
     return (
       <div className="overview overview--loading">
-        <p>Loading...</p>
+        <p>{t("Loading...")}</p>
       </div>
     );
   }
@@ -37,8 +39,8 @@ const Overview: React.FC = () => {
         {/* Page header (simple) */}
         <header className="overview__page-header">
           <div>
-            <h1 className="overview__title">Overview</h1>
-            <p className="overview__subtitle">Snapshot of your account and shops.</p>
+            <h1 className="overview__title">{t("Overview")}</h1>
+            <p className="overview__subtitle">{t("Snapshot of your account and shops.")}</p>
           </div>
         </header>
 
@@ -57,33 +59,36 @@ const Overview: React.FC = () => {
                 </p>
                 <p className="overview__email">{user.email}</p>
                 <p className="overview__profile-sub">
-                  Managing {user.shops.length} {user.shops.length === 1 ? "shop" : "shops"}.
+                  {t("Managing")} {user.shops.length}{" "}
+                  {user.shops.length === 1 ? t("shop") : t("shops")}.
                 </p>
               </div>
             </div>
 
             <div className="overview__profile-right">
-              <span className={planClass}>{user.subscription} plan</span>
+              <span className={planClass}>
+                {user.subscription} {t("plan")}
+              </span>
               <Link to="/new-shop" className="btn btn--primary btn--sm">
-                Create shop
+                {t("Create shop")}
               </Link>
             </div>
           </div>
 
           <div className="overview__profile-stats">
             <div className="overview__stat">
-              <div className="overview__stat-label">Shops</div>
+              <div className="overview__stat-label">{t("Shops")}</div>
               <div className="overview__stat-value">{user.shops.length}</div>
             </div>
 
             <div className="overview__stat">
-              <div className="overview__stat-label">Subscription</div>
+              <div className="overview__stat-label">{t("Subscription")}</div>
               <div className="overview__stat-value">{user.subscription}</div>
             </div>
 
             <div className="overview__stat">
-              <div className="overview__stat-label">Account</div>
-              <div className="overview__stat-value">Active</div>
+              <div className="overview__stat-label">{t("Account")}</div>
+              <div className="overview__stat-value">{t("Active")}</div>
             </div>
           </div>
         </section>
@@ -91,12 +96,12 @@ const Overview: React.FC = () => {
         {/* Shops */}
         <section className="overview__card overview__card--shops">
           <div className="overview__shops-header">
-            <h2 className="overview__section-title">Your shops</h2>
+            <h2 className="overview__section-title">{t("Your shops")}</h2>
             <span className="overview__shops-count">{user.shops.length}</span>
           </div>
 
           {user.shops.length === 0 ? (
-            <p className="overview__empty">You haven&apos;t created any shops yet.</p>
+            <p className="overview__empty">{t("You haven't created any shops yet.")}</p>
           ) : (
             <ul className="overview__shops-grid">
               {user.shops.map((shop) => {
@@ -119,7 +124,7 @@ const Overview: React.FC = () => {
                           {shop.role}
                         </span>
                       </div>
-                      <p className="overview__shop-subtext">Click to manage this shop.</p>
+                      <p className="overview__shop-subtext">{t("Click to manage this shop.")}</p>
                     </Link>
                   </li>
                 );

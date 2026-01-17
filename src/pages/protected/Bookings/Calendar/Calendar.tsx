@@ -1,6 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./Calendar.css";
 import { Link, useParams } from "react-router-dom";
+import {
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  CheckCircle2,
+  Clock,
+  Grid2x2,
+  List,
+  RefreshCw,
+  User,
+  UserX,
+  XCircle,
+} from "lucide-react";
 
 import type {
   BookingStatus,
@@ -8,15 +22,16 @@ import type {
   ListBookingParams,
   Service,
 } from "../../../../types";
-import { listBookings } from "../../../../api/bookings";
+import { listBookings, updateBookingStatus } from "../../../../api/bookings";
 import { listServices } from "../../../../api/services";
 
 import { getActiveShopId } from "../../../../api/http";
 import { getTeamOverview } from "../../../../api/team";
 import type { TeamMemberSummary, TeamOverview } from "../../../../types/team";
+import { useI18n } from "../../../../i18n";
 
 const STATUS_OPTIONS = ["PENDING", "CONFIRMED", "CANCELED", "NO_SHOW", "COMPLETED"] as const;
-const STATUS_ACTIONS = STATUS_OPTIONS;
+const STATUS_ACTIONS = ["CONFIRMED", "COMPLETED", "NO_SHOW", "CANCELED"] as const;
 
 /**
  * Grid config
@@ -161,9 +176,32 @@ function badgeClass(status: string | null | undefined): string {
   }
 }
 
+function formatTimeLabel(value: string | null): string {
+  if (!value) return "";
+  const mins = minutesFromValueLocal(value);
+  if (mins == null) return String(value);
+  return fmtTimeFromMinutes(mins);
+}
+
+function statusActionIcon(status: (typeof STATUS_ACTIONS)[number]) {
+  switch (status) {
+    case "CONFIRMED":
+      return <CheckCircle2 className="icon" aria-hidden="true" />;
+    case "COMPLETED":
+      return <Check className="icon" aria-hidden="true" />;
+    case "NO_SHOW":
+      return <UserX className="icon" aria-hidden="true" />;
+    case "CANCELED":
+      return <XCircle className="icon" aria-hidden="true" />;
+    default:
+      return null;
+  }
+}
+
 const Calendar: React.FC = () => {
   const shopId = getActiveShopId();
   const { shopName } = useParams();
+  const { t } = useI18n();
 
   const [draft, setDraft] = useState<DraftFilters>(() => ({
     status: "",
@@ -181,6 +219,7 @@ const Calendar: React.FC = () => {
   const [bookings, setBookings] = useState<BookingWithRelations[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const [services, setServices] = useState<ServiceRow[]>([]);
   const [servicesLoading, setServicesLoading] = useState(false);
@@ -189,8 +228,9 @@ const Calendar: React.FC = () => {
   const [overview, setOverview] = useState<TeamOverview | null>(null);
   const [providersLoading, setProvidersLoading] = useState(false);
   const [providersError, setProvidersError] = useState<string>("");
+  const [statusUpdatingId, setStatusUpdatingId] = useState<number | null>(null);
+  const [statusUpdateError, setStatusUpdateError] = useState<string>("");
 
-  const [showPayload, setShowPayload] = useState(false);
 
   // services loader (shop-scoped)
   useEffect(() => {
@@ -215,7 +255,7 @@ const Calendar: React.FC = () => {
         );
       } catch (err) {
         const message =
-          err instanceof Error ? err.message : "Unable to load services. Please try again.";
+          err instanceof Error ? err.message : t("Unable to load services. Please try again.");
         setServicesError(message);
         setServices([]);
       } finally {
@@ -224,13 +264,13 @@ const Calendar: React.FC = () => {
     };
 
     loadServices();
-  }, [shopId]);
+  }, [shopId, t]);
 
   // providers loader
   useEffect(() => {
     const loadProviders = async () => {
       if (!shopId) {
-        setProvidersError("Select a shop to load providers.");
+        setProvidersError(t("Select a shop to load providers."));
         setOverview(null);
         return;
       }
@@ -242,7 +282,7 @@ const Calendar: React.FC = () => {
         const data = await getTeamOverview();
         setOverview(data);
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Unable to load providers.";
+        const message = err instanceof Error ? err.message : t("Unable to load providers.");
         setProvidersError(message);
         setOverview(null);
       } finally {
@@ -251,7 +291,7 @@ const Calendar: React.FC = () => {
     };
 
     loadProviders();
-  }, [shopId]);
+  }, [shopId, t]);
 
   const providers = useMemo(() => {
     const members = overview?.members ?? [];
@@ -275,7 +315,7 @@ const Calendar: React.FC = () => {
         setBookings(data);
       } catch (e: any) {
         if (!alive) return;
-        setError(e?.message || "Failed to load bookings.");
+        setError(e?.message || t("Failed to load bookings."));
         setBookings([]);
       } finally {
         if (!alive) return;
@@ -287,7 +327,7 @@ const Calendar: React.FC = () => {
     return () => {
       alive = false;
     };
-  }, [applied]);
+  }, [applied, t]);
 
   const payloadPreview = useMemo(() => {
     const p: ListBookingParams = {};
@@ -429,36 +469,84 @@ const Calendar: React.FC = () => {
     return byProvider;
   }, [bookings, visibleProviders, timeSlots]);
 
-  const onChangeStatusClick = useCallback((booking: any, nextStatus: string) => {
-    // UI-only stub. Replace with your real API call when ready.
-    console.log("Change booking status", { bookingId: booking?.id, nextStatus });
+  const onChangeStatusClick = useCallback(
+    async (booking: BookingWithRelations, nextStatus: BookingStatus) => {
+      if (!booking?.id || booking.status === nextStatus) return;
+      setStatusUpdateError("");
+      setStatusUpdatingId(booking.id);
 
-    // Optimistic update
-    setBookings((prev) =>
-      (prev as any[]).map((b) =>
-        String(b?.id) === String(booking?.id) ? { ...b, status: nextStatus } : b,
-      ),
-    );
-  }, []);
+      try {
+        const updated = await updateBookingStatus(booking.id, nextStatus);
+        setBookings((prev) =>
+          prev.map((b) => (b.id === booking.id ? { ...b, ...updated } : b)),
+        );
+      } catch (err) {
+        const message = err instanceof Error ? err.message : t("Failed to update booking status.");
+        setStatusUpdateError(message);
+      } finally {
+        setStatusUpdatingId(null);
+      }
+    },
+    [t],
+  );
+
+  const sortedBookings = useMemo(() => {
+    return bookings
+      .slice()
+      .sort((a, b) => {
+        const aStart = getStartVal(a) ?? "";
+        const bStart = getStartVal(b) ?? "";
+        return aStart.localeCompare(bStart);
+      });
+  }, [bookings]);
+
+  const statusLabels = useMemo(
+    () => ({
+      PENDING: t("Pending"),
+      CONFIRMED: t("Confirmed"),
+      CANCELED: t("Canceled"),
+      NO_SHOW: t("No-show"),
+      COMPLETED: t("Completed"),
+    }),
+    [t],
+  );
 
   return (
     <div className="calendar-page">
       <div className="calendar-header">
         <div className="calendar-header__row">
           <div>
-            <h1 className="calendar-title">Calendar</h1>
-            <p className="calendar-subtitle">Bookings</p>
+            <h1 className="calendar-title">{t("Calendar")}</h1>
+            <p className="calendar-subtitle">{t("Bookings")}</p>
           </div>
 
-          <div className="row" style={{ gap: 8, alignItems: "center" }}>
-            <button className="btn btn--ghost" onClick={() => shiftDay(-1)} disabled={loading}>
-              Prev
+          <div className="row calendar-header__actions">
+            <button
+              className="btn btn--ghost"
+              onClick={() => shiftDay(-1)}
+              disabled={loading}
+              aria-label={t("Previous day")}
+              title={t("Previous day")}
+            >
+              <ChevronLeft className="icon" aria-hidden="true" />
             </button>
-            <button className="btn btn--ghost" onClick={resetFilters} disabled={loading}>
-              Today
+            <button
+              className="btn btn--ghost"
+              onClick={resetFilters}
+              disabled={loading}
+              aria-label={t("Today")}
+              title={t("Today")}
+            >
+              <RefreshCw className="icon" aria-hidden="true" />
             </button>
-            <button className="btn btn--ghost" onClick={() => shiftDay(1)} disabled={loading}>
-              Next
+            <button
+              className="btn btn--ghost"
+              onClick={() => shiftDay(1)}
+              disabled={loading}
+              aria-label={t("Next day")}
+              title={t("Next day")}
+            >
+              <ChevronRight className="icon" aria-hidden="true" />
             </button>
 
             {shopName ? (
@@ -466,7 +554,8 @@ const Calendar: React.FC = () => {
                 className="btn btn--primary"
                 to={`/shops/${encodeURIComponent(shopName)}/bookings/new`}
               >
-                New booking
+                <CalendarDays className="icon" aria-hidden="true" />
+                {t("New booking")}
               </Link>
             ) : null}
           </div>
@@ -476,7 +565,7 @@ const Calendar: React.FC = () => {
       <div className="card calendar-filters">
         <div className="row calendar-filters__row">
           <div className="field calendar-filters__field">
-            <label>Status</label>
+            <label>{t("Status")}</label>
             <select
               className="select"
               value={draft.status}
@@ -484,17 +573,17 @@ const Calendar: React.FC = () => {
                 setDraft((d) => ({ ...d, status: e.target.value as DraftFilters["status"] }))
               }
             >
-              <option value="">All</option>
+              <option value="">{t("All")}</option>
               {STATUS_OPTIONS.map((s) => (
                 <option key={s} value={s}>
-                  {s}
+                  {statusLabels[s]}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="field calendar-filters__field">
-            <label>Service</label>
+            <label>{t("Service")}</label>
             <select
               className="select"
               value={draft.serviceId}
@@ -503,10 +592,10 @@ const Calendar: React.FC = () => {
             >
               <option value="">
                 {!shopId
-                  ? "Select a shop first"
+                  ? t("Select a shop first")
                   : servicesLoading
-                    ? "Loading services..."
-                    : "All services"}
+                    ? t("Loading services...")
+                    : t("All services")}
               </option>
               {services.map((svc) => (
                 <option key={svc.id} value={String(svc.id)}>
@@ -520,14 +609,16 @@ const Calendar: React.FC = () => {
           </div>
 
           <div className="field calendar-filters__field">
-            <label>Provider</label>
+            <label>{t("Provider")}</label>
             <select
               className="select"
               value={draft.providerId}
               onChange={(e) => setDraft((d) => ({ ...d, providerId: e.target.value }))}
               disabled={providersLoading || !shopId}
             >
-              <option value="">{providersLoading ? "Loading providers..." : "All providers"}</option>
+              <option value="">
+                {providersLoading ? t("Loading providers...") : t("All providers")}
+              </option>
 
               {providers.map((m: TeamMemberSummary) => (
                 <option key={String(m.shopUserId ?? m.id)} value={String(m.shopUserId ?? "")}>
@@ -542,7 +633,7 @@ const Calendar: React.FC = () => {
           </div>
 
           <div className="field calendar-filters__field">
-            <label>Day</label>
+            <label>{t("Day")}</label>
             <input
               className="input"
               type="date"
@@ -553,53 +644,59 @@ const Calendar: React.FC = () => {
 
           <div className="row calendar-filters__actions">
             <button className="btn btn--primary" onClick={applyFilters} disabled={loading}>
-              Apply
+              {t("Apply")}
             </button>
             <button className="btn btn--ghost" onClick={resetFilters} disabled={loading}>
-              Reset
-            </button>
-            <button
-              className="btn btn--ghost"
-              type="button"
-              onClick={() => setShowPayload((s) => !s)}
-            >
-              {showPayload ? "Hide payload" : "Show payload"}
+              {t("Reset")}
             </button>
           </div>
         </div>
-
-        {showPayload ? (
-          <div className="calendar-filters__preview">
-            <div className="calendar-filters__preview-label">Payload</div>
-            <pre className="calendar-filters__code">{JSON.stringify(payloadPreview, null, 2)}</pre>
-          </div>
-        ) : null}
       </div>
 
       <div className="card calendar-results">
         <div className="calendar-results__header">
-          <h2 className="calendar-results__title">Day grid</h2>
-          <div className="calendar-results__meta">
-            {loading ? "Loading…" : `Bookings: ${bookings.length}`}
+          <h2 className="calendar-results__title">
+            {viewMode === "grid" ? t("Day grid") : t("Day list")}
+          </h2>
+          <div className="calendar-results__actions">
+            <div className="calendar-results__meta">
+              {loading ? t("Loading…") : `${t("Bookings")}: ${bookings.length}`}
+            </div>
+            <button
+              className="calendar-view-toggle"
+              type="button"
+              onClick={() => setViewMode((v) => (v === "grid" ? "list" : "grid"))}
+              aria-label={viewMode === "grid" ? t("Switch to list view") : t("Switch to grid view")}
+              title={viewMode === "grid" ? t("List view") : t("Grid view")}
+            >
+              {viewMode === "grid" ? (
+                <List className="icon" aria-hidden="true" />
+              ) : (
+                <Grid2x2 className="icon" aria-hidden="true" />
+              )}
+            </button>
           </div>
         </div>
 
         {error && <div className="calendar-alert calendar-alert--error">{error}</div>}
+        {statusUpdateError && (
+          <div className="calendar-alert calendar-alert--error">{statusUpdateError}</div>
+        )}
 
         {!loading && !error && !shopId && (
-          <div className="calendar-alert">Select a shop to load providers.</div>
+          <div className="calendar-alert">{t("Select a shop to load providers.")}</div>
         )}
 
         {!loading && !error && shopId && visibleProviders.length === 0 && (
-          <div className="calendar-alert">No active/bookable providers found.</div>
+          <div className="calendar-alert">{t("No active/bookable providers found.")}</div>
         )}
 
-        {!loading && !error && shopId && visibleProviders.length > 0 && (
+        {!loading && !error && shopId && visibleProviders.length > 0 && viewMode === "grid" && (
           <div className="calendar-grid-wrap">
             <table className="calendar-grid">
               <thead>
                 <tr>
-                  <th className="cal-th cal-th--time">Time</th>
+                  <th className="cal-th cal-th--time">{t("Time")}</th>
                   {visibleProviders.map((p) => {
                     const k = providerKeyFromMember(p);
                     if (!k) return null;
@@ -636,12 +733,19 @@ const Calendar: React.FC = () => {
                         const id = b.id ?? "";
                         const status = b.status ?? "";
 
-                        const serviceName = b.service?.name ?? b.serviceName ?? "Booking";
+                        const serviceName = b.service?.name ?? b.serviceName ?? t("Booking");
+                        const statusLabel = status ? statusLabels[status as keyof typeof statusLabels] : "";
                         const customerName =
                           b.customerName ??
                           (b.customer?.firstName
                             ? `${b.customer.firstName} ${b.customer.lastName ?? ""}`.trim()
                             : "");
+                        const customerPhone = b.customer?.phone ?? b.customerPhone ?? "";
+                        const customerId = b.customer?.id ?? b.customerId;
+                        const customerLink =
+                          shopName && customerId
+                            ? `/shops/${encodeURIComponent(shopName)}/customers/${customerId}`
+                            : "";
 
                         return (
                           <td
@@ -654,16 +758,35 @@ const Calendar: React.FC = () => {
                                 <div className="cal-booking__title">{serviceName}</div>
                                 {status ? (
                                   <span className={badgeClass(String(status))}>
-                                    {String(status)}
+                                    {statusLabel || String(status)}
                                   </span>
                                 ) : null}
                               </div>
 
                               <div className="cal-booking__meta">
-                                {customerName ? <div>{customerName}</div> : null}
+                                {customerName ? (
+                                  <div className="cal-booking__meta-row">
+                                    <User className="icon" aria-hidden="true" />
+                                    {customerLink ? (
+                                      <Link className="cal-booking__link" to={customerLink}>
+                                        {customerName}
+                                      </Link>
+                                    ) : (
+                                      <span>{customerName}</span>
+                                    )}
+                                  </div>
+                                ) : null}
+                                {customerPhone ? (
+                                  <div className="cal-booking__meta-row">
+                                    <span className="cal-booking__phone">{customerPhone}</span>
+                                  </div>
+                                ) : null}
                                 {id ? <div className="cal-booking__id">#{id}</div> : null}
-                                {b.startTime ? (
-                                  <div className="cal-booking__id">Start: {String(b.startTime)}</div>
+                                {getStartVal(b) ? (
+                                  <div className="cal-booking__meta-row">
+                                    <Clock className="icon" aria-hidden="true" />
+                                    <span>{formatTimeLabel(getStartVal(b))}</span>
+                                  </div>
                                 ) : null}
                               </div>
 
@@ -672,14 +795,17 @@ const Calendar: React.FC = () => {
                                   <button
                                     key={s}
                                     type="button"
-                                    className="btn btn--ghost cal-booking__action-btn"
+                                    className=" cal-booking__action-btn"
                                     onClick={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
                                       onChangeStatusClick(b, s);
                                     }}
+                                    disabled={statusUpdatingId === b.id}
+                                    aria-label={`${t("Mark as")} ${statusLabels[s] ?? s}`}
+                                    title={`${t("Mark as")} ${statusLabels[s] ?? s}`}
                                   >
-                                    {s}
+                                    {statusActionIcon(s)}
                                   </button>
                                 ))}
                               </div>
@@ -694,6 +820,100 @@ const Calendar: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {!loading && !error && shopId && viewMode === "list" && (
+          <div className="calendar-list">
+            {sortedBookings.length === 0 ? (
+              <div className="calendar-alert">{t("No bookings for this day.")}</div>
+            ) : (
+              <div className="calendar-list__table-wrap">
+                <table className="calendar-list__table">
+                  <thead>
+                    <tr>
+                      <th>{t("Time")}</th>
+                      <th>{t("Service")}</th>
+                      <th>{t("Customer")}</th>
+                      <th>{t("Status")}</th>
+                      <th>{t("Provider")}</th>
+                      <th className="calendar-list__actions-col">{t("Actions")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedBookings.map((b) => {
+                      const id = b.id ?? "";
+                      const status = b.status ?? "";
+                      const serviceName = b.service?.name ?? t("Booking");
+                      const customerName =
+                        b.customer?.name 
+                      const customerPhone = b.customer?.phone ;
+                      const customerId = b.customer?.id ?? b.customerId;
+                      const customerLink =
+                        shopName && customerId
+                          ? `/shops/${encodeURIComponent(shopName)}/customers/${customerId}`
+                          : "";
+                      const providerName =
+                        b.provider?.user?.firstName && b.provider?.user.lastName
+                          ? `${b.provider.user?.firstName} ${b.provider.user?.lastName}`.trim()
+                          : "";
+                      const start = getStartVal(b);
+                      const statusLabel = status ? statusLabels[status as keyof typeof statusLabels] : "";
+
+                      return (
+                        <tr key={String(id)}>
+                          <td>{formatTimeLabel(start)}</td>
+                          <td>{serviceName}</td>
+                          <td>
+                            {customerName ? (
+                              customerLink ? (
+                                <Link className="cal-booking__link" to={customerLink}>
+                                  {customerName}
+                                </Link>
+                              ) : (
+                                customerName
+                              )
+                            ) : (
+                              "—"
+                            )}
+                            {customerPhone ? (
+                              <div className="calendar-list__subtext">{customerPhone}</div>
+                            ) : null}
+                          </td>
+                          <td>
+                            {status ? (
+                              <span className={badgeClass(status)}>{statusLabel || status}</span>
+                            ) : (
+                              "—"
+                            )}
+                          </td>
+                          <td>{providerName || "—"}</td>
+                          <td className="calendar-list__actions">
+                            {STATUS_ACTIONS.map((s) => (
+                              <button
+                                key={s}
+                                type="button"
+                                className="cal-booking__action-btn"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  onChangeStatusClick(b, s);
+                                }}
+                                disabled={statusUpdatingId === b.id}
+                                aria-label={`${t("Mark as")} ${statusLabels[s] ?? s}`}
+                                title={`${t("Mark as")} ${statusLabels[s] ?? s}`}
+                              >
+                                {statusActionIcon(s)}
+                              </button>
+                            ))}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>

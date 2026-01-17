@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { deleteCurrentUser, updateCurrentUser } from "../../../../api/user";
 import { useAuth } from "../../../../providers/AuthProvider";
 import type { UpdateUserPayload } from "../../../../types/user";
+import { useI18n } from "../../../../i18n";
+import { getFriendlyError } from "../../../../utils/errors";
 import "./Account.css";
 
 // -------------------- Local types / helpers --------------------
@@ -13,6 +15,7 @@ type Theme = "dark" | "light";
 const Account: React.FC = () => {
   const { user, setUser, logout } = useAuth();
   const navigate = useNavigate();
+  const { lang, setLang, t } = useI18n();
 
   const [profileForm, setProfileForm] = useState({
     firstName: "",
@@ -83,8 +86,9 @@ const Account: React.FC = () => {
       setUser(updated);
       setProfileStatus("success");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to update profile.";
-      setProfileError(message);
+      setProfileError(
+        getFriendlyError(err, t, "We couldn't update your profile. Please try again."),
+      );
       setProfileStatus("error");
     }
   };
@@ -101,13 +105,13 @@ const Account: React.FC = () => {
     if (!user) return;
 
     if (!deleteForm.password.trim()) {
-      setDeleteError("Please enter your password to confirm deletion.");
+      setDeleteError(t("Please enter your password to confirm deletion."));
       setDeleteStatus("error");
       return;
     }
 
     const confirmed = window.confirm(
-      "This will permanently delete your account and all data. Are you sure?",
+      t("This will permanently delete your account and all data. Are you sure?"),
     );
 
     if (!confirmed) return;
@@ -121,8 +125,9 @@ const Account: React.FC = () => {
       logout();
       navigate("/login");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to delete account.";
-      setDeleteError(message);
+      setDeleteError(
+        getFriendlyError(err, t, "We couldn't delete your account. Please try again."),
+      );
       setDeleteStatus("error");
     }
   };
@@ -132,13 +137,13 @@ const Account: React.FC = () => {
     if (!user) return;
 
     if (!passwordForm.password.trim()) {
-      setPasswordError("Please enter a new password.");
+      setPasswordError(t("Please enter a new password."));
       setPasswordStatus("error");
       return;
     }
 
     if (passwordForm.password !== passwordForm.confirm) {
-      setPasswordError("Passwords do not match.");
+      setPasswordError(t("Passwords do not match."));
       setPasswordStatus("error");
       return;
     }
@@ -155,8 +160,9 @@ const Account: React.FC = () => {
       setPasswordStatus("success");
       setPasswordForm({ password: "", confirm: "" });
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unable to update password.";
-      setPasswordError(message);
+      setPasswordError(
+        getFriendlyError(err, t, "We couldn't update your password. Please try again."),
+      );
       setPasswordStatus("error");
     }
   };
@@ -184,10 +190,11 @@ const Account: React.FC = () => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+
   if (!user) {
     return (
       <div className="accountPage accountPage--loading">
-        <p>Loading account…</p>
+        <p>{t("Loading account…")}</p>
       </div>
     );
   }
@@ -197,40 +204,51 @@ const Account: React.FC = () => {
       <div className="accountPage__inner">
         <header className="accountPage__header">
           <div>
-            <p className="accountPage__eyebrow">Settings</p>
-            <h1 className="accountPage__title">Account</h1>
+            <p className="accountPage__eyebrow">{t("Settings")}</p>
+            <h1 className="accountPage__title">{t("Account")}</h1>
             <p className="accountPage__subtitle">
-              Update your personal details and keep your account information current.
+              {t("Update your personal details and keep your account information current.")}
             </p>
-          </div>
-
-          <div className="accountPage__badges">
-            <span className="badge badge--primary">{user.subscription} plan</span>
-            {user.active === false && <span className="badge">Inactive</span>}
           </div>
         </header>
 
-        <div className="accountPage__grid">
-          {/* PROFILE */}
-          <section className="card accountPage__card">
+        <section className="accountPage__hero">
+          <div className="accountPage__heroMain">
+            <div className="accountPage__avatar accountPage__avatar--lg" aria-hidden>
+              {user.firstName?.[0]}
+              {user.lastName?.[0]}
+            </div>
+            <div className="accountPage__heroInfo">
+              <h2 className="accountPage__heroName">{fullName || t("Account")}</h2>
+              <p className="accountPage__heroEmail">{user.email}</p>
+              <div className="accountPage__badges">
+                <span className="badge badge--primary">
+                  {user.subscription} {t("plan")}
+                </span>
+                <span className="badge">{user.active === false ? t("Inactive") : t("Active")}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="accountPage__layout">
+          <div className="accountPage__column">
+            {/* PROFILE */}
+            <section className="accountPage__panel">
             <header className="accountPage__cardHead">
               <div>
-                <p className="accountPage__eyebrow">Profile</p>
-                <h2>Personal info</h2>
+                <p className="accountPage__eyebrow">{t("Profile")}</p>
+                <h2>{t("Personal info")}</h2>
                 <p className="accountPage__hint">
-                  Control how your details appear across the dashboard.
+                  {t("Control how your details appear across the dashboard.")}
                 </p>
-              </div>
-              <div className="accountPage__avatar" aria-hidden>
-                {user.firstName?.[0]}
-                {user.lastName?.[0]}
               </div>
             </header>
 
             <form className="stack-md" onSubmit={handleProfileSubmit}>
               <div className="accountPage__twoCol">
                 <div className="field">
-                  <label htmlFor="firstName">First name</label>
+                  <label htmlFor="firstName">{t("First name")}</label>
                   <input
                     className="input"
                     id="firstName"
@@ -238,12 +256,12 @@ const Account: React.FC = () => {
                     value={profileForm.firstName}
                     onChange={handleProfileChange}
                     autoComplete="given-name"
-                    placeholder="Your first name"
+                    placeholder={t("Your first name")}
                   />
                 </div>
 
                 <div className="field">
-                  <label htmlFor="lastName">Last name</label>
+                  <label htmlFor="lastName">{t("Last name")}</label>
                   <input
                     className="input"
                     id="lastName"
@@ -251,13 +269,13 @@ const Account: React.FC = () => {
                     value={profileForm.lastName}
                     onChange={handleProfileChange}
                     autoComplete="family-name"
-                    placeholder="Your last name"
+                    placeholder={t("Your last name")}
                   />
                 </div>
               </div>
 
               <div className="field">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">{t("Email")}</label>
                 <input
                   className="input"
                   id="email"
@@ -266,10 +284,10 @@ const Account: React.FC = () => {
                   value={profileForm.email}
                   onChange={handleProfileChange}
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder={t("you@example.com")}
                 />
                 <p className="accountPage__hint accountPage__hint--inline">
-                  This email is used to log in and receive important notifications.
+                  {t("This email is used to log in and receive important notifications.")}
                 </p>
               </div>
 
@@ -277,7 +295,9 @@ const Account: React.FC = () => {
                 <p className="accountPage__alert accountPage__alert--error">{profileError}</p>
               )}
               {profileStatus === "success" && (
-                <p className="accountPage__alert accountPage__alert--success">Profile updated.</p>
+                <p className="accountPage__alert accountPage__alert--success">
+                  {t("Profile updated.")}
+                </p>
               )}
 
               <div className="accountPage__actions">
@@ -293,34 +313,34 @@ const Account: React.FC = () => {
                   }
                   disabled={profileStatus === "saving"}
                 >
-                  Reset
+                  {t("Reset")}
                 </button>
                 <button
                   className="btn btn--primary"
                   type="submit"
                   disabled={profileStatus === "saving"}
                 >
-                  {profileStatus === "saving" ? "Saving…" : "Save changes"}
+                  {profileStatus === "saving" ? t("Saving…") : t("Save changes")}
                 </button>
               </div>
             </form>
-          </section>
+            </section>
 
-          {/* SECURITY / PASSWORD */}
-          <section className="card accountPage__card">
+            {/* SECURITY / PASSWORD */}
+            <section className="accountPage__panel">
             <header className="accountPage__cardHead">
               <div>
-                <p className="accountPage__eyebrow">Security</p>
-                <h2>Password</h2>
+                <p className="accountPage__eyebrow">{t("Security")}</p>
+                <h2>{t("Password")}</h2>
                 <p className="accountPage__hint">
-                  Use a strong password to help keep your account safe.
+                  {t("Use a strong password to help keep your account safe.")}
                 </p>
               </div>
             </header>
 
             <form className="stack-md" onSubmit={handlePasswordSubmit}>
               <div className="field">
-                <label htmlFor="newPassword">New password</label>
+                <label htmlFor="newPassword">{t("New password")}</label>
                 <input
                   className="input"
                   id="newPassword"
@@ -329,12 +349,12 @@ const Account: React.FC = () => {
                   value={passwordForm.password}
                   onChange={handlePasswordChange}
                   autoComplete="new-password"
-                  placeholder="••••••••"
+                  placeholder={t("••••••••")}
                 />
               </div>
 
               <div className="field">
-                <label htmlFor="confirmPassword">Confirm password</label>
+                <label htmlFor="confirmPassword">{t("Confirm password")}</label>
                 <input
                   className="input"
                   id="confirmPassword"
@@ -343,7 +363,7 @@ const Account: React.FC = () => {
                   value={passwordForm.confirm}
                   onChange={handlePasswordChange}
                   autoComplete="new-password"
-                  placeholder="Repeat new password"
+                  placeholder={t("Repeat new password")}
                 />
               </div>
 
@@ -351,7 +371,9 @@ const Account: React.FC = () => {
                 <p className="accountPage__alert accountPage__alert--error">{passwordError}</p>
               )}
               {passwordStatus === "success" && (
-                <p className="accountPage__alert accountPage__alert--success">Password updated.</p>
+                <p className="accountPage__alert accountPage__alert--success">
+                  {t("Password updated.")}
+                </p>
               )}
 
               <div className="accountPage__actions">
@@ -360,92 +382,127 @@ const Account: React.FC = () => {
                   type="submit"
                   disabled={passwordStatus === "saving"}
                 >
-                  {passwordStatus === "saving" ? "Updating…" : "Update password"}
+                  {passwordStatus === "saving" ? t("Updating…") : t("Update password")}
                 </button>
               </div>
             </form>
-          </section>
-        </div>
-
-        {/* APPEARANCE */}
-        <section className="card stack-md">
-          <div className="row" style={{ justifyContent: "space-between" }}>
-            <div className="stack-sm" style={{ gap: 2 }}>
-              <h2 style={{ margin: 0 }}>Appearance</h2>
-              <small>Switch between dark and light theme.</small>
-              <small>
-                Current theme: <strong>{theme === "dark" ? "Dark" : "Light"}</strong>
-              </small>
-            </div>
-            <button
-              type="button"
-              className="btn btn--ghost btn--sm"
-              onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? "Use light mode" : "Use dark mode"}
-            </button>
+            </section>
           </div>
-        </section>
 
-        {/* METADATA */}
-        <section className="card accountPage__card accountPage__card--wide">
+          <div className="accountPage__column">
+            {/* APPEARANCE */}
+            <section className="accountPage__panel accountPage__panel--compact">
+            <header className="accountPage__cardHead accountPage__cardHead--split">
+              <div>
+                <p className="accountPage__eyebrow">{t("Appearance")}</p>
+                <h2>{t("Theme")}</h2>
+                <p className="accountPage__hint">{t("Switch between dark and light theme.")}</p>
+                <p className="accountPage__hint accountPage__hint--inline">
+                  {t("Current theme:")}{" "}
+                  <strong>{theme === "dark" ? t("Dark") : t("Light")}</strong>
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn btn--ghost btn--sm"
+                onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+                aria-label={t("Toggle theme")}
+              >
+                {theme === "dark" ? t("Use light mode") : t("Use dark mode")}
+              </button>
+            </header>
+            </section>
+
+            <section className="accountPage__panel accountPage__panel--compact">
+            <header className="accountPage__cardHead accountPage__cardHead--split">
+              <div>
+                <p className="accountPage__eyebrow">{t("Language")}</p>
+                <h2>{t("Language")}</h2>
+                <p className="accountPage__hint">{t("Choose the language for the interface.")}</p>
+              </div>
+              <div className="accountPage__lang">
+                <button
+                  type="button"
+                  className={`accountPage__langBtn ${lang === "en" ? "is-active" : ""}`}
+                  onClick={() => setLang("en")}
+                  aria-pressed={lang === "en"}
+                >
+                  🇬🇧 {t("English")}
+                </button>
+                <button
+                  type="button"
+                  className={`accountPage__langBtn ${lang === "el" ? "is-active" : ""}`}
+                  onClick={() => setLang("el")}
+                  aria-pressed={lang === "el"}
+                >
+                  🇬🇷 {t("Greek")}
+                </button>
+              </div>
+            </header>
+            </section>
+
+            {/* METADATA */}
+            <section className="accountPage__panel">
           <header className="accountPage__cardHead">
             <div>
-              <p className="accountPage__eyebrow">Account details</p>
-              <h2>Metadata</h2>
-              <p className="accountPage__hint">Reference information for your account.</p>
+              <p className="accountPage__eyebrow">{t("Account details")}</p>
+              <h2>{t("Metadata")}</h2>
+              <p className="accountPage__hint">{t("Reference information for your account.")}</p>
             </div>
           </header>
 
           <dl className="accountPage__metaGrid">
             <div>
-              <dt>Full name</dt>
+              <dt>{t("Full name")}</dt>
               <dd>{fullName || "-"}</dd>
             </div>
             <div>
-              <dt>Email</dt>
+              <dt>{t("Email")}</dt>
               <dd>{user.email}</dd>
             </div>
             <div>
-              <dt>Account ID</dt>
+              <dt>{t("Account ID")}</dt>
               <dd>#{user.id}</dd>
             </div>
             <div>
-              <dt>Joined</dt>
+              <dt>{t("Joined")}</dt>
               <dd>{formatDate(user.createdAt)}</dd>
             </div>
             <div>
-              <dt>Last updated</dt>
+              <dt>{t("Last updated")}</dt>
               <dd>{formatDate(user.updatedAt)}</dd>
             </div>
             <div>
-              <dt>Subscription</dt>
+              <dt>{t("Subscription")}</dt>
               <dd className="accountPage__pill">{user.subscription}</dd>
             </div>
             <div>
-              <dt>Status</dt>
-              <dd className="accountPage__pill">{user.active === false ? "Inactive" : "Active"}</dd>
+              <dt>{t("Status")}</dt>
+              <dd className="accountPage__pill">
+                {user.active === false ? t("Inactive") : t("Active")}
+              </dd>
             </div>
           </dl>
-        </section>
+            </section>
+          </div>
+        </div>
 
         {/* DANGER ZONE */}
-        <section className=" accountPage__card--danger edit-shop__danger">
+        <section className="accountPage__panel accountPage__panel--danger">
           <header className="accountPage__cardHead">
             <div>
-              <p className="accountPage__eyebrow">Danger zone</p>
-              <h2>Delete account</h2>
+              <h2>{t("Delete account")}</h2>
               <p className="accountPage__hint">
-                Permanently delete your account and all associated data. This action cannot be
-                undone.
+                {t(
+                  "Permanently delete your account and all associated data. This action cannot be undone.",
+                )}
               </p>
             </div>
           </header>
 
           <form className="stack-md" onSubmit={handleDeleteSubmit}>
             <div className="field">
-              <label htmlFor="deletePassword">Confirm password</label>
+              <label htmlFor="deletePassword">{t("Confirm password")}</label>
               <input
                 className="input"
                 id="deletePassword"
@@ -454,10 +511,10 @@ const Account: React.FC = () => {
                 value={deleteForm.password}
                 onChange={handleDeleteChange}
                 autoComplete="current-password"
-                placeholder="Enter your password to delete"
+                placeholder={t("Enter your password to delete")}
               />
               <p className="accountPage__hint accountPage__hint--inline">
-                For your security, you must enter your current password to delete your account.
+                {t("For your security, you must enter your current password to delete your account.")}
               </p>
             </div>
 
@@ -466,17 +523,17 @@ const Account: React.FC = () => {
             )}
             {deleteStatus === "success" && (
               <p className="accountPage__alert accountPage__alert--success">
-                Account deleted. Redirecting…
+                {t("Account deleted. Redirecting…")}
               </p>
             )}
 
-            <div className="edit-shop__dangerActions">
+            <div className="accountPage__actions accountPage__actions--danger">
               <button
                 type="submit"
-                className="edit-shop__dangerBtn"
+                className="btn--danger"
                 disabled={deleteStatus === "saving"}
               >
-                {deleteStatus === "saving" ? "Deleting…" : "Delete account"}
+                {deleteStatus === "saving" ? t("Deleting…") : t("Delete account")}
               </button>
             </div>
           </form>

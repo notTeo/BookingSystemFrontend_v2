@@ -3,9 +3,6 @@
    ========================================================= */
 
 .shopOv {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 22px 18px 40px;
   color: var(--text);
 }
 

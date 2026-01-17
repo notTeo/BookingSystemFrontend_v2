@@ -1,11 +1,8 @@
-service-library {
-    min-height: 100%;
-    padding: var(--page-pad);
-  }
+.service-library {
+  min-height: 100%;
+}
   
-  .service-library__inner {
-    max-width: 1200px;
-    margin: 0 auto;
+.service-library__inner {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -41,12 +38,18 @@ service-library {
     gap: 12px;
   }
   
+  .service-library__search {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+
   .service-library__search input {
     background: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: var(--r-md);
     padding: 10px 12px;
-    width: 260px;
+    width: 100%;
+    max-width: 320px;
     color: var(--text);
   }
   
@@ -59,6 +62,7 @@ service-library {
     display: flex;
     gap: 8px;
     align-items: center;
+    flex-wrap: wrap;
   }
   
   .service-library__chip {
@@ -87,7 +91,9 @@ service-library {
   
   .service-library__table-wrapper {
     width: 100%;
-    overflow: hidden;
+    max-width: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   .service-library__table {
@@ -112,16 +118,19 @@ service-library {
   .service-library__cell-title {
     font-weight: 700;
     margin-bottom: 6px;
+    overflow-wrap: anywhere;
   }
   
   .service-library__cell-subtext {
     color: var(--text-muted);
     margin-bottom: 6px;
+    overflow-wrap: anywhere;
   }
   
   .service-library__cell-footnote {
     color: var(--text-soft);
     font-size: 0.86rem;
+    overflow-wrap: anywhere;
   }
   
   .service-library__status-pill {
@@ -209,6 +218,7 @@ service-library {
     place-items: center;
     padding: 16px;
     z-index: 2000;
+    overflow: auto;
   }
   
   .service-library__modal,
@@ -219,6 +229,8 @@ service-library {
     width: min(640px, 100%);
     padding: 18px;
     box-shadow: var(--shadow);
+    max-height: 90vh;
+    overflow: auto;
   }
   
   .service-library__modal-header {
@@ -285,6 +297,48 @@ service-library {
     border: 1px solid var(--border);
     cursor: pointer;
   }
+
+  .service-library__toggle input {
+    appearance: none;
+    width: 44px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 15, 16, 0.6);
+    position: relative;
+    cursor: pointer;
+    transition:
+      background var(--t-fast),
+      border-color var(--t-fast),
+      box-shadow var(--t-fast);
+  }
+
+  .service-library__toggle input::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.25);
+    transition: transform var(--t-fast), background var(--t-fast);
+  }
+
+  .service-library__toggle input:checked {
+    border-color: rgba(59, 130, 246, 0.6);
+    background: rgba(59, 130, 246, 0.45);
+  }
+
+  .service-library__toggle input:checked::after {
+    transform: translateX(20px);
+  }
+
+  .service-library__toggle input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
   
   .service-library__actions-row {
     display: flex;
@@ -293,7 +347,7 @@ service-library {
     margin-top: 4px;
   }
   
-  .btn {
+  .service-library .btn {
     border: 1px solid transparent;
     border-radius: var(--r-md);
     padding: 10px 14px;
@@ -304,32 +358,52 @@ service-library {
     transition: background var(--t-med), border-color var(--t-med), color var(--t-med);
   }
   
-  .btn--primary {
+  .service-library .btn--primary {
     background: var(--accent);
     color: #fff;
     border-color: var(--accent);
   }
   
-  .btn--ghost {
+  .service-library .btn--ghost {
     background: transparent;
     border-color: var(--border);
     color: var(--text);
   }
   
-  .btn--danger {
+  .service-library .btn--danger {
     background: var(--danger);
     border-color: var(--danger);
     color: #fff;
   }
   
-  .btn:hover {
+  .service-library .btn:hover {
     background: var(--overlay-hover);
   }
   
-  .btn--primary:hover {
+  .service-library .btn--primary:hover {
     background: var(--accent-hover);
   }
   
-  .btn--danger:hover {
+  .service-library .btn--danger:hover {
     filter: brightness(0.95);
+  }
+
+  @media (max-width: 720px) {
+    .service-library__table {
+      table-layout: fixed;
+    }
+
+    .service-library__table th,
+    .service-library__table td {
+      word-break: break-word;
+    }
+
+    .service-library__actions-col {
+      width: auto;
+    }
+
+    .service-library__actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }

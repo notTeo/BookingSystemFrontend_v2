@@ -14,6 +14,13 @@ export function getPublicShop(shopId: number) {
   return request<ShopSummary>({ method: "GET", url: `/public/shops/${shopId}` });
 }
 
+export function getPublicShopByBookingEndpoint(bookingEndpoint: string) {
+  return request<ShopSummary>({
+    method: "GET",
+    url: `/public/shops/by-endpoint/${encodeURIComponent(bookingEndpoint)}`,
+  });
+}
+
 export function getPublicShopHours(shopId: number) {
   return request<PublicShopHour[]>({ method: "GET", url: `/public/shops/${shopId}/opening-hours` });
 }
