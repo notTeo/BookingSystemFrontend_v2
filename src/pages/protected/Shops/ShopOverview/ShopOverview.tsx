@@ -71,7 +71,7 @@ const ShopOverviewPage: React.FC = () => {
             >
               {t("Calendar")}
             </Link>
-            <Link className="btn btn--primary" to={`/shops/${encodeURIComponent(shop.name)}/edit`}>
+            <Link className="btn btn--primary" to={`/shops/${encodeURIComponent(shop.name)}/settings`}>
               {t("Manage")}
             </Link>
           </div>

@@ -44,6 +44,10 @@ export function clearClientState(): void {
   // Only client-side state we own is active shop.
   // Auth cookies are HttpOnly, so we cannot clear them here.
   setActiveShopId(null);
+  // Redirect to login if in a browser context
+  if (isBrowser && !window.location.pathname.startsWith('/login')) {
+    window.location.href = '/login';
+  }
 }
 
 // ---- axios client ----

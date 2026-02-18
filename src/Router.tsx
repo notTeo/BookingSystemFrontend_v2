@@ -77,8 +77,8 @@ export default function Router() {
                   <Route path="services" element={<ServiceLibrary />} />
                   <Route path="customers" element={<AllCustomers />} />
                   <Route path="team" element={<AllTeam />} />
-                  <Route path="team/:teamName" element={<UserOverview />} />
                   <Route path="team/invite" element={<Invite />} />
+                  <Route path="team/:teamName" element={<UserOverview />} />
                   <Route path="customers/:customerId" element={<CustomerOverview />} />
                 </Route>
               </Route>

@@ -112,6 +112,17 @@ const SideBar: React.FC = () => {
                 {t("Calendar")}
               </NavLink>
             </li>
+           <li className="app-sidebar__item">
+             <NavLink
+                to={`/shops/${currentShop?.shop.name}/bookings`}
+               onClick={close}
+               className={linkClass}
+             >
+               <CalendarDays className="icon" aria-hidden="true" />
+               {t("Bookings")}
+             </NavLink>
+            </li>
+
 
             <li className="app-sidebar__item">
               <NavLink

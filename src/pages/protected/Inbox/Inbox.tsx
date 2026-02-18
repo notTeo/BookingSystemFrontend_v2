@@ -33,7 +33,6 @@ const Inbox: React.FC = () => {
 
     try {
       const res = await listInvites();
-      console.log(res);
       const received = Array.isArray((res as any)?.received) ? (res as any).received : [];
       const sent = Array.isArray((res as any)?.sent) ? (res as any).sent : [];
 
@@ -104,7 +103,6 @@ const Inbox: React.FC = () => {
     <div className="inboxPage">
       <header className="inboxPage__header">
         <div>
-          <p className="inboxPage__eyebrow">{t("Inbox")}</p>
           <h1 className="inboxPage__title">{t("Invitations")}</h1>
           <p className="inboxPage__subtitle">{t("View received or sent invitations.")}</p>
         </div>

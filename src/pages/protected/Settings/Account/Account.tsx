@@ -204,7 +204,6 @@ const Account: React.FC = () => {
       <div className="accountPage__inner">
         <header className="accountPage__header">
           <div>
-            <p className="accountPage__eyebrow">{t("Settings")}</p>
             <h1 className="accountPage__title">{t("Account")}</h1>
             <p className="accountPage__subtitle">
               {t("Update your personal details and keep your account information current.")}
@@ -233,11 +232,10 @@ const Account: React.FC = () => {
 
         <div className="accountPage__layout">
           <div className="accountPage__column">
-            {/* PROFILE */}
+            {/**  PROFILE */}
             <section className="accountPage__panel">
             <header className="accountPage__cardHead">
               <div>
-                <p className="accountPage__eyebrow">{t("Profile")}</p>
                 <h2>{t("Personal info")}</h2>
                 <p className="accountPage__hint">
                   {t("Control how your details appear across the dashboard.")}
@@ -330,7 +328,6 @@ const Account: React.FC = () => {
             <section className="accountPage__panel">
             <header className="accountPage__cardHead">
               <div>
-                <p className="accountPage__eyebrow">{t("Security")}</p>
                 <h2>{t("Password")}</h2>
                 <p className="accountPage__hint">
                   {t("Use a strong password to help keep your account safe.")}
@@ -394,7 +391,6 @@ const Account: React.FC = () => {
             <section className="accountPage__panel accountPage__panel--compact">
             <header className="accountPage__cardHead accountPage__cardHead--split">
               <div>
-                <p className="accountPage__eyebrow">{t("Appearance")}</p>
                 <h2>{t("Theme")}</h2>
                 <p className="accountPage__hint">{t("Switch between dark and light theme.")}</p>
                 <p className="accountPage__hint accountPage__hint--inline">
@@ -416,7 +412,6 @@ const Account: React.FC = () => {
             <section className="accountPage__panel accountPage__panel--compact">
             <header className="accountPage__cardHead accountPage__cardHead--split">
               <div>
-                <p className="accountPage__eyebrow">{t("Language")}</p>
                 <h2>{t("Language")}</h2>
                 <p className="accountPage__hint">{t("Choose the language for the interface.")}</p>
               </div>
@@ -445,7 +440,6 @@ const Account: React.FC = () => {
             <section className="accountPage__panel">
           <header className="accountPage__cardHead">
             <div>
-              <p className="accountPage__eyebrow">{t("Account details")}</p>
               <h2>{t("Metadata")}</h2>
               <p className="accountPage__hint">{t("Reference information for your account.")}</p>
             </div>
